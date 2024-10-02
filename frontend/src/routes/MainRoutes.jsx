@@ -12,6 +12,9 @@ const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
 
+// render - home conductor
+const HomeConductor = Loadable(lazy(() => import('pages/home/home-conductor')));
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -32,7 +35,7 @@ const MainRoutes = {
         {
           path: 'default',
           element: <DashboardDefault />
-        }
+        },
       ]
     },
     {
@@ -46,7 +49,11 @@ const MainRoutes = {
     {
       path: 'typography',
       element: <Typography />
-    }
+    },
+    {
+      path: 'home-conductor',
+      element: <HomeConductor />
+    },
   ]
 };
 
