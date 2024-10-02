@@ -15,10 +15,10 @@ const HomeConductor = Loadable(lazy(() => import('pages/home/home-conductor')));
 // ==============================|| MAIN ROUTING ||============================== //
 
 // Simula obtener el usuario actual
-const usuarioId = 4; 
+const usuarioId = 6; 
 const usuario = fakeUsuarios.find((user) => user.id === usuarioId);
 
-// Lógica de redirección basada en los atributos del usuario
+
 let redirectPath = '/'; // Ruta por defecto
 
 if (usuario) {
