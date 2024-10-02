@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import fakeGarajes from '../../data/data-garajes';
+import fakeUsuarios from '../../data/data-usuarios'; // Importar los datos de usuarios
 import './ReservaForm.css';
 
 const ReservaForm = () => {
@@ -9,6 +10,10 @@ const ReservaForm = () => {
 
   // Obtenemos el primer garaje de los datos
   const garaje = fakeGarajes[0];
+
+  // Simula obtener el usuario actual
+  const usuarioId = 3; // Cambia esto según el usuario que necesites
+  const usuario = fakeUsuarios.find((user) => user.id === usuarioId);
 
   // Obtener la fecha actual en el formato 'YYYY-MM-DDTHH:MM' requerido por el input datetime-local
   const today = new Date().toISOString().slice(0, 16); 
@@ -38,13 +43,16 @@ const ReservaForm = () => {
     <div className="reservation-form">
       <h2>Formulario de Reserva</h2>
 
-      <div className="row">
-        <div className="info">
-          <p><strong>Dueño:</strong> Juan Perez</p>
-          <p><strong>Ubicación:</strong> {`${garaje.calle} ${garaje.altura}`}</p>
-          <p><strong>Descripción:</strong> {garaje.descripcion}</p>
+      {usuario && (
+        <div className="row">
+          <div className="info">
+            <p><strong>Dueño:</strong> {`${usuario.nombre} ${usuario.apellido}`}</p>
+            <p><strong>Email:</strong> {usuario.mail}</p>
+            <p><strong>Ubicación del Garaje:</strong> {`${garaje.calle} ${garaje.altura}`}</p>
+            <p><strong>Descripción:</strong> {garaje.descripcion}</p>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="row">
         <div className="input">
