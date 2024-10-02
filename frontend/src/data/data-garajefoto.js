@@ -1,5 +1,5 @@
-import garaje1 from '../assets/garaje1.jpg';
-import garaje2 from '../assets/garaje2.jpg';
+import garaje1 from 'assets/images/home/garajes-propietario/garaje1.jpg';
+import garaje2 from 'assets/images/home/garajes-propietario/garaje2.jpg';
 
 const fakeFotosGarajes = [
     {
