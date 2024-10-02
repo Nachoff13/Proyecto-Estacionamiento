@@ -56,7 +56,7 @@ const fakeUsuarios = [
       mail: '',
       username: 'anamartinez',
       contrasenia: 'ana789',
-      esConductor: false,
+      esConductor: true,
       esPropietario: true
     }
   ];
