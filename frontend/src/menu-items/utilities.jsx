@@ -35,6 +35,13 @@ const utilities = {
       icon: icons.CarOutlined
     },
     {
+      id: 'home-propietario',
+      title: 'Mis Garajes',
+      type: 'item',
+      url: '/home-propietario',
+      icon: CarOutlined
+    },
+    {
       id: 'util-typography',
       title: 'Typography',
       type: 'item',

@@ -1,21 +1,38 @@
 import { lazy } from 'react';
+import { Navigate } from 'react-router-dom'; // Importar Navigate para redirecciones
 
 // project import
 import Loadable from 'components/Loadable';
 import Dashboard from 'layout/Dashboard';
 
-const Color = Loadable(lazy(() => import('pages/component-overview/color')));
-const Typography = Loadable(lazy(() => import('pages/component-overview/typography')));
-const Shadow = Loadable(lazy(() => import('pages/component-overview/shadows')));
-const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
+// data
+import fakeUsuarios from 'data/data-usuarios';
 
-// render - sample page
-const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
+const Typography = Loadable(lazy(() => import('pages/component-overview/typography')));
+const HomePropietario = Loadable(lazy(() => import('pages/home/home-propietario')));
+
 
 // render - home conductor
 const HomeConductor = Loadable(lazy(() => import('pages/home/home-conductor')));
 
 // ==============================|| MAIN ROUTING ||============================== //
+
+// Simula obtener el usuario actual
+const usuarioId = 3; 
+const usuario = fakeUsuarios.find((user) => user.id === usuarioId);
+
+// Lógica de redirección basada en los atributos del usuario
+let redirectPath = '/'; // Ruta por defecto
+
+if (usuario) {
+  if (usuario.esPropietario) {
+    redirectPath = '/home-propietario';
+  } else if (usuario.esConductor) {
+    redirectPath = '/home-conductor'; 
+  } else {
+    redirectPath = '/otra-pagina'; 
+  }
+}
 
 const MainRoutes = {
   path: '/',
@@ -23,37 +40,20 @@ const MainRoutes = {
   children: [
     {
       path: '/',
-      element: <DashboardDefault />
-    },
-    {
-      path: 'color',
-      element: <Color />
-    },
-    {
-      path: 'dashboard',
-      children: [
-        {
-          path: 'default',
-          element: <DashboardDefault />
-        },
-      ]
-    },
-    {
-      path: 'sample-page',
-      element: <SamplePage />
-    },
-    {
-      path: 'shadow',
-      element: <Shadow />
+      element: <Navigate to={redirectPath} replace />
     },
     {
       path: 'typography',
       element: <Typography />
     },
     {
-      path: 'home-conductor',
-      element: <HomeConductor />
+      path: 'home-propietario',
+      element: <HomePropietario />
     },
+    // {
+    //   path: 'home-conductor',
+    //   element: <HomeConductor /> // Asegúrate de tener esta ruta definida
+    // }
   ]
 };
 
