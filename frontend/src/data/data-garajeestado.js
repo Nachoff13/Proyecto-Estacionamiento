@@ -1,15 +1,15 @@
 const fakeGarajeEstado = [
     {
         id: 1,
-        estado: 'Disponible'
+        nombre: 'Disponible'
     },
     {
         id: 2,
-        estado: 'Reservado'
+        nombre: 'Reservado'
     },
     {
         id: 3,
-        estado: 'No Disponible'
+        nombre: 'No Disponible'
     }
 ];
 
