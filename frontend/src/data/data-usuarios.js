@@ -48,6 +48,16 @@ const fakeUsuarios = [
       contrasenia: 'diego456',
       esConductor: true,
       esPropietario: false
+    },
+    {
+      id: 6,
+      nombre: 'Ana',
+      apellido: 'Martínez',
+      mail: '',
+      username: 'anamartinez',
+      contrasenia: 'ana789',
+      esConductor: true,
+      esPropietario: true
     }
   ];
   

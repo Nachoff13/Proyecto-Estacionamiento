@@ -17,15 +17,23 @@ const icons = {
   AntDesignOutlined,
   LoadingOutlined,
   AppstoreAddOutlined,
+  CarOutlined
 };
 
 // ==============================|| MENU ITEMS - UTILITIES ||============================== //
 
 const utilities = {
   id: 'utilities',
-  title: 'Utilities',
+  title: 'Utilidades',
   type: 'group',
   children: [
+    {
+      id: 'home-conductor',
+      title: 'Listado de Garajes',
+      type: 'item',
+      url: '/home-conductor',
+      icon: icons.CarOutlined
+    },
     {
       id: 'home-propietario',
       title: 'Mis Garajes',
