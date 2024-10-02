@@ -22,10 +22,18 @@ export default function NavGroup({ item }) {
         );
       case 'item':
         return <NavItem key={menuItem.id} item={menuItem} level={1} />;
+      case 'component': // Nuevo case para el tipo 'component'
+        const Component = menuItem.component;
+        return (
+          <Box key={menuItem.id} sx={{ p: 0.5 }}>
+            <Component />
+          </Box>
+        );
       default:
+        console.error(`Tipo de menú desconocido: ${menuItem.type}`);
         return (
           <Typography key={menuItem.id} variant="h6" color="error" align="center">
-            Fix - Group Collapse or Items
+            Error: Tipo de menú desconocido
           </Typography>
         );
     }
