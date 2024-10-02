@@ -3,9 +3,9 @@
 import React from 'react';
 import { Switch } from 'antd'; // Asegúrate de que 'antd' esté instalado
 
-const ModoSwitch = ({ esConductor, esPropietario, onModeChange }) => {
-  // Determina el modo inicial basado en las propiedades del usuario
-  const [modo, setModo] = React.useState(esConductor ? true : false);
+const ModeSwitch = ({ onModeChange }) => {
+  // Estado inicial del modo (puedes cambiarlo a true o false según tus necesidades)
+  const [modo, setModo] = React.useState(false);
 
   const handleSwitchChange = (checked) => {
     setModo(checked);
@@ -13,11 +13,11 @@ const ModoSwitch = ({ esConductor, esPropietario, onModeChange }) => {
   };
 
   return (
-    <div style={{ padding: '16px' }}>
-      <span>Modo: {modo ? 'Conductor' : 'Propietario'}</span>
+    <div style={{ padding: '16px', marginLeft:'5px' }}>
+      <span style={{marginRight: '5px'}}>Modo {modo ? 'Conductor' : 'Propietario'}</span>
       <Switch checked={modo} onChange={handleSwitchChange} />
     </div>
   );
 };
 
-export default ModoSwitch;
+export default ModeSwitch;
