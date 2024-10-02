@@ -10,6 +10,7 @@ import fakeUsuarios from 'data/data-usuarios';
 
 const Typography = Loadable(lazy(() => import('pages/component-overview/typography')));
 const HomePropietario = Loadable(lazy(() => import('pages/home/home-propietario')));
+const ReservaForm = Loadable(lazy(() => import('pages/reserva/ReservaForm')));
 
 
 // ==============================|| MAIN ROUTING ||============================== //
@@ -51,6 +52,10 @@ const MainRoutes = {
     //   path: 'home-conductor',
     //   element: <HomeConductor /> // Asegúrate de tener esta ruta definida
     // }
+    {
+      path: 'reserva',
+      element: <ReservaForm />
+    }
   ]
 };
 
