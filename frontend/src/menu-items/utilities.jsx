@@ -5,7 +5,8 @@ import {
   BarcodeOutlined,
   BgColorsOutlined,
   FontSizeOutlined,
-  LoadingOutlined
+  LoadingOutlined,
+  CarOutlined
 } from '@ant-design/icons';
 
 // icons
@@ -15,7 +16,7 @@ const icons = {
   BarcodeOutlined,
   AntDesignOutlined,
   LoadingOutlined,
-  AppstoreAddOutlined
+  AppstoreAddOutlined,
 };
 
 // ==============================|| MENU ITEMS - UTILITIES ||============================== //
@@ -25,6 +26,13 @@ const utilities = {
   title: 'Utilities',
   type: 'group',
   children: [
+    {
+      id: 'home-propietario',
+      title: 'Mis Garajes',
+      type: 'item',
+      url: '/home-propietario',
+      icon: CarOutlined
+    },
     {
       id: 'util-typography',
       title: 'Typography',
