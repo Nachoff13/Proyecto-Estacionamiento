@@ -8,18 +8,20 @@ import Dashboard from 'layout/Dashboard';
 // data
 import fakeUsuarios from 'data/data-usuarios';
 
+// Importar ViewProfile
+const ViewProfile = Loadable(lazy(() => import('pages/perfil/ViewProfile.jsx')));
+
+// Otros componentes
 const Typography = Loadable(lazy(() => import('pages/component-overview/typography')));
 const HomePropietario = Loadable(lazy(() => import('pages/home/home-propietario')));
 const ReservaForm = Loadable(lazy(() => import('pages/reserva/ReservaForm')));
 const HomeConductor = Loadable(lazy(() => import('pages/home/home-conductor')));
-
 
 // ==============================|| MAIN ROUTING ||============================== //
 
 // Simula obtener el usuario actual
 const usuarioId = 6; 
 const usuario = fakeUsuarios.find((user) => user.id === usuarioId);
-
 
 let redirectPath = '/'; // Ruta por defecto
 
@@ -56,6 +58,10 @@ const MainRoutes = {
     {
       path: 'home-conductor',
       element: <HomeConductor />
+    },
+    {
+      path: 'apps/profiles/account/basic', // Ruta para ver perfil
+      element: <ViewProfile /> // Carga del componente ViewProfile
     }
   ]
 };
