@@ -84,7 +84,7 @@ const ReservaForm = () => {
       </div>
 
       <div className="buttons">
-        <button className="cancelar" onClick={() => window.location.href = 'home.html'}>
+        <button className="cancelar" onClick={() => window.location.href = 'home-conductor'}>
           Volver al Home
         </button>
         <button className="confirmar" onClick={calcularMonto}>
