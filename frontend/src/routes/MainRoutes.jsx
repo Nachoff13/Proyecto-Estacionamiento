@@ -11,6 +11,7 @@ import fakeUsuarios from 'data/data-usuarios';
 const Typography = Loadable(lazy(() => import('pages/component-overview/typography')));
 const HomePropietario = Loadable(lazy(() => import('pages/home/home-propietario')));
 const HomeConductor = Loadable(lazy(() => import('pages/home/home-conductor')));
+const AltaGaraje = Loadable(lazy(() => import('pages/altaGaraje/alta-garaje')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -50,6 +51,10 @@ const MainRoutes = {
     {
       path: 'home-conductor',
       element: <HomeConductor />
+    },
+    {
+      path: 'alta-garaje',
+      element: <AltaGaraje />
     }
   ]
 };
