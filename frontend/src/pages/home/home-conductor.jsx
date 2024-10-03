@@ -1,5 +1,6 @@
 // material-ui
 import { Typography, Button, Chip } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 // project import
 import MainCard from 'components/MainCard';
@@ -14,6 +15,9 @@ import fakePropietario from 'data/data-usuarios';
 // ==============================|| SAMPLE PAGE ||============================== //
 
 export default function HomeConductor() {
+  const navigate = useNavigate(); // Hook para la navegación
+
+
   const getLocalidad = (idLocalidad) => {
     const localidad = fakeLocalidades.find((loc) => loc.id === idLocalidad);
     return localidad ? localidad.nombre : 'Desconocido';
@@ -46,6 +50,10 @@ export default function HomeConductor() {
       default:
         return 'default';
     }
+  };
+
+  const handleReservar = () => {
+    navigate('/reserva'); 
   };
 
   return (
@@ -87,7 +95,7 @@ export default function HomeConductor() {
               </Typography>
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: "auto" }}>
-              <Button variant="contained" color="primary" onClick={() => handleReservar(garaje.id)} style={{ marginTop: '10px' }}>
+              <Button variant="contained" color="primary" onClick={() => handleReservar()} style={{ marginTop: '10px' }}>
                 Reservar
               </Button>
             </div>

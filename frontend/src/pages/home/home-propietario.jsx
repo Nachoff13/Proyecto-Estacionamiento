@@ -1,8 +1,13 @@
+import { useState } from "react";
+
 // material-ui
 import { Typography, Button, Chip } from "@mui/material";
 
 // project import
 import MainCard from "components/MainCard";
+
+//components
+import EditModal from "components/modals/EditModal";
 
 // data imports
 import fakeGarajes from "data/data-garajes";
@@ -15,6 +20,20 @@ import fakeGarajeEstado from "data/data-garajeestado";
 
 export default function HomePropietario() {
   //-------------------------------LOGICA-----------------------------------
+  const [opened, setOpened] = useState(false);
+  const [currentGaraje, setCurrentGaraje] = useState({
+    id: null,
+    idPropietario: null,
+    idLocalidad: null,
+    idGarajeEstado: null,
+    altura: '',
+    calle: '',
+    descripcion: '',
+    precioHora: null,
+    capacidad: null
+  });
+
+  console.log("Garajes:", currentGaraje);
 
   // Obtener el propietario con id 2
   const propietarioId = 3;
@@ -54,9 +73,15 @@ export default function HomePropietario() {
   };
 
   //-------------------------------HANDLE EDITAR-----------------------------------
-  const handleEditar = (idGaraje) => {
-    console.log(`Editar garaje con id ${idGaraje}`);
-    // Agregar logica
+  const handleOpen = (garaje) => {
+    setCurrentGaraje(garaje);
+    setOpened(true);
+  };
+  
+
+  const handleClose = () => {
+    setOpened(false);
+    setCurrentGaraje(null); 
   };
 
   return (
@@ -116,16 +141,20 @@ export default function HomePropietario() {
             }}
           >
             <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleEditar(garaje.id)}
-              style={{ marginTop: "10px" }}
-            >
-              Editar
-            </Button>
+            variant="contained"
+            color="primary"
+            onClick={() => handleOpen(garaje)}
+          >
+            Editar
+          </Button>
           </div>
         </MainCard>
       ))}
+      <EditModal
+        opened={opened}
+        onClose={handleClose}
+        data={currentGaraje} // Pasar los datos del garaje seleccionado
+      />
     </div>
   );
 }
