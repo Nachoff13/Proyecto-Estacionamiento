@@ -1,47 +1,37 @@
 import React from 'react';
 import { Box, Typography, Grid, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import avatar from './avatar.png'; 
+import fakeGarajes from 'data/data-garajes'; // Importa los datos de garajes
+import fakeGarajeEstado from 'data/data-garajeestado'; // Importa los estados de los garajes
+import fakeFotosGarajes from 'data/data-garajefoto'; // Importa las fotos de los garajes
+import fakeLocalidades from 'data/data-localidades'; // Importa las localidades
+import fakeUsuarios from 'data/data-usuarios'; // Importa los usuarios
 
-const user = {
-  nombre: 'John',
-  apellido: 'Doe',
-  email: 'john.doe@example.com',
-  username: 'jhondoe',
-  bio: 'Aca podría ir una breve descripción del usuario.',
-};
-
-// fake data de los garages
-const garages = [
-  {
-    localidad: 'La Plata',
-    altura: '1234',
-    calle: 'Av. Libertador',
-    precioPorHora: '$10',
-    capacidad: '2 autos',
-    estado: 'Disponible',
-    imagen: 'path/to/image1.jpg', // aca iria la ruta de la imagen
-  },
-  {
-    localidad: 'City Bell',
-    altura: '5678',
-    calle: 'Calle Falsa',
-    precioPorHora: '$15',
-    capacidad: '1 auto',
-    estado: 'Ocupado',
-    imagen: 'path/to/image2.jpg', 
-  },
-  {
-    localidad: 'Los Hornos',
-    altura: '4321',
-    calle: 'Calle Ejemplo',
-    precioPorHora: '$12',
-    capacidad: '3 autos',
-    estado: 'Disponible',
-    imagen: 'path/to/image3.jpg', 
-  },
-];
+// Simulación de un usuario logueado
+const currentUser = fakeUsuarios.find(user => user.username === 'johndoe'); // Puedes cambiar esto para obtener el usuario dinámicamente
 
 export default function UserProfile() {
+  // Filtra los garajes del usuario actual (idPropietario)
+  const userGarages = fakeGarajes.filter(garage => garage.idPropietario === currentUser.id);
+
+  // Función para obtener el nombre del estado del garaje
+  const getGarageState = (idGarajeEstado) => {
+    const estado = fakeGarajeEstado.find(estado => estado.id === idGarajeEstado);
+    return estado ? estado.nombre : 'Desconocido';
+  };
+
+  // Función para obtener el nombre de la localidad
+  const getLocalidadName = (idLocalidad) => {
+    const localidad = fakeLocalidades.find(localidad => localidad.id === idLocalidad);
+    return localidad ? localidad.nombre : 'Desconocido';
+  };
+
+  // Función para obtener la imagen del garaje
+  const getGarageImage = (idGaraje) => {
+    const imagen = fakeFotosGarajes.find(foto => foto.idGaraje === idGaraje);
+    return imagen ? <img src={imagen.foto} alt="Garage" width="50" /> : 'Sin Imagen';
+  };
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', padding: 4, bgcolor: '#f5f5f5' }}>
       <Typography variant="h2" component="h1" sx={{ mb: 3, alignSelf: 'flex-start' }}>
@@ -55,24 +45,24 @@ export default function UserProfile() {
           sx={{ borderRadius: '50%', width: '180px', height: '180px', mb: 3 }} 
         />
         <Typography variant="h3" component="div" sx={{ mb: 1 }}>
-          {user.nombre} {user.apellido}
+          {currentUser.nombre} {currentUser.apellido}
         </Typography>
         <Typography variant="h5" color="text.secondary" sx={{ mb: 2 }}>
-          @{user.username}
+          @{currentUser.username}
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 3, textAlign: 'center', maxWidth: 600, fontSize: '1.2rem' }}>
-          {user.bio}
+          Aquí podría ir una breve descripción del usuario.
         </Typography>
         <Typography variant="body1" sx={{ mb: 3, fontSize: '1.2rem' }}>
-          Email: {user.email}
+          Email: {currentUser.mail}
         </Typography>
       </Box>
 
       {/* Tabla de Mis Garages */}
-      <Typography variant="h4" component="h2" sx={{ mt: 4, mb: 2 }}>
+      <Typography variant="h4" component="h2" sx={{ mb: 1 }}> 
         Mis Garages
       </Typography>
-      <TableContainer component={Paper} sx={{ mt: 2 }}>
+      <TableContainer component={Paper} sx={{ mt: 1 }}> 
         <Table>
           <TableHead>
             <TableRow>
@@ -86,33 +76,29 @@ export default function UserProfile() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {garages.map((garage, index) => (
+            {userGarages.map((garage, index) => (
               <TableRow key={index}>
-                <TableCell>{garage.localidad}</TableCell>
+                <TableCell>{getLocalidadName(garage.idLocalidad)}</TableCell>
                 <TableCell>{garage.altura}</TableCell>
                 <TableCell>{garage.calle}</TableCell>
-                <TableCell>{garage.precioPorHora}</TableCell>
-                <TableCell>{garage.capacidad}</TableCell>
-                <TableCell>{garage.estado}</TableCell>
-                <TableCell>
-                  <Button variant="outlined" size="small" sx={{ textTransform: 'none' }}>
-                    Ver Imágenes
-                  </Button>
-                </TableCell>
+                <TableCell>{`$${garage.precioHora}`}</TableCell>
+                <TableCell>{garage.capacidad} {garage.capacidad > 1 ? 'autos' : 'auto'}</TableCell>
+                <TableCell>{getGarageState(garage.idGarajeEstado)}</TableCell>
+                <TableCell>{getGarageImage(garage.id)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
 
-      <Grid container spacing={2} justifyContent="center" sx={{ mt: 2 }}>
+      <Grid container spacing={3} justifyContent="flex-end" sx={{ mt: 10 }}> 
         <Grid item>
-          <Button variant="contained" color="primary" size="small">
+          <Button variant="contained" color="primary" size="medium" sx={{ minWidth: '120px' }}> 
             Editar Perfil
           </Button>
         </Grid>
         <Grid item>
-          <Button variant="outlined" color="secondary" size="small">
+          <Button variant="outlined" color="secondary" size="medium" sx={{ minWidth: '120px' }}> 
             Cerrar Sesión
           </Button>
         </Grid>
