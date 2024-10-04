@@ -23,8 +23,8 @@ const fakeUsuarios = [
       id: 3,
       nombre: 'John',
       apellido: 'Doe',
-      mail: 'carlos.martinez@yahoo.com',
-      username: 'carlosmartinez',
+      mail: 'john.doe@gmail.com',
+      username: 'johndoe',
       contrasenia: 'carlos789',
       esConductor: false,
       esPropietario: true
