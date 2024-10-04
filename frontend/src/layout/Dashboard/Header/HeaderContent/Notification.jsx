@@ -99,14 +99,14 @@ export default function Notification() {
             <Paper sx={{ boxShadow: theme.customShadows.z1, width: '100%', minWidth: 285, maxWidth: { xs: 285, md: 420 } }}>
               <ClickAwayListener onClickAway={handleClose}>
                 <MainCard
-                  title="Notification"
+                  title="Notificación"
                   elevation={0}
                   border={false}
                   content={false}
                   secondary={
                     <>
                       {read > 0 && (
-                        <Tooltip title="Mark as all read">
+                        <Tooltip title="Marcar todo como leído">
                           <IconButton color="success" size="small" onClick={() => setRead(0)}>
                             <CheckCircleOutlined style={{ fontSize: '1.15rem' }} />
                           </IconButton>
@@ -130,20 +130,19 @@ export default function Notification() {
                     <ListItemButton selected={read > 0}>
                       <ListItemAvatar>
                         <Avatar sx={{ color: 'success.main', bgcolor: 'success.lighter' }}>
-                          <GiftOutlined />
+                          <CheckCircleOutlined />
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
                         primary={
                           <Typography variant="h6">
-                            It&apos;s{' '}
                             <Typography component="span" variant="subtitle1">
-                              Cristina danny&apos;s
+                              Cristina Tommasso
                             </Typography>{' '}
-                            birthday today.
+                            ha completado su estadía.
                           </Typography>
                         }
-                        secondary="2 min ago"
+                        secondary="Hace 2 minutos"
                       />
                       <ListItemSecondaryAction>
                         <Typography variant="caption" noWrap>
@@ -162,12 +161,12 @@ export default function Notification() {
                         primary={
                           <Typography variant="h6">
                             <Typography component="span" variant="subtitle1">
-                              Aida Burg
+                              Mauro Lombardo
                             </Typography>{' '}
-                            commented your post.
+                            reseñó tu garaje.
                           </Typography>
                         }
-                        secondary="5 August"
+                        secondary="5 de Octubre"
                       />
                       <ListItemSecondaryAction>
                         <Typography variant="caption" noWrap>
@@ -185,13 +184,13 @@ export default function Notification() {
                       <ListItemText
                         primary={
                           <Typography variant="h6">
-                            Your Profile is Complete &nbsp;
+                            Tu perfil está completo al&nbsp;
                             <Typography component="span" variant="subtitle1">
                               60%
                             </Typography>{' '}
                           </Typography>
                         }
-                        secondary="7 hours ago"
+                        secondary="Hace 7 horas"
                       />
                       <ListItemSecondaryAction>
                         <Typography variant="caption" noWrap>
@@ -200,36 +199,12 @@ export default function Notification() {
                       </ListItemSecondaryAction>
                     </ListItemButton>
                     <Divider />
-                    <ListItemButton>
-                      <ListItemAvatar>
-                        <Avatar sx={{ color: 'primary.main', bgcolor: 'primary.lighter' }}>C</Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6">
-                            <Typography component="span" variant="subtitle1">
-                              Cristina Danny
-                            </Typography>{' '}
-                            invited to join{' '}
-                            <Typography component="span" variant="subtitle1">
-                              Meeting.
-                            </Typography>
-                          </Typography>
-                        }
-                        secondary="Daily scrum meeting time"
-                      />
-                      <ListItemSecondaryAction>
-                        <Typography variant="caption" noWrap>
-                          9:10 PM
-                        </Typography>
-                      </ListItemSecondaryAction>
-                    </ListItemButton>
                     <Divider />
                     <ListItemButton sx={{ textAlign: 'center', py: `${12}px !important` }}>
                       <ListItemText
                         primary={
                           <Typography variant="h6" color="primary">
-                            View All
+                            Ver todas
                           </Typography>
                         }
                       />

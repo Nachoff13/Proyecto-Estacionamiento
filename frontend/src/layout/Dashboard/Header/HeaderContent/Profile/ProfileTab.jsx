@@ -70,7 +70,7 @@ export default function ProfileTab() {
         <ListItemIcon>
           <LogoutOutlined />
         </ListItemIcon>
-        <ListItemText primary="Logout" />
+        <ListItemText primary="Cerrar sesión" />
       </ListItemButton>
     </List>
   );
