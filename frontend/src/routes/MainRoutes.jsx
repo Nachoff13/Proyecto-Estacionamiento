@@ -12,7 +12,6 @@ import fakeUsuarios from 'data/data-usuarios';
 const ViewProfile = Loadable(lazy(() => import('pages/perfil/ViewProfile.jsx')));
 
 // Otros componentes
-const Typography = Loadable(lazy(() => import('pages/component-overview/typography')));
 const HomePropietario = Loadable(lazy(() => import('pages/home/home-propietario')));
 const ReservaForm = Loadable(lazy(() => import('pages/reserva/ReservaForm')));
 const HomeConductor = Loadable(lazy(() => import('pages/home/home-conductor')));
@@ -43,10 +42,6 @@ const MainRoutes = {
     {
       path: '/',
       element: <Navigate to={redirectPath} replace />
-    },
-    {
-      path: 'typography',
-      element: <Typography />
     },
     {
       path: 'home-propietario',
