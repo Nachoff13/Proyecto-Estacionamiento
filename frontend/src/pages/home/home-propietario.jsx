@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 // material-ui
-import { Typography, Button, Chip } from "@mui/material";
+import { Typography, Button, Chip , Fab} from "@mui/material";
 
 // project import
 import MainCard from "components/MainCard";
@@ -15,6 +15,7 @@ import fakeFotosGarajes from "data/data-garajefoto";
 import fakeUsuarios from "data/data-usuarios";
 import fakeLocalidades from "data/data-localidades";
 import fakeGarajeEstado from "data/data-garajeestado";
+import { useNavigate } from "react-router-dom";
 
 // ==============================|| HOME PROPIETARIO ||============================== //
 
@@ -32,6 +33,8 @@ export default function HomePropietario() {
     precioHora: null,
     capacidad: null
   });
+
+  const navigate = useNavigate(); 
 
   console.log("Garajes:", currentGaraje);
 
@@ -82,6 +85,10 @@ export default function HomePropietario() {
   const handleClose = () => {
     setOpened(false);
     setCurrentGaraje(null); 
+  };
+
+  const handleAddGaraje = () => {
+    navigate("/alta-garaje"); 
   };
 
   return (
@@ -150,6 +157,28 @@ export default function HomePropietario() {
           </div>
         </MainCard>
       ))}
+
+<Fab
+        variant="contained"
+        color="secondary"
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          right: "20px",
+          borderRadius: "50%",
+          width: "56px",
+          height: "56px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "24px"
+        }}
+        onClick={handleAddGaraje}
+      >
+        +
+      </Fab>
+
+
       <EditModal
         opened={opened}
         onClose={handleClose}
