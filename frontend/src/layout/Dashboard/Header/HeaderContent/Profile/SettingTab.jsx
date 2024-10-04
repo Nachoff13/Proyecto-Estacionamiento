@@ -37,7 +37,7 @@ export default function SettingTab() {
         </ListItemIcon>
         <ListItemText primary="Privacy Center" />
       </ListItemButton>
-      <ListItemButton selected={selectedIndex === 3} onClick={(event) => handleListItemClick(event, 3)}>
+      {/* <ListItemButton selected={selectedIndex === 3} onClick={(event) => handleListItemClick(event, 3)}>
         <ListItemIcon>
           <CommentOutlined />
         </ListItemIcon>
@@ -48,7 +48,7 @@ export default function SettingTab() {
           <UnorderedListOutlined />
         </ListItemIcon>
         <ListItemText primary="History" />
-      </ListItemButton>
+      </ListItemButton> */}
     </List>
   );
 }
