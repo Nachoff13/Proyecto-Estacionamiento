@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, Typography, Grid, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Typography, Grid, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Modal } from '@mui/material';
 import avatar from './avatar.png'; 
 import fakeGarajes from 'data/data-garajes'; // Importa los datos de garajes
 import fakeGarajeEstado from 'data/data-garajeestado'; // Importa los estados de los garajes
@@ -11,6 +11,10 @@ import fakeUsuarios from 'data/data-usuarios'; // Importa los usuarios
 const currentUser = fakeUsuarios.find(user => user.username === 'johndoe'); // Puedes cambiar esto para obtener el usuario dinámicamente
 
 export default function UserProfile() {
+  // Estado para manejar el modal de la imagen
+  const [open, setOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
+
   // Filtra los garajes del usuario actual (idPropietario)
   const userGarages = fakeGarajes.filter(garage => garage.idPropietario === currentUser.id);
 
@@ -26,10 +30,21 @@ export default function UserProfile() {
     return localidad ? localidad.nombre : 'Desconocido';
   };
 
-  // Función para obtener la imagen del garaje
-  const getGarageImage = (idGaraje) => {
-    const imagen = fakeFotosGarajes.find(foto => foto.idGaraje === idGaraje);
-    return imagen ? <img src={imagen.foto} alt="Garage" width="50" /> : 'Sin Imagen';
+  // Función para obtener las imágenes del garaje
+  const getGarageImages = (idGaraje) => {
+    return fakeFotosGarajes.filter(foto => foto.idGaraje === idGaraje);
+  };
+
+  // Maneja el evento de abrir el modal
+  const handleOpen = (image) => {
+    setSelectedImage(image);
+    setOpen(true);
+  };
+
+  // Maneja el evento de cerrar el modal
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedImage('');
   };
 
   return (
@@ -84,12 +99,38 @@ export default function UserProfile() {
                 <TableCell>{`$${garage.precioHora}`}</TableCell>
                 <TableCell>{garage.capacidad} {garage.capacidad > 1 ? 'autos' : 'auto'}</TableCell>
                 <TableCell>{getGarageState(garage.idGarajeEstado)}</TableCell>
-                <TableCell>{getGarageImage(garage.id)}</TableCell>
+                <TableCell>
+                  {getGarageImages(garage.id).map((img, idx) => (
+                    <Button key={idx} onClick={() => handleOpen(img.foto)} sx={{ padding: 0, minWidth: 'auto' }}>
+                      <img src={img.foto} alt="Garage" width="50" style={{ marginRight: '8px' }} />
+                    </Button>
+                  ))}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Modal para mostrar imagen ampliada */}
+      <Modal open={open} onClose={handleClose}>
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '80%',
+          bgcolor: 'background.paper',
+          borderRadius: '8px',
+          boxShadow: 24,
+          p: 4,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+          <img src={selectedImage} alt="Imagen del garaje" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+        </Box>
+      </Modal>
 
       <Grid container spacing={3} justifyContent="flex-end" sx={{ mt: 10 }}> 
         <Grid item>
