@@ -23,19 +23,19 @@ export default function SettingTab() {
         <ListItemIcon>
           <QuestionCircleOutlined />
         </ListItemIcon>
-        <ListItemText primary="Support" />
+        <ListItemText primary="Soporte" />
       </ListItemButton>
-      <ListItemButton selected={selectedIndex === 1} onClick={(event) => handleListItemClick(event, 1)}>
+      {/* <ListItemButton selected={selectedIndex === 1} onClick={(event) => handleListItemClick(event, 1)}>
         <ListItemIcon>
           <UserOutlined />
         </ListItemIcon>
         <ListItemText primary="Account Settings" />
-      </ListItemButton>
+      </ListItemButton> */}
       <ListItemButton selected={selectedIndex === 2} onClick={(event) => handleListItemClick(event, 2)}>
         <ListItemIcon>
           <LockOutlined />
         </ListItemIcon>
-        <ListItemText primary="Privacy Center" />
+        <ListItemText primary="Centro de privacidad" />
       </ListItemButton>
       {/* <ListItemButton selected={selectedIndex === 3} onClick={(event) => handleListItemClick(event, 3)}>
         <ListItemIcon>
