@@ -21,7 +21,7 @@ public partial class Garaje
 
     public int Capacidad { get; set; }
 
-    public string? Estado { get; set; }
+    public bool? Disponible { get; set; }
 
     public virtual ICollection<Garajefoto> Garajefotos { get; } = new List<Garajefoto>();
 
