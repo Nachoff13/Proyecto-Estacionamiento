@@ -237,9 +237,9 @@ public partial class DbEstacionamientoContext : DbContext
             entity.Property(e => e.Apellido)
                 .HasMaxLength(100)
                 .HasColumnName("apellido");
-            entity.Property(e => e.Contraseña)
+            entity.Property(e => e.Contrasena)
                 .HasMaxLength(255)
-                .HasColumnName("contraseña");
+                .HasColumnName("contrasena");
             entity.Property(e => e.Esconductor).HasColumnName("esconductor");
             entity.Property(e => e.Espropietario).HasColumnName("espropietario");
             entity.Property(e => e.Mail)

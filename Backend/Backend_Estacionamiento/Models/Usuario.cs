@@ -15,7 +15,7 @@ public partial class Usuario
 
     public string Username { get; set; } = null!;
 
-    public string Contraseña { get; set; } = null!;
+    public string Contrasena { get; set; } = null!;
 
     public bool? Esconductor { get; set; }
 
