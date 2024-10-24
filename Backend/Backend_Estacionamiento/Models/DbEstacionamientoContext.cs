@@ -29,9 +29,10 @@ public partial class DbEstacionamientoContext : DbContext
 
     public virtual DbSet<Pago> Pagos { get; set; }
 
-    public virtual DbSet<Provincium> Provincia { get; set; }
+    public virtual DbSet<Provincia> Provincias { get; set; }
 
     public virtual DbSet<Reserva> Reservas { get; set; }
+    public virtual DbSet<ReservaEstado> ReservaEstados { get; set; }
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
@@ -52,10 +53,9 @@ public partial class DbEstacionamientoContext : DbContext
                 .HasColumnName("calle");
             entity.Property(e => e.Capacidad).HasColumnName("capacidad");
             entity.Property(e => e.Descripcion).HasColumnName("descripcion");
-            entity.Property(e => e.Estado)
-                .HasMaxLength(50)
-                .HasDefaultValueSql("'disponible'::character varying")
-                .HasColumnName("estado");
+            entity.Property(e => e.Disponible)
+                    .HasColumnName("disponible")
+                    .HasDefaultValue(true);  
             entity.Property(e => e.Idlocalidad).HasColumnName("idlocalidad");
             entity.Property(e => e.Idpropietario).HasColumnName("idpropietario");
             entity.Property(e => e.Preciohora)
@@ -169,7 +169,7 @@ public partial class DbEstacionamientoContext : DbContext
                 .HasConstraintName("pago_idreserva_fkey");
         });
 
-        modelBuilder.Entity<Provincium>(entity =>
+        modelBuilder.Entity<Provincia>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("provincia_pkey");
 
@@ -188,10 +188,6 @@ public partial class DbEstacionamientoContext : DbContext
             entity.ToTable("reserva");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Estado)
-                .HasMaxLength(50)
-                .HasDefaultValueSql("'activa'::character varying")
-                .HasColumnName("estado");
             entity.Property(e => e.Fechafin)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("fechafin");
@@ -200,6 +196,7 @@ public partial class DbEstacionamientoContext : DbContext
                 .HasColumnName("fechainicio");
             entity.Property(e => e.Idconductor).HasColumnName("idconductor");
             entity.Property(e => e.Idgaraje).HasColumnName("idgaraje");
+            entity.Property(e => e.Idreservaestado).HasColumnName("idreservaestado");
 
             entity.HasOne(d => d.IdconductorNavigation).WithMany(p => p.Reservas)
                 .HasForeignKey(d => d.Idconductor)
@@ -208,6 +205,22 @@ public partial class DbEstacionamientoContext : DbContext
             entity.HasOne(d => d.IdgarajeNavigation).WithMany(p => p.Reservas)
                 .HasForeignKey(d => d.Idgaraje)
                 .HasConstraintName("reserva_idgaraje_fkey");
+
+            entity.HasOne(d => d.IdreservaestadoNavigation).WithMany(p => p.Reservas)
+                .HasForeignKey(d => d.Idreservaestado)
+                .HasConstraintName("reserva_idreservaestado_fkey");
+        });
+
+        modelBuilder.Entity<ReservaEstado>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("reservaestado_pkey");
+
+            entity.ToTable("reservaestado");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Nombre)
+                .HasMaxLength(100)
+                .HasColumnName("nombre");
         });
 
         modelBuilder.Entity<Usuario>(entity =>
