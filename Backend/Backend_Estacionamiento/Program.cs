@@ -1,5 +1,7 @@
 using Npgsql;
 using Microsoft.Extensions.Configuration;
+using Backend_Estacionamiento.Models;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,11 +9,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+builder.Services.AddDbContext<DbEstacionamientoContext>(options =>
+    options.UseNpgsql(connectionString));
+
 // Agregar servicios al contenedor.
 builder.Services.AddControllers();
 // Configuración de Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 // Crear una nueva conexión a la base de datos para probarla
 using (var conn = new NpgsqlConnection(connectionString))
