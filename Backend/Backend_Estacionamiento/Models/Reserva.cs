@@ -16,8 +16,6 @@ public partial class Reserva
 
     public DateTime Fechafin { get; set; }
 
-    public string? Estado { get; set; }
-
     public virtual Usuario? IdconductorNavigation { get; set; }
 
     public virtual Garaje? IdgarajeNavigation { get; set; }
