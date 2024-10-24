@@ -15,5 +15,5 @@ public partial class Localidad
 
     public virtual ICollection<Garaje> Garajes { get; } = new List<Garaje>();
 
-    public virtual Provincium? IdprovinciaNavigation { get; set; }
+    public virtual Provincia? IdprovinciaNavigation { get; set; }
 }
