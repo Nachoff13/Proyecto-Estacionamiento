@@ -11,7 +11,7 @@ public partial class Vehiculo
 
     public int? Idmodelo { get; set; }
 
-    public int Matricula { get; set; }
+    public string Matricula { get; set; }
 
     public virtual Usuario? IdconductorNavigation { get; set; }
 

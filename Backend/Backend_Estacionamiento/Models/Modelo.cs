@@ -9,7 +9,7 @@ public partial class Modelo
 
     public int? Idmarca { get; set; }
 
-    public int Nombre { get; set; }
+    public string Nombre { get; set; }
 
     public virtual Marca? IdmarcaNavigation { get; set; }
 
