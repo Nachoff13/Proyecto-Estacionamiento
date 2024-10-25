@@ -1,4 +1,5 @@
-using Backend_Estacionamiento.Models;
+using Data.Models;
+using Data.Contexto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace Backend_Estacionamiento.Controllers
         [HttpGet(Name = "GetUsuarios")]
         public ActionResult<IEnumerable<Usuario>> Get()
         {
-            var usuarios = _dbContext.Usuarios.ToList();
+            var usuarios = _dbContext.Usuario.ToList();
             return Ok(usuarios); 
         }
     }
