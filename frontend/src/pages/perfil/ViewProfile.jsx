@@ -1,6 +1,19 @@
 import React, { useState } from 'react';
-import { Box, Typography, Grid, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Modal } from '@mui/material';
-import avatar from './avatar.png'; 
+import {
+  Box,
+  Typography,
+  Grid,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Modal
+} from '@mui/material';
+import avatar from './avatar.png';
 import fakeGarajes from 'data/data-garajes'; // Importa los datos de garajes
 import fakeGarajeEstado from 'data/data-garajeestado'; // Importa los estados de los garajes
 import fakeFotosGarajes from 'data/data-garajefoto'; // Importa las fotos de los garajes
@@ -8,7 +21,7 @@ import fakeLocalidades from 'data/data-localidades'; // Importa las localidades
 import fakeUsuarios from 'data/data-usuarios'; // Importa los usuarios
 
 // Simulación de un usuario logueado
-const currentUser = fakeUsuarios.find(user => user.username === 'johndoe'); // Puedes cambiar esto para obtener el usuario dinámicamente
+const currentUser = fakeUsuarios.find((user) => user.username === 'johndoe'); // Puedes cambiar esto para obtener el usuario dinámicamente
 
 export default function UserProfile() {
   // Estado para manejar el modal de la imagen
@@ -16,23 +29,23 @@ export default function UserProfile() {
   const [selectedImage, setSelectedImage] = useState('');
 
   // Filtra los garajes del usuario actual (idPropietario)
-  const userGarages = fakeGarajes.filter(garage => garage.idPropietario === currentUser.id);
+  const userGarages = fakeGarajes.filter((garage) => garage.idPropietario === currentUser.id);
 
   // Función para obtener el nombre del estado del garaje
   const getGarageState = (idGarajeEstado) => {
-    const estado = fakeGarajeEstado.find(estado => estado.id === idGarajeEstado);
+    const estado = fakeGarajeEstado.find((estado) => estado.id === idGarajeEstado);
     return estado ? estado.nombre : 'Desconocido';
   };
 
   // Función para obtener el nombre de la localidad
   const getLocalidadName = (idLocalidad) => {
-    const localidad = fakeLocalidades.find(localidad => localidad.id === idLocalidad);
+    const localidad = fakeLocalidades.find((localidad) => localidad.id === idLocalidad);
     return localidad ? localidad.nombre : 'Desconocido';
   };
 
   // Función para obtener las imágenes del garaje
   const getGarageImages = (idGaraje) => {
-    return fakeFotosGarajes.filter(foto => foto.idGaraje === idGaraje);
+    return fakeFotosGarajes.filter((foto) => foto.idGaraje === idGaraje);
   };
 
   // Maneja el evento de abrir el modal
@@ -53,12 +66,7 @@ export default function UserProfile() {
         Perfil
       </Typography>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexGrow: 1, justifyContent: 'center' }}>
-        <Box
-          component="img"
-          alt="Perfil de usuario"
-          src={avatar} 
-          sx={{ borderRadius: '50%', width: '180px', height: '180px', mb: 3 }} 
-        />
+        <Box component="img" alt="Perfil de usuario" src={avatar} sx={{ borderRadius: '50%', width: '180px', height: '180px', mb: 3 }} />
         <Typography variant="h3" component="div" sx={{ mb: 1 }}>
           {currentUser.nombre} {currentUser.apellido}
         </Typography>
@@ -74,18 +82,18 @@ export default function UserProfile() {
       </Box>
 
       {/* Tabla de Mis Garages */}
-      <Typography variant="h4" component="h2" sx={{ mb: 1 }}> 
+      <Typography variant="h4" component="h2" sx={{ mb: 1 }}>
         Mis Garages
       </Typography>
-      <TableContainer component={Paper} sx={{ mt: 1 }}> 
+      <TableContainer component={Paper} sx={{ mt: 1, overflowX: 'auto' }}>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell>Localidad</TableCell>
-              <TableCell>Altura</TableCell>
+              <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Altura</TableCell>
               <TableCell>Calle</TableCell>
               <TableCell>Precio por Hora</TableCell>
-              <TableCell>Capacidad</TableCell>
+              <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Capacidad</TableCell>
               <TableCell>Estado</TableCell>
               <TableCell>Imágenes</TableCell>
             </TableRow>
@@ -94,10 +102,12 @@ export default function UserProfile() {
             {userGarages.map((garage, index) => (
               <TableRow key={index}>
                 <TableCell>{getLocalidadName(garage.idLocalidad)}</TableCell>
-                <TableCell>{garage.altura}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{garage.altura}</TableCell>
                 <TableCell>{garage.calle}</TableCell>
                 <TableCell>{`$${garage.precioHora}`}</TableCell>
-                <TableCell>{garage.capacidad} {garage.capacidad > 1 ? 'autos' : 'auto'}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
+                  {garage.capacidad} {garage.capacidad > 1 ? 'autos' : 'auto'}
+                </TableCell>
                 <TableCell>{getGarageState(garage.idGarajeEstado)}</TableCell>
                 <TableCell>
                   {getGarageImages(garage.id).map((img, idx) => (
@@ -114,32 +124,34 @@ export default function UserProfile() {
 
       {/* Modal para mostrar imagen ampliada */}
       <Modal open={open} onClose={handleClose}>
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '80%',
-          bgcolor: 'background.paper',
-          borderRadius: '8px',
-          boxShadow: 24,
-          p: 4,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '80%',
+            bgcolor: 'background.paper',
+            borderRadius: '8px',
+            boxShadow: 24,
+            p: 4,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
           <img src={selectedImage} alt="Imagen del garaje" style={{ maxWidth: '100%', maxHeight: '100%' }} />
         </Box>
       </Modal>
 
-      <Grid container spacing={3} justifyContent="flex-end" sx={{ mt: 10 }}> 
+      <Grid container spacing={3} justifyContent="flex-end" sx={{ mt: 10 }}>
         <Grid item>
-          <Button variant="contained" color="primary" size="medium" sx={{ minWidth: '120px' }}> 
+          <Button variant="contained" color="primary" size="medium" sx={{ minWidth: '120px' }}>
             Editar Perfil
           </Button>
         </Grid>
         <Grid item>
-          <Button variant="outlined" color="secondary" size="medium" sx={{ minWidth: '120px' }}> 
+          <Button variant="outlined" color="secondary" size="medium" sx={{ minWidth: '120px' }}>
             Cerrar Sesión
           </Button>
         </Grid>
