@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 // material-ui
-import { Typography, Button, Chip , Fab} from "@mui/material";
+import { Typography, Button, Chip , Fab, Tooltip, IconButton} from "@mui/material";
 
 // project import
 import MainCard from "components/MainCard";
@@ -16,6 +16,10 @@ import fakeUsuarios from "data/data-usuarios";
 import fakeLocalidades from "data/data-localidades";
 import fakeGarajeEstado from "data/data-garajeestado";
 import { useNavigate } from "react-router-dom";
+
+//icons
+import EditOutlined from '@ant-design/icons/EditOutlined';
+import HistoryOutlined from '@ant-design/icons/HistoryOutlined';
 
 // ==============================|| HOME PROPIETARIO ||============================== //
 
@@ -147,13 +151,16 @@ export default function HomePropietario() {
               justifyContent: "flex-end",
             }}
           >
-            <Button
-            variant="contained"
-            color="primary"
-            onClick={() => handleOpen(garaje)}
-          >
-            Editar
-          </Button>
+            <Tooltip title="Ver Historial">
+              <IconButton color="primary">
+                <HistoryOutlined style={{ fontSize: '24px' }}  />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Editar">
+              <IconButton color="success" onClick={() => handleOpen(garaje)}>
+                <EditOutlined style={{ fontSize: '24px' }} />
+              </IconButton>
+            </Tooltip>
           </div>
         </MainCard>
       ))}
