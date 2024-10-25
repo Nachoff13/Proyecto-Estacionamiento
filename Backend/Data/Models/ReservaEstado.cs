@@ -1,4 +1,4 @@
-﻿namespace Backend_Estacionamiento.Models
+﻿namespace Data.Models
 {
     public class ReservaEstado
     {

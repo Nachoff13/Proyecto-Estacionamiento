@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Backend_Estacionamiento.Models;
+namespace Data.Models;
 
 public partial class Metodopago
 {

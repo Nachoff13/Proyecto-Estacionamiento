@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Data.Models;
 
-namespace Backend_Estacionamiento.Models;
+namespace Data.Contexto;
 
 public partial class DbEstacionamientoContext : DbContext
 {
@@ -15,28 +16,28 @@ public partial class DbEstacionamientoContext : DbContext
     {
     }
 
-    public virtual DbSet<Garaje> Garajes { get; set; }
+    public virtual DbSet<Garaje> Garaje { get; set; }
 
-    public virtual DbSet<Garajefoto> Garajefotos { get; set; }
+    public virtual DbSet<Garajefoto> Garajefoto { get; set; }
 
-    public virtual DbSet<Localidad> Localidads { get; set; }
+    public virtual DbSet<Localidad> Localidad { get; set; }
 
-    public virtual DbSet<Marca> Marcas { get; set; }
+    public virtual DbSet<Marca> Marca { get; set; }
 
-    public virtual DbSet<Metodopago> Metodopagos { get; set; }
+    public virtual DbSet<Metodopago> Metodopago { get; set; }
 
-    public virtual DbSet<Modelo> Modelos { get; set; }
+    public virtual DbSet<Modelo> Modelo { get; set; }
 
-    public virtual DbSet<Pago> Pagos { get; set; }
+    public virtual DbSet<Pago> Pago { get; set; }
 
-    public virtual DbSet<Provincia> Provincias { get; set; }
+    public virtual DbSet<Provincia> Provincia { get; set; }
 
-    public virtual DbSet<Reserva> Reservas { get; set; }
-    public virtual DbSet<ReservaEstado> ReservaEstados { get; set; }
+    public virtual DbSet<Reserva> Reserva { get; set; }
+    public virtual DbSet<ReservaEstado> ReservaEstado { get; set; }
 
-    public virtual DbSet<Usuario> Usuarios { get; set; }
+    public virtual DbSet<Usuario> Usuario { get; set; }
 
-    public virtual DbSet<Vehiculo> Vehiculos { get; set; }
+    public virtual DbSet<Vehiculo> Vehiculo { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

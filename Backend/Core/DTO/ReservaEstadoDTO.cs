@@ -1,11 +1,11 @@
-﻿namespace Backend_Estacionamiento.DTOs
+﻿namespace Core.DTO
 {
     public class ReservaEstadoDTO
     {
         public string Nombre { get; set; }
     }
 
-    public class ProvinciaConId : ReservaEstadoDTO
+    public class ReservaEstadoConId : ReservaEstadoDTO
     {
         public int Id { get; set; }
     }
