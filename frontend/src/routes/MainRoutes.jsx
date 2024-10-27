@@ -16,6 +16,7 @@ const HomePropietario = Loadable(lazy(() => import('pages/home/home-propietario'
 const ReservaForm = Loadable(lazy(() => import('pages/reserva/ReservaForm')));
 const HomeConductor = Loadable(lazy(() => import('pages/home/home-conductor')));
 const AltaGaraje = Loadable(lazy(() => import('pages/altaGaraje/alta-garaje')));
+const AltaVehiculo = Loadable(lazy(() => import('pages/altaVehiculo/alta-vehiculo')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -62,6 +63,10 @@ const MainRoutes = {
     {
       path: 'apps/profiles/account/basic', // Ruta para ver perfil
       element: <ViewProfile /> // Carga del componente ViewProfile
+    },
+    {
+      path: 'alta-vehiculo',
+      element: <AltaVehiculo />
     }
   ]
 };
