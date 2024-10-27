@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -27,6 +27,13 @@ export default function UserProfile() {
   // Estado para manejar el modal de la imagen
   const [open, setOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
+  const [modo, setModo] = useState(false);
+
+  useEffect(() => {
+    // Obtener el modo desde localStorage
+    const savedModo = localStorage.getItem('modo');
+    setModo(savedModo ? JSON.parse(savedModo) : false);
+  }, []);
 
   // Filtra los garajes del usuario actual (idPropietario)
   const userGarages = fakeGarajes.filter((garage) => garage.idPropietario === currentUser.id);
@@ -74,56 +81,59 @@ export default function UserProfile() {
           @{currentUser.username}
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 3, textAlign: 'center', maxWidth: 600, fontSize: '1.2rem' }}>
-          Aquí podría ir una breve descripción del usuario.
+        Argentino de corazón, amante del fútbol, el mate y los asados. Disfruto de las pequeñas cosas de la vida, rodeado de amigos y familia.
         </Typography>
         <Typography variant="body1" sx={{ mb: 3, fontSize: '1.2rem' }}>
           Email: {currentUser.mail}
         </Typography>
       </Box>
 
-      {/* Tabla de Mis Garages */}
-      <Typography variant="h4" component="h2" sx={{ mb: 1 }}>
-        Mis Garages
-      <Box sx={{ width: '100%', overflowX: 'auto' }}>
-        <TableContainer component={Paper} sx={{ mt: 0 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Localidad</TableCell>
-                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Altura</TableCell>
-                <TableCell>Calle</TableCell>
-                <TableCell>Precio por Hora</TableCell>
-                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Capacidad</TableCell>
-                <TableCell>Estado</TableCell>
-                <TableCell>Imágenes</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {userGarages.map((garage, index) => (
-                <TableRow key={index}>
-                  <TableCell>{getLocalidadName(garage.idLocalidad)}</TableCell>
-                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{garage.altura}</TableCell>
-                  <TableCell>{garage.calle}</TableCell>
-                  <TableCell>{`$${garage.precioHora}`}</TableCell>
-                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
-                    {garage.capacidad} {garage.capacidad > 1 ? 'autos' : 'auto'}
-                  </TableCell>
-                  <TableCell>{getGarageState(garage.idGarajeEstado)}</TableCell>
-                  <TableCell>
-                    {getGarageImages(garage.id).map((img, idx) => (
-                      <Button key={idx} onClick={() => handleOpen(img.foto)} sx={{ padding: 0, minWidth: 'auto' }}>
-                        <img src={img.foto} alt="Garage" width="80" style={{ marginRight: '8px' }} />
-                      </Button>
-                    ))}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
-      </Typography>
-
+      {/* Condicionalmente renderizar la tabla de Mis Garages */}
+      {modo === false && (
+        <>
+          <Typography variant="h4" component="h2" sx={{ mb: 1 }}>
+            Mis Garages
+          <Box sx={{ width: '100%', overflowX: 'auto' }}>
+            <TableContainer component={Paper} sx={{ mt: 0 }}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Localidad</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Altura</TableCell>
+                    <TableCell>Calle</TableCell>
+                    <TableCell>Precio por Hora</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Capacidad</TableCell>
+                    <TableCell>Estado</TableCell>
+                    <TableCell>Imágenes</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {userGarages.map((garage, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{getLocalidadName(garage.idLocalidad)}</TableCell>
+                      <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{garage.altura}</TableCell>
+                      <TableCell>{garage.calle}</TableCell>
+                      <TableCell>{`$${garage.precioHora}`}</TableCell>
+                      <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
+                        {garage.capacidad} {garage.capacidad > 1 ? 'autos' : 'auto'}
+                      </TableCell>
+                      <TableCell>{getGarageState(garage.idGarajeEstado)}</TableCell>
+                      <TableCell>
+                        {getGarageImages(garage.id).map((img, idx) => (
+                          <Button key={idx} onClick={() => handleOpen(img.foto)} sx={{ padding: 0, minWidth: 'auto' }}>
+                            <img src={img.foto} alt="Garage" width="80" style={{ marginRight: '8px' }} />
+                          </Button>
+                        ))}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+          </Typography>
+        </>
+      )}
 
       {/* Modal para mostrar imagen ampliada */}
       <Modal open={open} onClose={handleClose}>
