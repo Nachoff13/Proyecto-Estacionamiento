@@ -125,14 +125,11 @@ export default function Profile() {
                           <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
                           <Stack>
                             <Typography variant="h6">John Doe</Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              UI/UX Designer
-                            </Typography>
                           </Stack>
                         </Stack>
                       </Grid>
                       <Grid item>
-                        <Tooltip title="Logout">
+                        <Tooltip title="Cerrar sesión">
                           <IconButton size="large" sx={{ color: 'text.primary' }}>
                             <LogoutOutlined />
                           </IconButton>
@@ -152,7 +149,7 @@ export default function Profile() {
                           textTransform: 'capitalize'
                         }}
                         icon={<UserOutlined style={{ marginBottom: 0, marginRight: '10px' }} />}
-                        label="Profile"
+                        label="Perfil"
                         {...a11yProps(0)}
                       />
                       <Tab
@@ -164,7 +161,7 @@ export default function Profile() {
                           textTransform: 'capitalize'
                         }}
                         icon={<SettingOutlined style={{ marginBottom: 0, marginRight: '10px' }} />}
-                        label="Setting"
+                        label="Configuración"
                         {...a11yProps(1)}
                       />
                     </Tabs>

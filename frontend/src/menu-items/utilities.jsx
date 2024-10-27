@@ -41,13 +41,6 @@ const utilities = {
       url: '/home-propietario',
       icon: CarOutlined
     },
-    {
-      id: 'util-typography',
-      title: 'Typography',
-      type: 'item',
-      url: '/typography',
-      icon: icons.FontSizeOutlined
-    },
   ]
 };
 
