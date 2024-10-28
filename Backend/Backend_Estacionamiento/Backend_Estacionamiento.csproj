@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\**" />
+    <Content Remove="Data\**" />
+    <EmbeddedResource Remove="Data\**" />
+    <None Remove="Data\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
@@ -19,9 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="DTO\" />
-    <Folder Include="Models\" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Data\Data.csproj" />
+    <ProjectReference Include="..\Servicios\Servicios.csproj" />
   </ItemGroup>
 
 </Project>
