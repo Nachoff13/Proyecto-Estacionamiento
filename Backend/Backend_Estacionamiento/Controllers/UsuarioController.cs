@@ -16,7 +16,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("Agregar")]
-        public async Task<ActionResult<int>> Agregar(Core.DTO.UsuarioDTO usuario)
+        public async Task<ActionResult<int>> Agregar(Core.DTO.UsuarioCrearDTO usuario)
         {
             var resultado = await _usuario.Agregar(usuario).ConfigureAwait(false);
             return Ok(resultado);

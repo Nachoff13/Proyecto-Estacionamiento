@@ -8,16 +8,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hashing;
 
 namespace Servicios.Servicios
 {
     public interface IUsuario
     {
-        Task<int> Agregar(Core.DTO.UsuarioDTO usuario);
+        Task<int> Agregar(Core.DTO.UsuarioCrearDTO usuario);
         Task<bool> Eliminar(int id);
         Task<bool> Modificar(UsuarioConId usuario);
-        Task<UsuarioConId> ObtenerIndividual(int id);
-        Task<List<UsuarioConId>> Obtener();
+        Task<UsuarioConIdSinContrasena> ObtenerIndividual(int id);
+        Task<List<UsuarioConIdSinContrasena>> Obtener();
     }
 
     public class UsuarioServicio : IUsuario
@@ -29,7 +30,7 @@ namespace Servicios.Servicios
             _db = db;
         }
 
-        public async Task<int> Agregar(Core.DTO.UsuarioDTO usuario)
+        public async Task<int> Agregar(Core.DTO.UsuarioCrearDTO usuario)
         {
             try
             {
@@ -39,7 +40,11 @@ namespace Servicios.Servicios
                 if (validadorResultado.IsValid)
                 {
                     var nuevoUsuario = usuario.Adapt<Data.Models.Usuario>();
-                    //nuevoUsuario.Baja = false;
+
+                    // hashear la contraseña
+                    var hasher = new Hashear();
+                    nuevoUsuario.Contrasena = hasher.HashearConSHA256(usuario.Contrasena);
+
                     await _db.Usuario.AddAsync(nuevoUsuario).ConfigureAwait(false);
                     await _db.SaveChangesAsync().ConfigureAwait(false);
                     return nuevoUsuario.Id;
@@ -71,6 +76,10 @@ namespace Servicios.Servicios
                         usuarioModelo.Nombre = usuario.Nombre;
                         usuarioModelo.Apellido = usuario.Apellido;
                         usuarioModelo.Mail = usuario.Mail;
+                        usuarioModelo.Username = usuario.Username;
+                        // hasheo la nueva contraseña
+                        var hasher = new Hashear();
+                        usuarioModelo.Contrasena = hasher.HashearConSHA256(usuario.Contrasena);
                         usuarioModelo.Esconductor = usuario.Esconductor;
                         usuarioModelo.Espropietario = usuario.Espropietario;
                         
@@ -116,12 +125,12 @@ namespace Servicios.Servicios
             }
         }
 
-        public async Task<List<UsuarioConId>> Obtener()
+        public async Task<List<UsuarioConIdSinContrasena>> Obtener()
         {
             try
             {
                 List<Data.Models.Usuario> modelos = _db.Usuario.ToList();
-                return modelos.Adapt<List<UsuarioConId>>();
+                return modelos.Adapt<List<UsuarioConIdSinContrasena>>();
             }
             catch (Exception ex)
             {
@@ -129,7 +138,7 @@ namespace Servicios.Servicios
             }
         }
 
-        public async Task<UsuarioConId> ObtenerIndividual(int id)
+        public async Task<UsuarioConIdSinContrasena> ObtenerIndividual(int id)
         {
             try
             {
@@ -137,7 +146,7 @@ namespace Servicios.Servicios
 
                 if (modeloUsuario != null)
                 {
-                    return modeloUsuario.Adapt<UsuarioConId>();
+                    return modeloUsuario.Adapt<UsuarioConIdSinContrasena>();
                 }
                 else
                 {
