@@ -19,6 +19,7 @@ import fakeGarajeEstado from 'data/data-garajeestado'; // Importa los estados de
 import fakeFotosGarajes from 'data/data-garajefoto'; // Importa las fotos de los garajes
 import fakeLocalidades from 'data/data-localidades'; // Importa las localidades
 import fakeUsuarios from 'data/data-usuarios'; // Importa los usuarios
+import EditProfileModal from './EditProfileModal'; // Importa el nuevo componente
 
 // Simulación de un usuario logueado
 const currentUser = fakeUsuarios.find((user) => user.username === 'johndoe'); // Puedes cambiar esto para obtener el usuario dinámicamente
@@ -28,6 +29,12 @@ export default function UserProfile() {
   const [open, setOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
   const [modo, setModo] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [profileData, setProfileData] = useState({
+    username: currentUser.username,
+    bio: 'Argentino de corazón, amante del fútbol, el mate y los asados. Disfruto de las pequeñas cosas de la vida, rodeado de amigos y familia.',
+    image: avatar
+  });
 
   useEffect(() => {
     // Obtener el modo desde localStorage
@@ -55,35 +62,45 @@ export default function UserProfile() {
     return fakeFotosGarajes.filter((foto) => foto.idGaraje === idGaraje);
   };
 
-  // Maneja el evento de abrir el modal
+  // Maneja el evento de abrir el modal de imagen
   const handleOpen = (image) => {
     setSelectedImage(image);
     setOpen(true);
   };
 
-  // Maneja el evento de cerrar el modal
+  // Maneja el evento de cerrar el modal de imagen
   const handleClose = () => {
     setOpen(false);
     setSelectedImage('');
   };
 
+  // Maneja el evento de abrir el modal de edición
+  const handleEditOpen = () => {
+    setEditOpen(true);
+  };
+
+  // Maneja el evento de cerrar el modal de edición
+  const handleEditClose = () => {
+    setEditOpen(false);
+  };
+
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', padding: 4, bgcolor: '#f5f5f5' }}>
-      <Typography variant="h2" component="h1" sx={{ mb: 3, alignSelf: 'flex-start' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', padding: 2, bgcolor: '#f5f5f5' }}>
+      <Typography variant="h3" component="h1" sx={{ mb: -4, alignSelf: 'flex-start' }}>
         Perfil
       </Typography>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexGrow: 1, justifyContent: 'center' }}>
-        <Box component="img" alt="Perfil de usuario" src={avatar} sx={{ borderRadius: '50%', width: '180px', height: '180px', mb: 3 }} />
-        <Typography variant="h3" component="div" sx={{ mb: 1 }}>
+        <Box component="img" alt="Perfil de usuario" src={profileData.image} sx={{ borderRadius: '50%', width: '180px', height: '180px', mb: 3 }} />
+        <Typography variant="h2" component="div" sx={{ mb: 1 }}>
           {currentUser.nombre} {currentUser.apellido}
         </Typography>
-        <Typography variant="h5" color="text.secondary" sx={{ mb: 2 }}>
-          @{currentUser.username}
+        <Typography variant="h4" color="text.secondary" sx={{ mb: 2 }}>
+          @{profileData.username}
         </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 3, textAlign: 'center', maxWidth: 600, fontSize: '1.2rem' }}>
-        Argentino de corazón, amante del fútbol, el mate y los asados. Disfruto de las pequeñas cosas de la vida, rodeado de amigos y familia.
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 2, textAlign: 'center', maxWidth: 600, fontSize: '1.2rem' }}>
+          {profileData.bio}
         </Typography>
-        <Typography variant="body1" sx={{ mb: 3, fontSize: '1.2rem' }}>
+        <Typography variant="body1" sx={{ mb: 2, fontSize: '1.2rem' }}>
           Email: {currentUser.mail}
         </Typography>
       </Box>
@@ -93,8 +110,8 @@ export default function UserProfile() {
         <>
           <Typography variant="h4" component="h2" sx={{ mb: 1 }}>
             Mis Garages
-          <Box sx={{ width: '100%', overflowX: 'auto' }}>
-            <TableContainer component={Paper} sx={{ mt: 0 }}>
+          <Box sx={{ width: '95%', overflowX: 'auto' }}>
+            <TableContainer component={Paper} sx={{ mt: 2 }}>
               <Table>
                 <TableHead>
                   <TableRow>
@@ -157,9 +174,17 @@ export default function UserProfile() {
         </Box>
       </Modal>
 
+      {/* Modal para editar perfil */}
+      <EditProfileModal
+        open={editOpen}
+        handleClose={handleEditClose}
+        profileData={profileData}
+        setProfileData={setProfileData}
+      />
+
       <Grid container spacing={3} justifyContent="flex-end" sx={{ mt: 10 }}>
         <Grid item>
-          <Button variant="contained" color="primary" size="medium" sx={{ minWidth: '120px' }}>
+          <Button variant="contained" color="primary" size="medium" sx={{ minWidth: '120px' }} onClick={handleEditOpen}>
             Editar Perfil
           </Button>
         </Grid>
