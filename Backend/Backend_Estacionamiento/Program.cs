@@ -28,6 +28,7 @@ builder.Services.AddScoped<IGarajefoto, GarajefotoServicio>();
 builder.Services.AddScoped<IModelo, ModeloServicio>();
 builder.Services.AddScoped<IPago, PagoServicio>();
 builder.Services.AddScoped<IMetodopago, MetodopagoServicio>();
+builder.Services.AddScoped<IUsuario, UsuarioServicio>();
 
 
 
