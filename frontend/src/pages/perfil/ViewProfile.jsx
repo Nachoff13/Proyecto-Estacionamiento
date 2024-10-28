@@ -19,7 +19,8 @@ import fakeGarajeEstado from 'data/data-garajeestado'; // Importa los estados de
 import fakeFotosGarajes from 'data/data-garajefoto'; // Importa las fotos de los garajes
 import fakeLocalidades from 'data/data-localidades'; // Importa las localidades
 import fakeUsuarios from 'data/data-usuarios'; // Importa los usuarios
-import EditProfileModal from './EditProfileModal'; // Importa el nuevo componente
+import EditProfileModal from './EditProfileModal'; // Importa el componente de edición de perfil
+import ChangeProfileImageModal from './ChangeProfileImageModal'; // Importa el nuevo componente
 
 // Simulación de un usuario logueado
 const currentUser = fakeUsuarios.find((user) => user.username === 'johndoe'); // Puedes cambiar esto para obtener el usuario dinámicamente
@@ -30,10 +31,11 @@ export default function UserProfile() {
   const [selectedImage, setSelectedImage] = useState('');
   const [modo, setModo] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  const [imageModalOpen, setImageModalOpen] = useState(false);
   const [profileData, setProfileData] = useState({
     username: currentUser.username,
     bio: 'Argentino de corazón, amante del fútbol, el mate y los asados. Disfruto de las pequeñas cosas de la vida, rodeado de amigos y familia.',
-    image: avatar
+    image: localStorage.getItem('profileImage') || avatar // Cargar la imagen desde localStorage o usar la imagen por defecto
   });
 
   useEffect(() => {
@@ -84,13 +86,40 @@ export default function UserProfile() {
     setEditOpen(false);
   };
 
+  // Maneja el evento de abrir el modal de cambio de imagen
+  const handleImageModalOpen = () => {
+    setImageModalOpen(true);
+  };
+
+  // Maneja el evento de cerrar el modal de cambio de imagen
+  const handleImageModalClose = () => {
+    setImageModalOpen(false);
+  };
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', padding: 2, bgcolor: '#f5f5f5' }}>
       <Typography variant="h3" component="h1" sx={{ mb: -4, alignSelf: 'flex-start' }}>
         Perfil
       </Typography>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexGrow: 1, justifyContent: 'center' }}>
-        <Box component="img" alt="Perfil de usuario" src={profileData.image} sx={{ borderRadius: '50%', width: '180px', height: '180px', mb: 3 }} />
+        <Box
+          component="img"
+          alt="Perfil de usuario"
+          src={profileData.image}
+          sx={{
+            borderRadius: '50%',
+            width: '180px',
+            height: '180px',
+            mb: 3,
+            cursor: 'pointer',
+            transition: 'transform 0.3s, opacity 0.3s',
+            '&:hover': {
+              transform: 'scale(1.1)',
+              opacity: 0.8
+            }
+          }}
+          onClick={handleImageModalOpen}
+        />
         <Typography variant="h2" component="div" sx={{ mb: 1 }}>
           {currentUser.nombre} {currentUser.apellido}
         </Typography>
@@ -110,44 +139,44 @@ export default function UserProfile() {
         <>
           <Typography variant="h4" component="h2" sx={{ mb: 1 }}>
             Mis Garages
-          <Box sx={{ width: '95%', overflowX: 'auto' }}>
-            <TableContainer component={Paper} sx={{ mt: 2 }}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Localidad</TableCell>
-                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Altura</TableCell>
-                    <TableCell>Calle</TableCell>
-                    <TableCell>Precio por Hora</TableCell>
-                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Capacidad</TableCell>
-                    <TableCell>Estado</TableCell>
-                    <TableCell>Imágenes</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {userGarages.map((garage, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{getLocalidadName(garage.idLocalidad)}</TableCell>
-                      <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{garage.altura}</TableCell>
-                      <TableCell>{garage.calle}</TableCell>
-                      <TableCell>{`$${garage.precioHora}`}</TableCell>
-                      <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
-                        {garage.capacidad} {garage.capacidad > 1 ? 'autos' : 'auto'}
-                      </TableCell>
-                      <TableCell>{getGarageState(garage.idGarajeEstado)}</TableCell>
-                      <TableCell>
-                        {getGarageImages(garage.id).map((img, idx) => (
-                          <Button key={idx} onClick={() => handleOpen(img.foto)} sx={{ padding: 0, minWidth: 'auto' }}>
-                            <img src={img.foto} alt="Garage" width="80" style={{ marginRight: '8px' }} />
-                          </Button>
-                        ))}
-                      </TableCell>
+            <Box sx={{ width: '95%', margin: '0 auto', overflowX: 'auto' }}>
+              <TableContainer component={Paper} sx={{ mt: 2 }}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Localidad</TableCell>
+                      <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Altura</TableCell>
+                      <TableCell>Calle</TableCell>
+                      <TableCell>Precio por Hora</TableCell>
+                      <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Capacidad</TableCell>
+                      <TableCell>Estado</TableCell>
+                      <TableCell>Imágenes</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
+                  </TableHead>
+                  <TableBody>
+                    {userGarages.map((garage, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{getLocalidadName(garage.idLocalidad)}</TableCell>
+                        <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{garage.altura}</TableCell>
+                        <TableCell>{garage.calle}</TableCell>
+                        <TableCell>{`$${garage.precioHora}`}</TableCell>
+                        <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
+                          {garage.capacidad} {garage.capacidad > 1 ? 'autos' : 'auto'}
+                        </TableCell>
+                        <TableCell>{getGarageState(garage.idGarajeEstado)}</TableCell>
+                        <TableCell>
+                          {getGarageImages(garage.id).map((img, idx) => (
+                            <Button key={idx} onClick={() => handleOpen(img.foto)} sx={{ padding: 0, minWidth: 'auto' }}>
+                              <img src={img.foto} alt="Garage" width="80" style={{ marginRight: '8px' }} />
+                            </Button>
+                          ))}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
           </Typography>
         </>
       )}
@@ -175,12 +204,10 @@ export default function UserProfile() {
       </Modal>
 
       {/* Modal para editar perfil */}
-      <EditProfileModal
-        open={editOpen}
-        handleClose={handleEditClose}
-        profileData={profileData}
-        setProfileData={setProfileData}
-      />
+      <EditProfileModal open={editOpen} handleClose={handleEditClose} profileData={profileData} setProfileData={setProfileData} />
+
+      {/* Modal para cambiar imagen de perfil */}
+      <ChangeProfileImageModal open={imageModalOpen} handleClose={handleImageModalClose} setProfileData={setProfileData} />
 
       <Grid container spacing={3} justifyContent="flex-end" sx={{ mt: 10 }}>
         <Grid item>
