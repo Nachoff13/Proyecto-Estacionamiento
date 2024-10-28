@@ -74,10 +74,12 @@ export default function AuthRegister() {
     setFieldValue(name, checked);
   };
 
-  const handleSubmit = (values, { setSubmitting }) => {
-
+  const handleSubmit = async (values, { setSubmitting }) => {
+    
+    console.log('Se presiono el boton');
+    alert('Formulario enviado');
+    
     console.log('Formulario enviado con los valores:', values);
-    // Crear el objeto limpio para la API
     const dataForAPI = {
       nombre: values.nombre,
       apellido: values.apellido,
@@ -88,10 +90,30 @@ export default function AuthRegister() {
       espropietario: values.espropietario
     };
 
-    // Aquí puedes llamar a la API con el objeto dataForAPI
     console.log('Datos para la API:', dataForAPI);
 
-    setSubmitting(false);
+    try {
+      const response = await fetch("https://localhost:7294/Usuario/Agregar", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataForAPI),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error al agregar el usuario');
+      }
+  
+      const result = await response.json();
+      console.log('Usuario agregado con ID:', result);
+      // Aquí puedes manejar la respuesta, como redirigir al usuario o mostrar un mensaje de éxito
+    } catch (error) {
+      console.error('Error al enviar los datos:', error);
+      // Maneja el error aquí, por ejemplo, mostrando un mensaje al usuario
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   useEffect(() => {
@@ -123,20 +145,21 @@ export default function AuthRegister() {
           email: '',
           username:'',
           contrasena: '',
-          esConductor: false,
-          esPropietario: false,
+          esconductor: false,
+          espropietario: false,
         }}
         validationSchema={Yup.object().shape({
           nombre: Yup.string().max(255).required('Se necesita llenar el campo Nombre'),
           apellido: Yup.string().max(255).required('Se necesita llenar el campo Apellido'),
           email: Yup.string().email('El email debe ser válido').max(255).required('Se necesita llenar el campo Email'),
           username: Yup.string().max(255).required('Se necesita llenar el campo Nombre de Usuario'),
-          contraseña: Yup.string().max(255).required('Se necesita llenar el campo Contraseña')
+          contrasena: Yup.string().max(255).required('Se necesita llenar el campo Contraseña')
         })}
         onSubmit={handleSubmit}
       >
-        {({ errors, handleBlur, handleChange, isSubmitting, touched, values, setFieldValue }) => (
-          <form noValidate onSubmit={handleSubmit}>
+        {({ errors, handleBlur, handleChange, isSubmitting, touched, values, setFieldValue, handleSubmit }) => (
+            <form noValidate onSubmit={handleSubmit}>
+
             <Grid container spacing={3}>
               <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
