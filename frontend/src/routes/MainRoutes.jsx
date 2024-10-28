@@ -17,7 +17,7 @@ const HistorialReservas = Loadable(lazy(() => import('pages/home/reserva/histori
 const ReservaForm = Loadable(lazy(() => import('pages/reserva/ReservaForm')));
 const HomeConductor = Loadable(lazy(() => import('pages/home/home-conductor')));
 const AltaGaraje = Loadable(lazy(() => import('pages/altaGaraje/alta-garaje')));
-const HistorialCalificacion = Loadable(lazy(() => import('pages/home/calificacion/historial-calificacion')));
+const HistorialCalificaciones = Loadable(lazy(() => import('pages/home/calificacion/historial-calificaciones')));
 // ==============================|| MAIN ROUTING ||============================== //
 
 // Simula obtener el usuario actual
@@ -72,8 +72,8 @@ const MainRoutes = {
       element: <ViewProfile modo={modo} /> // Pasar el modo como prop
     },
     {
-      path: 'historial-calificacion',
-      element: <HistorialCalificacion />
+      path: 'historial-calificaciones/:id',
+      element: <HistorialCalificaciones />
     },
   ]
 };
