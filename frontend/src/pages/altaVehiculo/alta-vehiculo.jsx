@@ -11,7 +11,7 @@ export default function AltaVehiculo() {
     matricula: "",
     idMarca: "",  // Marca seleccionada
     idModelo: "", // Modelo seleccionado
-    idConductor: 3, // El conductor es conocido (id 3)
+    idConductor: 4, // El conductor es conocido (id 4)
   });
 
   // Manejar cambios en los campos del formulario
@@ -20,11 +20,41 @@ export default function AltaVehiculo() {
     setVehiculo({ ...vehiculo, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Vehículo agregado:", vehiculo);
-    console.log(vehiculo);
-  };
+  
+    const dataToSend = {
+      idconductor: vehiculo.idConductor,
+      idmodelo: vehiculo.idModelo,
+      matricula: vehiculo.matricula,
+    };
+  
+    console.log("Datos que se envían al backend:", dataToSend);
+  
+    try {
+      const response = await fetch("https://localhost:7294/Vehiculo/Agregar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToSend),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        alert("Vehículo agregado exitosamente!");
+        console.log("Respuesta del servidor:", data);
+      } else {
+        alert("Error al agregar el vehículo");
+        console.error("Error:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error en la solicitud:", error);
+      alert("Error al conectar con el servidor");
+    }
+  };  
+  
+  
 
   // Filtrar los modelos según la marca seleccionada
   const modelosFiltrados = vehiculo.idMarca
