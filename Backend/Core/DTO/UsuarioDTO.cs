@@ -1,4 +1,4 @@
-﻿namespace Backend_Estacionamiento.DTO
+﻿namespace Core.DTO
 {
     
     public class UsuarioDTO
