@@ -1,5 +1,9 @@
 using Npgsql;
 using Microsoft.Extensions.Configuration;
+using Data.Models;
+using Data.Contexto;
+using Microsoft.EntityFrameworkCore;
+using Servicios.Servicios;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,11 +11,31 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+builder.Services.AddDbContext<DbEstacionamientoContext>(options =>
+    options.UseNpgsql(connectionString));
+
 // Agregar servicios al contenedor.
 builder.Services.AddControllers();
+
+builder.Services.AddScoped<IProvincia, ProvinciaServicio>();
+builder.Services.AddScoped<ILocalidad, LocalidadServicio>();
+builder.Services.AddScoped<IMarca, MarcaServicio>();
+builder.Services.AddScoped<IReservaEstado, ReservaEstadoServicio>();
+builder.Services.AddScoped<IReserva, ReservaServicio>();
+builder.Services.AddScoped<IVehiculo, VehiculoServicio>();
+builder.Services.AddScoped<IGaraje, GarajeServicio>();
+builder.Services.AddScoped<IGarajefoto, GarajefotoServicio>();
+builder.Services.AddScoped<IModelo, ModeloServicio>();
+builder.Services.AddScoped<IPago, PagoServicio>();
+builder.Services.AddScoped<IMetodopago, MetodopagoServicio>();
+builder.Services.AddScoped<IUsuario, UsuarioServicio>();
+
+
+
 // Configuración de Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 // Crear una nueva conexión a la base de datos para probarla
 using (var conn = new NpgsqlConnection(connectionString))
