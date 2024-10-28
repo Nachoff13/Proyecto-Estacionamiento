@@ -25,14 +25,17 @@ const usuarioId = 6;
 const usuario = fakeUsuarios.find((user) => user.id === usuarioId);
 
 let redirectPath = '/'; // Ruta por defecto
+let modo = 'conductor'; // Modo por defecto
 
 if (usuario) {
   if (usuario.esPropietario) {
     redirectPath = '/home-propietario';
+    modo = 'propietario';
   } else if (usuario.esConductor) {
-    redirectPath = '/home-conductor'; 
+    redirectPath = '/home-conductor';
+    modo = 'conductor';
   } else {
-    redirectPath = '/otra-pagina'; 
+    redirectPath = '/otra-pagina';
   }
 }
 
@@ -47,12 +50,6 @@ const MainRoutes = {
     {
       path: 'home-propietario',
       element: <HomePropietario />
-      // children: [
-      //   {
-      //     path: 'historial-reservas',
-      //     element: <HistorialReservas /> 
-      //   },
-      // ]
     },
     {
       path: 'reserva',
@@ -72,7 +69,7 @@ const MainRoutes = {
     },
     {
       path: 'apps/profiles/account/basic', // Ruta para ver perfil
-      element: <ViewProfile /> // Carga del componente ViewProfile
+      element: <ViewProfile modo={modo} /> // Pasar el modo como prop
     }
   ]
 };
