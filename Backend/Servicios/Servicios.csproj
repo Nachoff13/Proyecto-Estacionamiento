@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\Data\Data.csproj" />
+    <ProjectReference Include="..\Hashing\Hashing.csproj" />
   </ItemGroup>
 
 </Project>

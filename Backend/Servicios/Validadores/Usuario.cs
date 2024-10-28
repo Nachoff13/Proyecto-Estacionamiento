@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Servicios.Validadores;
 
-public class UsuarioAgregarValidador : AbstractValidator<UsuarioDTO>
+public class UsuarioAgregarValidador : AbstractValidator<UsuarioCrearDTO>
 {
     public UsuarioAgregarValidador()
     {
