@@ -56,6 +56,10 @@ export default function HomeConductor() {
     navigate('/reserva'); 
   };
 
+  const handleHistorialCalificacion = () => {
+    navigate('/historial-calificacion'); 
+  };
+
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
       {dataGarajes
@@ -95,10 +99,15 @@ export default function HomeConductor() {
               </Typography>
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: "auto" }}>
+            <Button variant="text" color="primary" onClick={() => handleHistorialCalificacion()} style={{ marginTop: '10px', marginRight: '10px' }}>
+                Ver reseñas
+              </Button>
               <Button variant="contained" color="primary" onClick={() => handleReservar()} style={{ marginTop: '10px' }}>
                 Reservar
               </Button>
+              
             </div>
+            
           </MainCard>
         ))}
     </div>
