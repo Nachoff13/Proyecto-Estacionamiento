@@ -4,6 +4,9 @@ using Data.Models;
 using Data.Contexto;
 using Microsoft.EntityFrameworkCore;
 using Servicios.Servicios;
+using Core.DTO;
+using Mapster;
+using Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +33,15 @@ builder.Services.AddScoped<IPago, PagoServicio>();
 builder.Services.AddScoped<IMetodopago, MetodopagoServicio>();
 builder.Services.AddScoped<IUsuario, UsuarioServicio>();
 
+
+// Configurar Mapster
+TypeAdapterConfig<GarajefotoDTO, Garajefoto>
+    .ForType()
+    .Map(dest => dest.Foto, src => ImageProcessingHelper.ImagenAByte(src.Foto));
+
+TypeAdapterConfig<Garajefoto, GarajefotoDTO>
+    .ForType()
+    .Map(dest => dest.Foto, src => ImageProcessingHelper.ByteAImagen(src.Foto));
 
 
 // Configuración de Swagger/OpenAPI

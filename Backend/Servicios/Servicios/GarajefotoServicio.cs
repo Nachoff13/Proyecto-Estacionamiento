@@ -3,6 +3,7 @@ using Data.Contexto;
 using FluentValidation;
 using Mapster;
 using Servicios.Validadores;
+using Helpers;
 
 namespace Servicios.Servicios
 {
@@ -65,7 +66,12 @@ namespace Servicios.Servicios
                     if (garajefotoModelo != null)
                     {
                         garajefotoModelo.Idgaraje = garajefoto.Idgaraje;
-                        garajefotoModelo.Foto = garajefoto.Foto;
+
+                        if (!string.IsNullOrEmpty(garajefoto.Foto))
+                        {
+                            garajefotoModelo.Foto = ImageProcessingHelper.ImagenAByte(garajefoto.Foto);
+                        }
+
                         await _db.SaveChangesAsync().ConfigureAwait(false);
                         return true;
                     }
@@ -84,6 +90,7 @@ namespace Servicios.Servicios
                 throw new Exception($"No se pudo modificar el garajefoto. Detalles: {ex.Message}", ex);
             }
         }
+
 
         public async Task<bool> Eliminar(int id)
         {
