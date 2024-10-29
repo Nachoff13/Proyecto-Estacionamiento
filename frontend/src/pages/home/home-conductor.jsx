@@ -98,8 +98,8 @@ export default function HomeConductor() {
                 <strong>Capacidad:</strong> {garaje.capacidad} vehículos <br />
               </Typography>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 'auto' }}>
-              <Button variant="text" color="primary" onClick={() =>  handleHistorialCalificaciones(garaje.id)} style={{ textDecoration: 'underline', marginRight: '10px'}}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+              <Button variant="text" color="primary" onClick={() =>  handleHistorialCalificaciones(garaje.id)} style={{ textDecoration: 'underline', marginTop: '10px', marginRight: '10px'}}>
                 Reseñas
               </Button>
               <Button variant="contained" color="primary" onClick={() => handleReservar()} style={{ marginTop: '10px' }}>
