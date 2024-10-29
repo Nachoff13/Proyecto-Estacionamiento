@@ -36,6 +36,16 @@ builder.Services.AddScoped<IUsuario, UsuarioServicio>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirLocalhost3000", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 
 // Crear una nueva conexión a la base de datos para probarla
 using (var conn = new NpgsqlConnection(connectionString))
@@ -60,6 +70,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("PermitirLocalhost3000");
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
