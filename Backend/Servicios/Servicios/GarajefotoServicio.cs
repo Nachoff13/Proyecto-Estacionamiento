@@ -3,6 +3,7 @@ using Data.Contexto;
 using FluentValidation;
 using Mapster;
 using Servicios.Validadores;
+using Helpers;
 
 namespace Servicios.Servicios
 {
@@ -24,32 +25,37 @@ namespace Servicios.Servicios
             _db = db;
         }
 
-        public async Task<int> Agregar(Core.DTO.GarajefotoDTO garajefoto)
+       public async Task<int> Agregar(Core.DTO.GarajefotoDTO garajefoto)
+{
+    try
+    {
+        var validador = new GarajefotoAgregarValidador();
+        var validadorResultado = validador.Validate(garajefoto);
+
+        if (validadorResultado.IsValid)
         {
-
-            try
+            // Convertir de base64 a byte[]
+            var nuevaGarajefoto = new Data.Models.Garajefoto
             {
-                var validador = new GarajefotoAgregarValidador();
-                var validadorResultado = validador.Validate(garajefoto);
+                Idgaraje = garajefoto.Idgaraje,
+                Foto = ImageProcessingHelper.ImagenAByte(garajefoto.Foto)
+            };
 
-                if (validadorResultado.IsValid)
-                {
-                    var nuevaGarajefoto = garajefoto.Adapt<Data.Models.Garajefoto>();
-                    //nuevaGarajefoto.Baja = false;
-                    await _db.Garajefoto.AddAsync(nuevaGarajefoto).ConfigureAwait(false);
-                    await _db.SaveChangesAsync().ConfigureAwait(false);
-                    return nuevaGarajefoto.Id;
-                }
-                else
-                {
-                    throw new Exception("El nombre no puede estar vacío");
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"No se pudo crear el garajefoto. Detalles: {ex.Message}", ex);
-            }
+            await _db.Garajefoto.AddAsync(nuevaGarajefoto).ConfigureAwait(false);
+            await _db.SaveChangesAsync().ConfigureAwait(false);
+            return nuevaGarajefoto.Id;
         }
+        else
+        {
+            throw new Exception("El nombre no puede estar vacío");
+        }
+    }
+    catch (Exception ex)
+    {
+        throw new Exception($"No se pudo crear el garajefoto. Detalles: {ex.Message}", ex);
+    }
+}
+
 
         public async Task<bool> Modificar(GarajefotoConId garajefoto)
         {
@@ -65,7 +71,12 @@ namespace Servicios.Servicios
                     if (garajefotoModelo != null)
                     {
                         garajefotoModelo.Idgaraje = garajefoto.Idgaraje;
-                        garajefotoModelo.Foto = garajefoto.Foto;
+
+                        if (!string.IsNullOrEmpty(garajefoto.Foto))
+                        {
+                            garajefotoModelo.Foto = ImageProcessingHelper.ImagenAByte(garajefoto.Foto);
+                        }
+
                         await _db.SaveChangesAsync().ConfigureAwait(false);
                         return true;
                     }
@@ -84,6 +95,7 @@ namespace Servicios.Servicios
                 throw new Exception($"No se pudo modificar el garajefoto. Detalles: {ex.Message}", ex);
             }
         }
+
 
         public async Task<bool> Eliminar(int id)
         {
@@ -112,7 +124,7 @@ namespace Servicios.Servicios
         {
             try
             {
-                 List<Data.Models.Garajefoto> garajefotos = _db.Garajefoto.ToList();
+                List<Data.Models.Garajefoto> garajefotos = _db.Garajefoto.ToList();
                 return garajefotos.Adapt<List<GarajefotoConId>>();
             }
             catch (Exception ex)

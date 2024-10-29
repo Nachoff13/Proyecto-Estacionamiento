@@ -2,8 +2,8 @@ namespace Core.DTO
 {
     public class GarajefotoDTO
     {
-        public int? Idgaraje { get; set; }
-        public byte[]? Foto { get; set; }
+        public int Idgaraje { get; set; }
+        public string ? Foto { get; set; }
     }
 
     public class GarajefotoConId : GarajefotoDTO
