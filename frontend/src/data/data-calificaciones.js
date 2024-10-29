@@ -1,12 +1,12 @@
 const fakeCalificaciones = [
-  { id: 1, IdGaraje: 1, usuario: 'Juan Pérez', fecha: '2024-10-15', puntuacion: 4, comentario: 'Muy buen servicio.' },
-  { id: 2, IdGaraje: 2, usuario: 'Ana Gómez', fecha: '2024-10-16', puntuacion: 5, comentario: 'Excelente atención.' },
-  { id: 3, IdGaraje: 55, usuario: 'Carlos López', fecha: '2024-10-17', puntuacion: 3, comentario: 'Servicio aceptable.' },
-  { id: 4, IdGaraje: 56, usuario: 'María Fernández', fecha: '2024-10-18', puntuacion: 5, comentario: 'Me encantó el lugar.' },
-  { id: 5, IdGaraje: 57, usuario: 'Luis Martínez', fecha: '2024-10-19', puntuacion: 2, comentario: 'Podría mejorar la atención.' },
-  { id: 6, IdGaraje: 58, usuario: 'Sofía Torres', fecha: '2024-10-20', puntuacion: 4, comentario: 'Buena experiencia en general.' },
-  { id: 7, IdGaraje: 1, usuario: 'Romina Gallardo', fecha: '2024-10-15', puntuacion: 3, comentario: 'Podria mejorar la atención.' },
-  { id: 8, IdGaraje: 1, usuario: 'Sebastián Gonzales', fecha: '2024-10-15', puntuacion: 1, comentario: 'Muy maleducado.' },
+  { id: 1, IdGaraje: 1, idUsuario: 1, fecha: '15-10-2024', puntuacion: 4, comentario: 'Muy buen servicio.' },
+  { id: 2, IdGaraje: 2, idUsuario: 4, fecha: '16-10-2024', puntuacion: 5, comentario: 'Excelente atención.' },
+  { id: 3, IdGaraje: 55, idUsuario: 5, fecha: '17-10-2024', puntuacion: 3, comentario: 'Servicio aceptable.' },
+  { id: 4, IdGaraje: 56, idUsuario: 6, fecha: '18-10-2024', puntuacion: 5, comentario: 'Me encantó el lugar.' },
+  { id: 5, IdGaraje: 57, idUsuario: 1, fecha: '19-10-2024', puntuacion: 2, comentario: 'Podría mejorar la atención.' },
+  { id: 6, IdGaraje: 58, idUsuario: 5, fecha: '20-10-2024', puntuacion: 4, comentario: 'Buena experiencia en general.' },
+  { id: 7, IdGaraje: 1, idUsuario: 4, fecha: '15-10-2024', puntuacion: 3, comentario: 'Podria mejorar la atención.' },
+  { id: 8, IdGaraje: 1, idUsuario: 6, fecha: '15-10-2024', puntuacion: 1, comentario: 'Muy maleducado.' },
 ];
 
 export default fakeCalificaciones;
