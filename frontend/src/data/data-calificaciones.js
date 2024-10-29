@@ -5,6 +5,8 @@ const fakeCalificaciones = [
   { id: 4, IdGaraje: 56, usuario: 'María Fernández', fecha: '2024-10-18', puntuacion: 5, comentario: 'Me encantó el lugar.' },
   { id: 5, IdGaraje: 57, usuario: 'Luis Martínez', fecha: '2024-10-19', puntuacion: 2, comentario: 'Podría mejorar la atención.' },
   { id: 6, IdGaraje: 58, usuario: 'Sofía Torres', fecha: '2024-10-20', puntuacion: 4, comentario: 'Buena experiencia en general.' },
+  { id: 7, IdGaraje: 1, usuario: 'Romina Gallardo', fecha: '2024-10-15', puntuacion: 3, comentario: 'Podria mejorar la atención.' },
+  { id: 8, IdGaraje: 1, usuario: 'Sebastián Gonzales', fecha: '2024-10-15', puntuacion: 1, comentario: 'Muy maleducado.' },
 ];
 
 export default fakeCalificaciones;
