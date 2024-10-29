@@ -75,11 +75,7 @@ export default function AuthRegister() {
   };
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    
-    console.log('Se presiono el boton');
-    alert('Formulario enviado');
-    
-    console.log('Formulario enviado con los valores:', values);
+        
     const dataForAPI = {
       nombre: values.nombre,
       apellido: values.apellido,
@@ -107,10 +103,9 @@ export default function AuthRegister() {
   
       const result = await response.json();
       console.log('Usuario agregado con ID:', result);
-      // Aquí puedes manejar la respuesta, como redirigir al usuario o mostrar un mensaje de éxito
+      alert('Se ha creado el usuario exitosamente.');
     } catch (error) {
       console.error('Error al enviar los datos:', error);
-      // Maneja el error aquí, por ejemplo, mostrando un mensaje al usuario
     } finally {
       setSubmitting(false);
     }
