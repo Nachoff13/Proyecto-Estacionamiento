@@ -49,5 +49,25 @@ namespace WebAPI.Controllers
             var resultado = await _garajeFoto.ObtenerIndividual(id).ConfigureAwait(false);
             return Ok(resultado);
         }
+
+
+        [HttpGet("ObtenerFotosDeGaraje/{idGaraje}")]
+        public async Task<ActionResult<List<GarajefotoDTO>>> ObtenerFotosDeGaraje(int idGaraje)
+        {
+            try
+            {
+                List<GarajefotoDTO> fotos = await _garajeFoto.ObtenerFotosPorGaraje(idGaraje).ConfigureAwait(false);
+                if (fotos != null && fotos.Count > 0)
+                {
+                    return Ok(fotos);
+                }
+                return NotFound("No se encontraron fotos para el garaje especificado.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
     }
 }

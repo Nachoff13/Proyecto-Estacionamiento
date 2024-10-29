@@ -4,6 +4,7 @@ using FluentValidation;
 using Mapster;
 using Servicios.Validadores;
 using Helpers;
+using Microsoft.EntityFrameworkCore;
 
 namespace Servicios.Servicios
 {
@@ -14,6 +15,8 @@ namespace Servicios.Servicios
         Task <bool> Modificar(GarajefotoConId garajefoto);
         Task <GarajefotoConId> ObtenerIndividual(int id);
         Task <List<GarajefotoConId>> Obtener();
+
+        Task <List<GarajefotoDTO>> ObtenerFotosPorGaraje(int idGaraje);
     }
 
     public class GarajefotoServicio : IGarajefoto
@@ -25,37 +28,32 @@ namespace Servicios.Servicios
             _db = db;
         }
 
-       public async Task<int> Agregar(Core.DTO.GarajefotoDTO garajefoto)
-{
-    try
-    {
-        var validador = new GarajefotoAgregarValidador();
-        var validadorResultado = validador.Validate(garajefoto);
-
-        if (validadorResultado.IsValid)
+        public async Task<int> Agregar(Core.DTO.GarajefotoDTO garajefoto)
         {
-            // Convertir de base64 a byte[]
-            var nuevaGarajefoto = new Data.Models.Garajefoto
+
+            try
             {
-                Idgaraje = garajefoto.Idgaraje,
-                Foto = ImageProcessingHelper.ImagenAByte(garajefoto.Foto)
-            };
+                var validador = new GarajefotoAgregarValidador();
+                var validadorResultado = validador.Validate(garajefoto);
 
-            await _db.Garajefoto.AddAsync(nuevaGarajefoto).ConfigureAwait(false);
-            await _db.SaveChangesAsync().ConfigureAwait(false);
-            return nuevaGarajefoto.Id;
+                if (validadorResultado.IsValid)
+                {
+                    var nuevaGarajefoto = garajefoto.Adapt<Data.Models.Garajefoto>();
+                    //nuevaGarajefoto.Baja = false;
+                    await _db.Garajefoto.AddAsync(nuevaGarajefoto).ConfigureAwait(false);
+                    await _db.SaveChangesAsync().ConfigureAwait(false);
+                    return nuevaGarajefoto.Id;
+                }
+                else
+                {
+                    throw new Exception("El nombre no puede estar vacío");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"No se pudo crear el garajefoto. Detalles: {ex.Message}", ex);
+            }
         }
-        else
-        {
-            throw new Exception("El nombre no puede estar vacío");
-        }
-    }
-    catch (Exception ex)
-    {
-        throw new Exception($"No se pudo crear el garajefoto. Detalles: {ex.Message}", ex);
-    }
-}
-
 
         public async Task<bool> Modificar(GarajefotoConId garajefoto)
         {
@@ -124,7 +122,7 @@ namespace Servicios.Servicios
         {
             try
             {
-                List<Data.Models.Garajefoto> garajefotos = _db.Garajefoto.ToList();
+                 List<Data.Models.Garajefoto> garajefotos = _db.Garajefoto.ToList();
                 return garajefotos.Adapt<List<GarajefotoConId>>();
             }
             catch (Exception ex)
@@ -153,5 +151,23 @@ namespace Servicios.Servicios
                 throw new Exception($"No se pudo recuperar el garajefoto con ID {id}. Detalles: {ex.Message}", ex);
             }
         }
+
+        public async Task<List<GarajefotoDTO>> ObtenerFotosPorGaraje(int idGaraje)
+        {
+            try
+            {
+                List<Data.Models.Garajefoto> garajefotos = await _db.Garajefoto
+                    .Where(x => x.Idgaraje == idGaraje)
+                    .ToListAsync()
+                    .ConfigureAwait(false);
+                
+                return garajefotos.Adapt<List<GarajefotoDTO>>();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"No se pudieron obtener las fotos del garaje con ID {idGaraje}. Detalles: {ex.Message}", ex);
+            }
+        }
+
     }
 }
