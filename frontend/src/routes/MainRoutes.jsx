@@ -14,14 +14,14 @@ const ViewProfile = Loadable(lazy(() => import('pages/perfil/ViewProfile.jsx')))
 // Otros componentes
 const HomePropietario = Loadable(lazy(() => import('pages/home/home-propietario')));
 const HistorialReservas = Loadable(lazy(() => import('pages/home/reserva/historial-reservas')));
-const ReservaForm = Loadable(lazy(() => import('pages/reserva/ReservaForm')));
+const ReservaForm = Loadable(lazy(() => import('pages/reserva/ReservaForm.jsx')));
 const HomeConductor = Loadable(lazy(() => import('pages/home/home-conductor')));
 const AltaGaraje = Loadable(lazy(() => import('pages/altaGaraje/alta-garaje')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
 // Simula obtener el usuario actual
-const usuarioId = 6; 
+const usuarioId = 4; 
 const usuario = fakeUsuarios.find((user) => user.id === usuarioId);
 
 let redirectPath = '/'; // Ruta por defecto
