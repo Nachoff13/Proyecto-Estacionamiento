@@ -1,81 +1,85 @@
-import { useState } from 'react';
-
-// material-ui
-import { Typography, Button, Chip, Fab, Tooltip, IconButton } from '@mui/material';
-
-// project import
+import { useState, useEffect } from 'react';
+import { Typography, Button, Chip, Fab, Tooltip, IconButton, ImageList, ImageListItem } from '@mui/material';
 import MainCard from 'components/MainCard';
-
-//components
 import EditModal from 'components/modals/EditModal';
-
-// data imports
-import fakeGarajes from 'data/data-garajes';
-import fakeFotosGarajes from 'data/data-garajefoto';
-import fakeUsuarios from 'data/data-usuarios';
-import fakeLocalidades from 'data/data-localidades';
-import fakeGarajeEstado from 'data/data-garajeestado';
 import { useNavigate } from 'react-router-dom';
-
-//icons
 import EditOutlined from '@ant-design/icons/EditOutlined';
 import HistoryOutlined from '@ant-design/icons/HistoryOutlined';
 
-// ==============================|| HOME PROPIETARIO ||============================== //
-
 export default function HomePropietario() {
-  //-------------------------------LOGICA-----------------------------------
   const [opened, setOpened] = useState(false);
-  const [currentGaraje, setCurrentGaraje] = useState({
-    id: null,
-    idPropietario: null,
-    idLocalidad: null,
-    idGarajeEstado: null,
-    altura: '',
-    calle: '',
-    descripcion: '',
-    precioHora: null,
-    capacidad: null
-  });
-
+  const [currentGaraje, setCurrentGaraje] = useState({});
+  const [garages, setGarages] = useState([]);
+  const [garageImages, setGarageImages] = useState({});
+  const [localidades, setLocalidades] = useState([]);
   const navigate = useNavigate();
 
-  console.log('Garajes:', currentGaraje);
-
-  // Obtener el propietario con id 2
   const propietarioId = 3;
-  const garajesPropietario = fakeGarajes.filter((garaje) => garaje.idPropietario === propietarioId);
 
-  const getLocalidad = (idLocalidad) => {
-    const localidad = fakeLocalidades.find((loc) => loc.id === idLocalidad);
-    return localidad ? localidad.nombre : 'Desconocido';
-  };
+  const fetchGarages = async () => {
+    try {
+      const response = await fetch("https://localhost:7294/Garaje/Obtener", {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const garagesData = await response.json();
+      setGarages(garagesData);
 
-  const getFotoGaraje = (idGaraje) => {
-    const fotoGaraje = fakeFotosGarajes.find((foto) => foto.idGaraje === idGaraje);
-    return fotoGaraje ? fotoGaraje.foto : 'default-foto.jpg'; // En caso de que no encuentre foto
-  };
-
-  const getEstadoGaraje = (idGarajeEstado) => {
-    const estado = fakeGarajeEstado.find((est) => est.id === idGarajeEstado);
-    return estado ? estado.nombre : 'Desconocido';
-  };
-
-  //-------------------------------GET COLOR ESTADO-----------------------------------
-  const getColorEstado = (idGarajeEstado) => {
-    switch (idGarajeEstado) {
-      case 1: // Disponible
-        return 'success';
-      case 2: // Reservado
-        return 'warning';
-      case 3: // No Disponible
-        return 'error';
-      default:
-        return 'default';
+      for (const garage of garagesData) {
+        await fetchGarageImages(garage.id);
+      }
+    } catch (error) {
+      console.error("Error fetching garages:", error);
     }
   };
 
-  //-------------------------------HANDLE EDITAR-----------------------------------
+  const fetchLocalidades = async () => {
+    try {
+      const response = await fetch("https://localhost:7294/Localidad/Obtener", {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const localidadesData = await response.json();
+      setLocalidades(localidadesData);
+    } catch (error) {
+      console.error("Error fetching localidades:", error);
+    }
+  };
+
+  const fetchGarageImages = async (idGaraje) => {
+    try {
+      const response = await fetch(`https://localhost:7294/GarajeFoto/ObtenerFotosDeGaraje/${idGaraje}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (response.status === 404) {
+        console.warn(`No images found for garage ${idGaraje}`);
+        return;
+      }
+
+      const imagesData = await response.json();
+      if (imagesData && imagesData.length > 0) {
+        setGarageImages((prevImages) => ({
+          ...prevImages,
+          [idGaraje]: imagesData.map((img) => URL.createObjectURL(new Blob([new Uint8Array(img.foto.split(',').map(Number))], { type: 'image/jpeg' })))
+        }));
+      }
+    } catch (error) {
+      console.error(`Error fetching images for garage ${idGaraje}:`, error);
+    }
+  };
+
+  useEffect(() => {
+    fetchGarages();
+    fetchLocalidades();
+  }, []);
+
+  const getLocalidadName = (idLocalidad) => {
+    const localidad = localidades.find(loc => loc.id === idLocalidad);
+    return localidad ? localidad.nombre : "Localidad desconocida";
+  };
+
   const handleOpen = (garaje) => {
     setCurrentGaraje(garaje);
     setOpened(true);
@@ -83,7 +87,7 @@ export default function HomePropietario() {
 
   const handleClose = () => {
     setOpened(false);
-    setCurrentGaraje(null);
+    setCurrentGaraje({});
   };
 
   const handleAddGaraje = () => {
@@ -97,7 +101,7 @@ export default function HomePropietario() {
 
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%', gap: '16px' }}>
-      {garajesPropietario.map((garaje, index) => (
+      {garages.map((garaje, index) => (
         <MainCard
           key={garaje.id}
           style={{
@@ -109,44 +113,34 @@ export default function HomePropietario() {
             position: 'relative'
           }}
         >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}
-          >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant="h6" style={{ marginBottom: '8px' }}>
               Mi garaje {index + 1}
             </Typography>
             <Chip
-              label={getEstadoGaraje(garaje.idGarajeEstado)}
-              color={getColorEstado(garaje.idGarajeEstado)}
+              label={garaje.disponible ? "Disponible" : "No disponible"}
+              color={garaje.disponible ? "success" : "error"}
               variant="outlined"
               style={{ marginBottom: '8px' }}
             />
           </div>
           <div style={{ flex: '1', overflow: 'hidden' }}>
-            <img
-              src={getFotoGaraje(garaje.id)} // Obtener la imagen del garaje
-              alt={`Foto del garaje ${garaje.id}`}
-              style={{ width: '100%', height: '200px', objectFit: 'cover' }}
-            />
+            <ImageList cols={1} rowHeight={200} style={{ width: '100%' }}>
+              {(garageImages[garaje.id] || []).map((src, idx) => (
+                <ImageListItem key={idx}>
+                  <img src={src} alt={`Foto ${idx + 1} del garaje ${garaje.id}`} style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+                </ImageListItem>
+              ))}
+            </ImageList>
             <Typography variant="body2">
-              <strong>Localidad: </strong> {getLocalidad(garaje.idLocalidad)} <br />
+              <strong>Localidad: </strong> {getLocalidadName(garaje.idlocalidad)} <br />
               <strong>Ubicación:</strong> {garaje.calle} N° {garaje.altura} <br />
               <strong>Descripción:</strong> {garaje.descripcion} <br />
-              <strong>Precio por hora:</strong> ${garaje.precioHora} <br />
+              <strong>Precio por hora:</strong> ${garaje.preciohora} <br />
               <strong>Capacidad:</strong> {garaje.capacidad} vehículos <br />
             </Typography>
           </div>
-          <div
-            style={{
-              marginTop: 'auto',
-              display: 'flex',
-              justifyContent: 'flex-end'
-            }}
-          >
+          <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'flex-end' }}>
             <Tooltip title="Ver Historial">
               <IconButton color="primary" onClick={() => handleOpenHistorial(garaje)}>
                 <HistoryOutlined style={{ fontSize: '24px' }} />
@@ -160,9 +154,8 @@ export default function HomePropietario() {
           </div>
         </MainCard>
       ))}
-
+      
       <Fab
-        variant="contained"
         color="secondary"
         style={{
           position: 'fixed',
@@ -181,11 +174,7 @@ export default function HomePropietario() {
         +
       </Fab>
 
-      <EditModal
-        opened={opened}
-        onClose={handleClose}
-        data={currentGaraje} // Pasar los datos del garaje seleccionado
-      />
+      <EditModal opened={opened} onClose={handleClose} data={currentGaraje} />
     </div>
   );
 }
