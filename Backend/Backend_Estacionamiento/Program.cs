@@ -7,7 +7,7 @@ using Servicios.Servicios;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuración de la cadena de conexión desde appsettings.json
+// Configuraciï¿½n de la cadena de conexiï¿½n desde appsettings.json
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -32,19 +32,29 @@ builder.Services.AddScoped<IUsuario, UsuarioServicio>();
 
 
 
-// Configuración de Swagger/OpenAPI
+// Configuraciï¿½n de Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirLocalhost3000", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
-// Crear una nueva conexión a la base de datos para probarla
+
+// Crear una nueva conexiï¿½n a la base de datos para probarla
 using (var conn = new NpgsqlConnection(connectionString))
 {
     try
     {
         conn.Open();
-        Console.WriteLine("Conexión exitosa a la base de datos.");
-        // Aquí puedes realizar consultas a la base de datos si lo deseas.
+        Console.WriteLine("Conexiï¿½n exitosa a la base de datos.");
+        // Aquï¿½ puedes realizar consultas a la base de datos si lo deseas.
     }
     catch (Exception ex)
     {
@@ -60,6 +70,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("PermitirLocalhost3000");
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
