@@ -105,12 +105,13 @@ export default function HomePropietario() {
         <MainCard
           key={garaje.id}
           style={{
-            width: '30%',
-            boxSizing: 'border-box',
-            height: '500px',
+            width: '32%', // Ancho de la tarjeta
+            height: 'auto', // Ajustar altura automáticamente
             display: 'flex',
             flexDirection: 'column',
-            position: 'relative'
+            position: 'relative',
+            overflow: 'hidden',
+            padding: '16px',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -124,23 +125,27 @@ export default function HomePropietario() {
               style={{ marginBottom: '8px' }}
             />
           </div>
-          <div style={{ flex: '1', overflow: 'hidden' }}>
-            <ImageList cols={1} rowHeight={200} style={{ width: '100%' }}>
+          <div style={{ flex: '1', overflow: 'hidden', marginBottom: '8px' }}>
+            <ImageList cols={1} rowHeight={150} style={{ width: '100%', height: 'auto' }}>
               {(garageImages[garaje.id] || []).map((src, idx) => (
                 <ImageListItem key={idx}>
-                  <img src={src} alt={`Foto ${idx + 1} del garaje ${garaje.id}`} style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+                  <img
+                    src={src}
+                    alt={`Foto ${idx + 1} del garaje ${garaje.id}`}
+                    style={{ objectFit: 'contain', width: '100%', height: '100%', borderRadius: '8px' }} // Cambiado a 'contain'
+                  />
                 </ImageListItem>
               ))}
             </ImageList>
-            <Typography variant="body2">
-              <strong>Localidad: </strong> {getLocalidadName(garaje.idlocalidad)} <br />
-              <strong>Ubicación:</strong> {garaje.calle} N° {garaje.altura} <br />
-              <strong>Descripción:</strong> {garaje.descripcion} <br />
-              <strong>Precio por hora:</strong> ${garaje.preciohora} <br />
-              <strong>Capacidad:</strong> {garaje.capacidad} vehículos <br />
-            </Typography>
           </div>
-          <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'flex-end' }}>
+          <Typography variant="body2" style={{ paddingBottom: '8px' }}>
+            <strong>Localidad: </strong> {getLocalidadName(garaje.idlocalidad)} <br />
+            <strong>Ubicación:</strong> {garaje.calle} N° {garaje.altura} <br />
+            <strong>Descripción:</strong> {garaje.descripcion} <br />
+            <strong>Precio por hora:</strong> ${garaje.preciohora} <br />
+            <strong>Capacidad:</strong> {garaje.capacidad} vehículos <br />
+          </Typography>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Tooltip title="Ver Historial">
               <IconButton color="primary" onClick={() => handleOpenHistorial(garaje)}>
                 <HistoryOutlined style={{ fontSize: '24px' }} />
