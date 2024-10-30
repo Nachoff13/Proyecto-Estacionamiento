@@ -1,12 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Typography, Button, TextField, MenuItem } from "@mui/material";
 import MainCard from "components/MainCard";
-import fakeMarcas from "data/data-marcas";
 
-// ==============================|| ALTA VEHICULO ||============================== //
+// ==============================|| ALTA VEHICULO ||============================== // 
 
 export default function AltaVehiculo() {
-  //-------------------------------LOGICA-----------------------------------
+  //-------------------------------LOGICA----------------------------------- 
   const [vehiculo, setVehiculo] = useState({
     matricula: "",
     idMarca: "",  // Marca seleccionada
@@ -14,10 +13,52 @@ export default function AltaVehiculo() {
     idConductor: 4, // El conductor es conocido (id 4)
   });
 
+  const [marcas, setMarcas] = useState([]); // Estado para almacenar las marcas
+  const [modelos, setModelos] = useState([]); // Estado para almacenar los modelos
+
+  // Cargar las marcas al montar el componente
+  useEffect(() => {
+    const fetchMarcas = async () => {
+      try {
+        const response = await fetch("https://localhost:7294/Marca/Obtener");
+        if (response.ok) {
+          const data = await response.json();
+          setMarcas(data); // Actualizar el estado de marcas con la respuesta del servidor
+        } else {
+          console.error("Error al obtener las marcas:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error en la solicitud:", error);
+      }
+    };
+
+    fetchMarcas(); // Llamar a la función para obtener marcas
+  }, []); // Dependencia vacía para que se ejecute solo al montar
+
   // Manejar cambios en los campos del formulario
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setVehiculo({ ...vehiculo, [name]: value });
+    
+    // Si se cambia la marca, se deben obtener los modelos
+    if (name === "idMarca") {
+      fetchModelos(value);
+    }
+  };
+
+  // Función para obtener los modelos de acuerdo a la marca seleccionada
+  const fetchModelos = async (idMarca) => {
+    try {
+      const response = await fetch(`https://localhost:7294/Marca/ObtenerModelos/${idMarca}`);
+      if (response.ok) {
+        const data = await response.json();
+        setModelos(data); // Actualizar el estado de modelos con la respuesta del servidor
+      } else {
+        console.error("Error al obtener los modelos:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error en la solicitud:", error);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -53,13 +94,6 @@ export default function AltaVehiculo() {
       alert("Error al conectar con el servidor");
     }
   };  
-  
-  
-
-  // Filtrar los modelos según la marca seleccionada
-  const modelosFiltrados = vehiculo.idMarca
-    ? fakeMarcas.find((marca) => marca.id === parseInt(vehiculo.idMarca))?.modelos || []
-    : [];
 
   return (
     <MainCard style={{ maxWidth: "600px", margin: "auto" }}>
@@ -89,7 +123,7 @@ export default function AltaVehiculo() {
           margin="normal"
           required
         >
-          {fakeMarcas.map((marca) => (
+          {marcas.map((marca) => (
             <MenuItem key={marca.id} value={marca.id}>
               {marca.nombre}
             </MenuItem>
@@ -108,7 +142,7 @@ export default function AltaVehiculo() {
           required
           disabled={!vehiculo.idMarca}  // Desactivar si no se selecciona una marca
         >
-          {modelosFiltrados.map((modelo) => (
+          {modelos.map((modelo) => (
             <MenuItem key={modelo.id} value={modelo.id}>
               {modelo.nombre}
             </MenuItem>
