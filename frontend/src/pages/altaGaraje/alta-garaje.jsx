@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Typography, Button, TextField, MenuItem, Grid } from "@mui/material";
 import MainCard from "components/MainCard";
-import fakeLocalidades from "data/data-localidades";
+import { useNavigate } from 'react-router-dom';
 
 // ==============================|| ALTA GARAJE ||============================== //
 
 export default function AltaGaraje() {
+
+  const navigate=useNavigate();
   //-------------------------------LOGICA-----------------------------------
   const [garaje, setGaraje] = useState({
     calle: "",
@@ -15,15 +17,35 @@ export default function AltaGaraje() {
     precioHora: "",
     idLocalidad: "",
     idPropietario: 3, // Hardcoded for now
-    estado: "disponible",
+    disponible:true ,
   });
 
   const [garajeFoto, setGarajeFoto] = useState({
-    idGaraje: 3, // Hardcoded for now
-    imagenes: [], // Para almacenar las imágenes en bytes
+    idgaraje: 0, 
+    fotos: [], 
   });
+  const [localidades, setLocalidades] = useState([]); 
 
-  const [previewImages, setPreviewImages] = useState([]); // Almacena las imágenes para previsualización
+  const [previewImages, setPreviewImages] = useState([]); 
+
+  useEffect(() => {
+    const fetchLocalidades = async () => {
+      try {
+        const response = await fetch("https://localhost:7294/Localidad/Obtener");
+        if (response.ok) {
+          const data = await response.json();
+          setLocalidades(data); 
+        } else {
+          console.error("Error al obtener localidades");
+        }
+      } catch (error) {
+        console.error("Error de red:", error);
+      }
+    };
+
+    fetchLocalidades();
+  }, []);
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -44,16 +66,56 @@ export default function AltaGaraje() {
     // Acumular las nuevas imágenes con las anteriores
     setGarajeFoto((prevState) => ({
       ...prevState,
-      imagenes: [...prevState.imagenes, ...imagesArray], // Acumular imágenes en bytes
+      fotos: [...prevState.fotos, ...imagesArray],
     }));
     setPreviewImages((prevImages) => [...prevImages, ...previewArray]); // Acumular previsualizaciones
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit  = async (e) => {
     e.preventDefault();
-    alert("Garaje agregado con imágenes:", garaje, garajeFoto);
-    console.log( garajeFoto);
-    // Aquí puedes hacer una llamada a tu backend para enviar el garaje y las imágenes
+
+    try {
+      const response = await fetch("https://localhost:7294/Garaje/Agregar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(garaje),
+      });
+      
+      if (response.ok) {
+        const idgaraje = await response.json();
+  
+        for (const foto of garajeFoto.fotos) {
+          const garajeFotoData = {
+            idgaraje, // Usar el ID recibido
+            foto, 
+          };
+  
+          const fotoResponse = await fetch("https://localhost:7294/GarajeFoto/Agregar", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(garajeFotoData),
+          });
+  
+          if (!fotoResponse.ok) {
+            alert(`Error al agregar la imagen ${foto}`);
+            return; 
+          }
+        }
+        
+        alert("Garaje y todas las fotos agregados exitosamente");
+        navigate('/home-propietario');
+
+
+      } else {
+        alert("Error al agregar el garaje");
+      }
+    } catch (error) {
+      console.error("Error en el envío:", error);
+    }
   };
 
   const convertToBytes = (file) => {
@@ -141,7 +203,7 @@ export default function AltaGaraje() {
           margin="normal"
           required
         >
-          {fakeLocalidades.map((localidad) => (
+          {localidades.map((localidad) => (
             <MenuItem key={localidad.id} value={localidad.id}>
               {localidad.nombre} ({localidad.codpostal})
             </MenuItem>
@@ -158,7 +220,6 @@ export default function AltaGaraje() {
           <input type="file" hidden onChange={handleImageChange} multiple />
         </Button>
 
-        {/* Previsualización de Imágenes */}
         <Grid container spacing={2} style={{ marginTop: "16px" }}>
           {previewImages.map((image, index) => (
             <Grid item xs={4} key={index}>

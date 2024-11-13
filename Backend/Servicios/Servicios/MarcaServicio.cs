@@ -14,6 +14,7 @@ namespace Servicios.Servicios
         Task<bool> Modificar(MarcaConId marca);
         Task<MarcaConId> ObtenerIndividual(int id);
         Task<List<MarcaConId>> Obtener();
+        Task<List<ModeloConId>> ObtenerModelos(int id);
     }
 
     public class MarcaServicio : IMarca
@@ -138,6 +139,27 @@ namespace Servicios.Servicios
             catch (Exception ex)
             {
                 throw new Exception($"No se pudo recuperar la marca con ID {id}. Detalles: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<List<ModeloConId>> ObtenerModelos(int id)
+        {
+            try
+            {
+                var marcaModelo = _db.Marca.Include(x => x.Modelos).FirstOrDefault(x => x.Id == id);
+
+                if (marcaModelo != null)
+                {
+                    return marcaModelo.Modelos.Adapt<List<ModeloConId>>();
+                }
+                else
+                {
+                    throw new Exception("No es posible encontrar esa marca");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"No se pudo recuperar los modelos de la marca con ID {id}. Detalles: {ex.Message}", ex);
             }
         }
     }

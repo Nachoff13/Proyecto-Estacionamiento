@@ -3,6 +3,8 @@ using Data.Contexto;
 using FluentValidation;
 using Mapster;
 using Servicios.Validadores;
+using Helpers;
+using Microsoft.EntityFrameworkCore;
 
 namespace Servicios.Servicios
 {
@@ -13,6 +15,8 @@ namespace Servicios.Servicios
         Task <bool> Modificar(GarajefotoConId garajefoto);
         Task <GarajefotoConId> ObtenerIndividual(int id);
         Task <List<GarajefotoConId>> Obtener();
+
+        Task <List<GarajefotoDTO>> ObtenerFotosPorGaraje(int idGaraje);
     }
 
     public class GarajefotoServicio : IGarajefoto
@@ -65,7 +69,12 @@ namespace Servicios.Servicios
                     if (garajefotoModelo != null)
                     {
                         garajefotoModelo.Idgaraje = garajefoto.Idgaraje;
-                        garajefotoModelo.Foto = garajefoto.Foto;
+
+                        if (!string.IsNullOrEmpty(garajefoto.Foto))
+                        {
+                            garajefotoModelo.Foto = ImageProcessingHelper.ImagenAByte(garajefoto.Foto);
+                        }
+
                         await _db.SaveChangesAsync().ConfigureAwait(false);
                         return true;
                     }
@@ -84,6 +93,7 @@ namespace Servicios.Servicios
                 throw new Exception($"No se pudo modificar el garajefoto. Detalles: {ex.Message}", ex);
             }
         }
+
 
         public async Task<bool> Eliminar(int id)
         {
@@ -141,5 +151,23 @@ namespace Servicios.Servicios
                 throw new Exception($"No se pudo recuperar el garajefoto con ID {id}. Detalles: {ex.Message}", ex);
             }
         }
+
+        public async Task<List<GarajefotoDTO>> ObtenerFotosPorGaraje(int idGaraje)
+        {
+            try
+            {
+                List<Data.Models.Garajefoto> garajefotos = await _db.Garajefoto
+                    .Where(x => x.Idgaraje == idGaraje)
+                    .ToListAsync()
+                    .ConfigureAwait(false);
+                
+                return garajefotos.Adapt<List<GarajefotoDTO>>();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"No se pudieron obtener las fotos del garaje con ID {idGaraje}. Detalles: {ex.Message}", ex);
+            }
+        }
+
     }
 }

@@ -13,25 +13,31 @@ const ViewProfile = Loadable(lazy(() => import('pages/perfil/ViewProfile.jsx')))
 
 // Otros componentes
 const HomePropietario = Loadable(lazy(() => import('pages/home/home-propietario')));
-const ReservaForm = Loadable(lazy(() => import('pages/reserva/ReservaForm')));
+const HistorialReservas = Loadable(lazy(() => import('pages/home/reserva/historial-reservas')));
+const ReservaForm = Loadable(lazy(() => import('pages/reserva/ReservaForm.jsx')));
 const HomeConductor = Loadable(lazy(() => import('pages/home/home-conductor')));
 const AltaGaraje = Loadable(lazy(() => import('pages/altaGaraje/alta-garaje')));
+const HistorialCalificaciones = Loadable(lazy(() => import('pages/home/calificacion/historial-calificaciones')));
+const AltaVehiculo = Loadable(lazy(() => import('pages/altaVehiculo/alta-vehiculo')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
 // Simula obtener el usuario actual
-const usuarioId = 6; 
+const usuarioId = 4; 
 const usuario = fakeUsuarios.find((user) => user.id === usuarioId);
 
 let redirectPath = '/'; // Ruta por defecto
+let modo = 'conductor'; // Modo por defecto
 
 if (usuario) {
   if (usuario.esPropietario) {
     redirectPath = '/home-propietario';
+    modo = 'propietario';
   } else if (usuario.esConductor) {
-    redirectPath = '/home-conductor'; 
+    redirectPath = '/home-conductor';
+    modo = 'conductor';
   } else {
-    redirectPath = '/otra-pagina'; 
+    redirectPath = '/otra-pagina';
   }
 }
 
@@ -56,12 +62,24 @@ const MainRoutes = {
       element: <HomeConductor />
     },
     {
+      path: 'historial-reservas',
+      element: <HistorialReservas />
+    },
+    {
       path: 'alta-garaje',
       element: <AltaGaraje />
     },
     {
       path: 'apps/profiles/account/basic', // Ruta para ver perfil
-      element: <ViewProfile /> // Carga del componente ViewProfile
+      element: <ViewProfile modo={modo} /> // Pasar el modo como prop
+    },
+    {
+      path: 'historial-calificaciones/:id',
+      element: <HistorialCalificaciones />
+    },
+    {
+      path: 'alta-vehiculo',
+      element: <AltaVehiculo />
     }
   ]
 };
