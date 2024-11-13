@@ -49,5 +49,12 @@ namespace WebAPI.Controllers
             var resultado = await _marca.ObtenerIndividual(id).ConfigureAwait(false);
             return Ok(resultado);
         }
+
+        [HttpGet("ObtenerModelos/{id}")]
+        public async Task<ActionResult<List<ModeloConId>>> ObtenerModelos(int id)
+        {
+            var resultado = await _marca.ObtenerModelos(id).ConfigureAwait(false);
+            return Ok(resultado);
+        }
     }
 }
