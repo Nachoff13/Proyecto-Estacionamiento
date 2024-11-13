@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import fakeGarajes from '../../data/data-garajes';
 import fakeUsuarios from '../../data/data-usuarios'; // Importar los datos de usuarios
-import 'src/pages/reserva/ReservaForm.css';
-import axios from 'axios';
+import './ReservaForm.css';
 
 const ReservaForm = () => {
   const [fechaInicio, setFechaInicio] = useState('');
@@ -13,7 +12,7 @@ const ReservaForm = () => {
   const garaje = fakeGarajes[0];
 
   // Simula obtener el usuario actual
-  const usuarioId = 4; // Cambia esto según el usuario que necesites
+  const usuarioId = 3; // Cambia esto según el usuario que necesites
   const usuario = fakeUsuarios.find((user) => user.id === usuarioId);
 
   // Obtener la fecha actual en el formato 'YYYY-MM-DDTHH:MM' requerido por el input datetime-local
@@ -37,28 +36,6 @@ const ReservaForm = () => {
       setMonto(total.toFixed(2)); // Fijamos dos decimales
     } else {
       alert('Por favor, selecciona ambas fechas y horas.');
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const reserva = {
-      idGaraje: garaje.id,
-      idConductor: usuario.id,
-      idReservaEstado: 1, // Puedes ajustar esto según tu lógica de negocio
-      fechaInicio,
-      fechaFin
-    };
-
-    try {
-      const response = await axios.post('https://localhost:7294/Reserva/Agregar', reserva);
-
-      alert('Reserva agregada con éxito');
-      console.log(response.data);
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Hubo un error al guardar la reserva');
     }
   };
 
@@ -112,9 +89,6 @@ const ReservaForm = () => {
         </button>
         <button className="confirmar" onClick={calcularMonto}>
           Confirmar Reserva
-        </button>
-        <button className="confirmar" onClick={handleSubmit}>
-          Guardar Reserva
         </button>
       </div>
     </div>

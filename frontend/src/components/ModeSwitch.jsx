@@ -3,17 +3,12 @@ import { Switch } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 const ModeSwitch = ({ usuario }) => {
-  const [modo, setModo] = React.useState(() => {
-    // Obtener el modo inicial desde localStorage
-    const savedModo = localStorage.getItem('modo');
-    return savedModo ? JSON.parse(savedModo) : false;
-  });
+  const [modo, setModo] = React.useState(false); // Estado inicial del switch
   const navigate = useNavigate(); // Hook para navegar programáticamente
 
   // cambia la pagina segun el modo
   const handleSwitchChange = (checked) => {
     setModo(checked);
-    localStorage.setItem('modo', JSON.stringify(checked)); // Guardar el modo en localStorage
 
     if (checked) {
       navigate('/home-conductor'); // Navega a la página del conductor
@@ -21,6 +16,7 @@ const ModeSwitch = ({ usuario }) => {
       navigate('/home-propietario'); // Navega a la página del propietario
     }
   };
+
 
   React.useEffect(() => {
     if (usuario.esPropietario && usuario.esConductor) {

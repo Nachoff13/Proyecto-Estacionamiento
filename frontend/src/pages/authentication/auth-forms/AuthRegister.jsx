@@ -2,14 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 // material-ui
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogActions from '@mui/material/DialogActions';
-
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
@@ -40,10 +32,6 @@ import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
 export default function AuthRegister() {
   const [level, setLevel] = useState();
   const [showPassword, setShowPassword] = useState(false);
-  const [showTerms, setShowTerms] = useState(false);
-  const [acceptedTerms, setAcceptedTerms] = useState(false);
-
-
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -57,201 +45,98 @@ export default function AuthRegister() {
     setLevel(strengthColor(temp));
   };
 
-  const handleShowTerms = () => setShowTerms(true);
-
-  const handleAcceptTerms = () => {
-    setAcceptedTerms(true);
-    setShowTerms(false);
-  };
-
-  const handleRejectTerms = () => {
-    setAcceptedTerms(false);
-    setShowTerms(false);
-  };
-
-  const handleRoleChange = (event, setFieldValue) => {
-    const { name, checked } = event.target;
-    setFieldValue(name, checked);
-  };
-
-  const handleSubmit = async (values, { setSubmitting }) => {
-        
-    const dataForAPI = {
-      nombre: values.nombre,
-      apellido: values.apellido,
-      mail: values.email,
-      username: values.username,
-      contrasena: values.contrasena,
-      esconductor: values.esconductor,
-      espropietario: values.espropietario
-    };
-
-    console.log('Datos para la API:', dataForAPI);
-
-    try {
-      const response = await fetch("https://localhost:7294/Usuario/Agregar", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataForAPI),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Error al agregar el usuario');
-      }
-  
-      const result = await response.json();
-      console.log('Usuario agregado con ID:', result);
-      alert('Se ha creado el usuario exitosamente.');
-    } catch (error) {
-      console.error('Error al enviar los datos:', error);
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   useEffect(() => {
     changePassword('');
   }, []);
 
-
-
   return (
     <>
-
-<Dialog open={showTerms} onClose={handleRejectTerms}>
-        <DialogTitle>Términos y Condiciones</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Al usar esta aplicación, acepta que no nos hacemos responsables por daños, pérdidas o inconvenientes relacionados con el uso del servicio de alquiler de garaje. Es su responsabilidad asegurar la seguridad de su vehículo y pertenencias.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleRejectTerms} color="secondary">Cancelar</Button>
-          <Button onClick={handleAcceptTerms} color="primary">Aceptar</Button>
-        </DialogActions>
-      </Dialog>
-
       <Formik
         initialValues={{
-          nombre: '',
-          apellido: '',
+          firstname: '',
+          lastname: '',
           email: '',
-          username:'',
-          contrasena: '',
-          esconductor: false,
-          espropietario: false,
+          company: '',
+          password: '',
+          submit: null
         }}
         validationSchema={Yup.object().shape({
-          nombre: Yup.string().max(255).required('Se necesita llenar el campo Nombre'),
-          apellido: Yup.string().max(255).required('Se necesita llenar el campo Apellido'),
-          email: Yup.string().email('El email debe ser válido').max(255).required('Se necesita llenar el campo Email'),
-          username: Yup.string().max(255).required('Se necesita llenar el campo Nombre de Usuario'),
-          contrasena: Yup.string().max(255).required('Se necesita llenar el campo Contraseña')
+          firstname: Yup.string().max(255).required('First Name is required'),
+          lastname: Yup.string().max(255).required('Last Name is required'),
+          email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+          password: Yup.string().max(255).required('Password is required')
         })}
-        onSubmit={handleSubmit}
       >
-        {({ errors, handleBlur, handleChange, isSubmitting, touched, values, setFieldValue, handleSubmit }) => (
-            <form noValidate onSubmit={handleSubmit}>
-
+        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+          <form noValidate onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="nombre-signup">Nombre*</InputLabel>
+                  <InputLabel htmlFor="firstname-signup">First Name*</InputLabel>
                   <OutlinedInput
-                    id="nombre-login"
-                    type="nombre"
-                    value={values.nombre}
-                    name="nombre"
+                    id="firstname-login"
+                    type="firstname"
+                    value={values.firstname}
+                    name="firstname"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     placeholder="John"
                     fullWidth
-                    error={Boolean(touched.nombre && errors.nombre)}
+                    error={Boolean(touched.firstname && errors.firstname)}
                   />
                 </Stack>
-                {touched.nombre && errors.nombre && (
-                  <FormHelperText error id="helper-text-nombre-signup">
-                    {errors.nombre}
+                {touched.firstname && errors.firstname && (
+                  <FormHelperText error id="helper-text-firstname-signup">
+                    {errors.firstname}
                   </FormHelperText>
                 )}
               </Grid>
               <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="apellido-signup">Apellido*</InputLabel>
+                  <InputLabel htmlFor="lastname-signup">Last Name*</InputLabel>
                   <OutlinedInput
                     fullWidth
-                    error={Boolean(touched.apellido && errors.apellido)}
-                    id="apellido-signup"
-                    type="apellido"
-                    value={values.apellido}
-                    name="apellido"
+                    error={Boolean(touched.lastname && errors.lastname)}
+                    id="lastname-signup"
+                    type="lastname"
+                    value={values.lastname}
+                    name="lastname"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     placeholder="Doe"
                     inputProps={{}}
                   />
                 </Stack>
-                {touched.apellido && errors.apellido && (
-                  <FormHelperText error id="helper-text-apellido-signup">
-                    {errors.apellido}
+                {touched.lastname && errors.lastname && (
+                  <FormHelperText error id="helper-text-lastname-signup">
+                    {errors.lastname}
                   </FormHelperText>
                 )}
               </Grid>
-
-              <Grid item xs={12}>
-              <Stack spacing={1}>
-                <InputLabel htmlFor="username">Nombre de usuario</InputLabel>
-                <OutlinedInput
-                  fullWidth
-                  error={Boolean(touched.username && errors.username)}
-                  id="username"
-                  value={values.username}
-                  name="username"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  placeholder="Jhonny02"
-                />
-              </Stack>
-              {touched.username && errors.username && (
-                <FormHelperText error id="helper-text-username">
-                  {errors.username}
-                </FormHelperText>
-              )}
-            </Grid>
-
-
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel>Rol</InputLabel>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        name="esconductor"
-                        checked={values.esconductor}
-                        onChange={(event) => handleRoleChange(event, setFieldValue)}
-                      />
-                    }
-                    label="Conductor"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        name="espropietario"
-                        checked={values.espropietario}
-                        onChange={(event) => handleRoleChange(event, setFieldValue)}
-                      />
-                    }
-                    label="Propietario"
+                  <InputLabel htmlFor="company-signup">Company</InputLabel>
+                  <OutlinedInput
+                    fullWidth
+                    error={Boolean(touched.company && errors.company)}
+                    id="company-signup"
+                    value={values.company}
+                    name="company"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    placeholder="Demo Inc."
+                    inputProps={{}}
                   />
                 </Stack>
+                {touched.company && errors.company && (
+                  <FormHelperText error id="helper-text-company-signup">
+                    {errors.company}
+                  </FormHelperText>
+                )}
               </Grid>
-
-
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="email-signup">Email*</InputLabel>
+                  <InputLabel htmlFor="email-signup">Email Address*</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.email && errors.email)}
@@ -261,7 +146,7 @@ export default function AuthRegister() {
                     name="email"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="jhon@gmail.com"
+                    placeholder="demo@company.com"
                     inputProps={{}}
                   />
                 </Stack>
@@ -271,18 +156,16 @@ export default function AuthRegister() {
                   </FormHelperText>
                 )}
               </Grid>
-
-              
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="contrasena">Contraseña</InputLabel>
+                  <InputLabel htmlFor="password-signup">Password</InputLabel>
                   <OutlinedInput
                     fullWidth
-                    error={Boolean(touched.contrasena && errors.contrasena)}
-                    id="contrasena"
+                    error={Boolean(touched.password && errors.password)}
+                    id="password-signup"
                     type={showPassword ? 'text' : 'password'}
-                    value={values.contrasena}
-                    name="contrasena"
+                    value={values.password}
+                    name="password"
                     onBlur={handleBlur}
                     onChange={(e) => {
                       handleChange(e);
@@ -302,49 +185,51 @@ export default function AuthRegister() {
                       </InputAdornment>
                     }
                     placeholder="******"
+                    inputProps={{}}
                   />
                 </Stack>
-                {touched.contrasena && errors.contrasena && (
-                  <FormHelperText error id="helper-text-contrasena">
-                    {errors.contrasena}
+                {touched.password && errors.password && (
+                  <FormHelperText error id="helper-text-password-signup">
+                    {errors.password}
                   </FormHelperText>
                 )}
+                <FormControl fullWidth sx={{ mt: 2 }}>
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item>
+                      <Box sx={{ bgcolor: level?.color, width: 85, height: 8, borderRadius: '7px' }} />
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="subtitle1" fontSize="0.75rem">
+                        {level?.label}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </FormControl>
               </Grid>
-
-              
-
-
               <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox checked={acceptedTerms} onClick={handleShowTerms} />}
-                  label="Acepto los términos y condiciones"
-                />
-                {!acceptedTerms && (
-                  <FormHelperText error id="helper-text-terms">
-                    Debe aceptar los términos y condiciones para registrarse
-                  </FormHelperText>
-                )}
+                <Typography variant="body2">
+                  By Signing up, you agree to our &nbsp;
+                  <Link variant="subtitle2" component={RouterLink} to="#">
+                    Terms of Service
+                  </Link>
+                  &nbsp; and &nbsp;
+                  <Link variant="subtitle2" component={RouterLink} to="#">
+                    Privacy Policy
+                  </Link>
+                </Typography>
               </Grid>
-
-
-
-
+              {errors.submit && (
+                <Grid item xs={12}>
+                  <FormHelperText error>{errors.submit}</FormHelperText>
+                </Grid>
+              )}
               <Grid item xs={12}>
                 <AnimateButton>
-                  <Button
-                    disableElevation
-                    disabled={isSubmitting || !acceptedTerms}
-                    fullWidth
-                    size="large"
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                  >
-                    Crear Cuenta
+                  <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
+                    Create Account
                   </Button>
                 </AnimateButton>
               </Grid>
-
             </Grid>
           </form>
         )}

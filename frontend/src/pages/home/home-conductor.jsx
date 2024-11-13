@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 // material-ui
 import { Typography, Button, Chip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +16,7 @@ import fakePropietario from 'data/data-usuarios';
 
 export default function HomeConductor() {
   const navigate = useNavigate(); // Hook para la navegación
+
 
   const getLocalidad = (idLocalidad) => {
     const localidad = fakeLocalidades.find((loc) => loc.id === idLocalidad);
@@ -53,11 +53,7 @@ export default function HomeConductor() {
   };
 
   const handleReservar = () => {
-    navigate('/reserva');
-  };
-
-  const handleHistorialCalificaciones = (idGaraje) => {
-    navigate(`/historial-calificaciones/${idGaraje}`);
+    navigate('/reserva'); 
   };
 
   return (
@@ -98,16 +94,11 @@ export default function HomeConductor() {
                 <strong>Capacidad:</strong> {garaje.capacidad} vehículos <br />
               </Typography>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
-              <Button variant="text" color="primary" onClick={() =>  handleHistorialCalificaciones(garaje.id)} style={{ textDecoration: 'underline', marginTop: '10px', marginRight: '10px'}}>
-                Reseñas
-              </Button>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: "auto" }}>
               <Button variant="contained" color="primary" onClick={() => handleReservar()} style={{ marginTop: '10px' }}>
                 Reservar
               </Button>
-              
             </div>
-            
           </MainCard>
         ))}
     </div>

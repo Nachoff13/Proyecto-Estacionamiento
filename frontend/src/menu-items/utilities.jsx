@@ -41,13 +41,6 @@ const utilities = {
       url: '/home-propietario',
       icon: CarOutlined
     },
-    {
-      id: 'alta-vehiculo',
-      title: 'Alta de Vehículo',
-      type: 'item',
-      url: '/alta-vehiculo',
-      icon: CarOutlined
-    }
   ]
 };
 

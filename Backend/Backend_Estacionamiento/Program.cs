@@ -4,13 +4,10 @@ using Data.Models;
 using Data.Contexto;
 using Microsoft.EntityFrameworkCore;
 using Servicios.Servicios;
-using Core.DTO;
-using Mapster;
-using Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuraciï¿½n de la cadena de conexiï¿½n desde appsettings.json
+// Configuración de la cadena de conexión desde appsettings.json
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -34,48 +31,20 @@ builder.Services.AddScoped<IMetodopago, MetodopagoServicio>();
 builder.Services.AddScoped<IUsuario, UsuarioServicio>();
 
 
-// Configurar Mapster
-TypeAdapterConfig<GarajefotoDTO, Garajefoto>
-    .ForType()
-    .Map(dest => dest.Foto, src => ImageProcessingHelper.ImagenAByte(src.Foto));
 
-TypeAdapterConfig<Garajefoto, GarajefotoDTO>
-    .ForType()
-    .Map(dest => dest.Foto, src => ImageProcessingHelper.ByteAImagen(src.Foto));
-
-
-// Configuraciï¿½n de Swagger/OpenAPI
+// Configuración de Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("PermitirLocalhost3000", policy =>
-    {
-        policy.WithOrigins("http://localhost:3000")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("PermitirLocalhost3000", policy =>
-    {
-        policy.WithOrigins("http://localhost:3000")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
-
-// Crear una nueva conexiï¿½n a la base de datos para probarla
+// Crear una nueva conexión a la base de datos para probarla
 using (var conn = new NpgsqlConnection(connectionString))
 {
     try
     {
         conn.Open();
-        Console.WriteLine("Conexiï¿½n exitosa a la base de datos.");
-        // Aquï¿½ puedes realizar consultas a la base de datos si lo deseas.
+        Console.WriteLine("Conexión exitosa a la base de datos.");
+        // Aquí puedes realizar consultas a la base de datos si lo deseas.
     }
     catch (Exception ex)
     {
@@ -91,8 +60,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseCors("PermitirLocalhost3000");
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
