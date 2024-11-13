@@ -8,7 +8,9 @@ import fakeUsuarios from 'data/data-usuarios';
 
 // ==============================|| MENU ITEMS - MODO ||============================== //
 // Simula obtener el usuario actual
-const usuarioId = 6; 
+const usuarioId = 3; // Juan Perez, Propietario
+// const usuarioId = 4; // Martin Suarez, Conductor
+// const usuarioId = 6; // David Torres, Conductor y Propietario
 const usuario = fakeUsuarios.find((user) => user.id === usuarioId);
 
 

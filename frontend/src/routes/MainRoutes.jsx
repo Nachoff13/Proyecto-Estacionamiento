@@ -23,11 +23,13 @@ const AltaVehiculo = Loadable(lazy(() => import('pages/altaVehiculo/alta-vehicul
 // ==============================|| MAIN ROUTING ||============================== //
 
 // Simula obtener el usuario actual
-const usuarioId = 4; 
+const usuarioId = 3; // Juan Perez, Propietario
+// const usuarioId = 4; // Martin Suarez, Conductor
+// const usuarioId = 6; // David Torres, Conductor y Propietario
 const usuario = fakeUsuarios.find((user) => user.id === usuarioId);
 
 let redirectPath = '/'; // Ruta por defecto
-let modo = 'conductor'; // Modo por defecto
+let modo = ''; // Modo por defecto
 
 if (usuario) {
   if (usuario.esPropietario) {
