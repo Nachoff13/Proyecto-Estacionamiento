@@ -14,6 +14,8 @@ namespace Servicios.Servicios
         Task<bool> Modificar(GarajeConId garaje);
         Task<GarajeConId> ObtenerIndividual(int id);
         Task<List<GarajeConId>> Obtener();
+        Task<List<GarajeConId>> ObtenerConPropietario(int idPropietario);
+
     }
 
     public class GarajeServicio : IGaraje
@@ -146,6 +148,24 @@ namespace Servicios.Servicios
             catch (Exception ex)
             {
                 throw new Exception($"No se pudo recuperar el garaje con ID {id}. Detalles: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<List<GarajeConId>> ObtenerConPropietario(int idPropietario)
+        {
+            try
+            {
+                // Filtrar los garajes por Idpropietario
+                List<Data.Models.Garaje> garajes = _db.Garaje
+                    .Where(g => g.Idpropietario == idPropietario)
+                    .ToList();
+
+                // Adaptar los garajes a GarajeConId
+                return garajes.Adapt<List<GarajeConId>>();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"No se pudieron obtener los garajes. Detalles: {ex.Message}", ex);
             }
         }
     }
