@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 // project import
 import MainCard from 'components/MainCard';
+import SearchBar from 'components/home/SearchBar';
 
 //data imports
 import dataGarajes from 'data/data-garajes';
@@ -17,6 +18,7 @@ import fakePropietario from 'data/data-usuarios';
 
 export default function HomeConductor() {
   const navigate = useNavigate(); // Hook para la navegación
+  const [selectedLocalidad, setSelectedLocalidad] = useState(''); //buscador
 
   const getLocalidad = (idLocalidad) => {
     const localidad = fakeLocalidades.find((loc) => loc.id === idLocalidad);
@@ -60,56 +62,69 @@ export default function HomeConductor() {
     navigate(`/historial-calificaciones/${idGaraje}`);
   };
 
+  // Maneja la búsqueda de localidades
+  const handleSearch = ({ selectedLocalidad }) => {
+    setSelectedLocalidad(selectedLocalidad);
+    console.log("localidad seleeccionada:",selectedLocalidad);
+  };
+
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
-      {dataGarajes
-        .filter((garaje) => garaje.idGarajeEstado === 1) // Filtramos los garajes que estan dispo
+    <div>
+      <SearchBar onSearch={handleSearch} />
+      <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
+        {dataGarajes
+          .filter((garaje) => garaje.idGarajeEstado === 1 && 
+          (selectedLocalidad ? garaje.idLocalidad === selectedLocalidad : true)) // Filtra por disponibilidad y localidad
         .map((garaje, index) => (
-          <MainCard key={garaje.id} style={{ width: '33.33%', boxSizing: 'border-box', height: '450px' }}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Typography variant="h6" style={{ marginBottom: '8px' }}>
-                Garaje {index + 1}
-              </Typography>
-              <Chip
-                label={getEstadoGaraje(garaje.idGarajeEstado)}
-                color={getColorEstado(garaje.idGarajeEstado)}
-                variant="outlined"
-                style={{ marginBottom: '8px' }}
+            <MainCard key={garaje.id} style={{ width: '33.33%', boxSizing: 'border-box', height: '450px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <Typography variant="h6" style={{ marginBottom: '8px' }}>
+                  Garaje {index + 1}
+                </Typography>
+                <Chip
+                  label={getEstadoGaraje(garaje.idGarajeEstado)}
+                  color={getColorEstado(garaje.idGarajeEstado)}
+                  variant="outlined"
+                  style={{ marginBottom: '8px' }}
+                />
+              </div>
+              <img
+                src={getFotoGaraje(garaje.id)} // Obtener la imagen del garaje
+                alt={`Foto del garaje ${garaje.id}`}
+                style={{ width: '100%', height: '200px', objectFit: 'cover' }}
               />
-            </div>
-            <img
-              src={getFotoGaraje(garaje.id)} // Obtener la imagen del garaje
-              alt={`Foto del garaje ${garaje.id}`}
-              style={{ width: '100%', height: '200px', objectFit: 'cover' }}
-            />
-            <div style={{ flex: '1', overflow: 'hidden' }}>
-              <Typography variant="body2">
-                <strong>Propietario: </strong> {getPropietario(garaje.idPropietario)} <br />
-                <strong>Localidad: </strong> {getLocalidad(garaje.idLocalidad)} <strong>Ubicación:</strong> {garaje.Calle} N°{' '}
-                {garaje.altura} <br />
-                <strong>Descripción:</strong> {garaje.descripcion} <br />
-                <strong>Precio por hora:</strong> ${garaje.precioHora} <br />
-                <strong>Capacidad:</strong> {garaje.capacidad} vehículos <br />
-              </Typography>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
-              <Button variant="text" color="primary" onClick={() =>  handleHistorialCalificaciones(garaje.id)} style={{ textDecoration: 'underline', marginTop: '10px', marginRight: '10px'}}>
-                Reseñas
-              </Button>
-              <Button variant="contained" color="primary" onClick={() => handleReservar()} style={{ marginTop: '10px' }}>
-                Reservar
-              </Button>
-              
-            </div>
-            
-          </MainCard>
-        ))}
+              <div style={{ flex: '1', overflow: 'hidden' }}>
+                <Typography variant="body2">
+                  <strong>Propietario: </strong> {getPropietario(garaje.idPropietario)} <br />
+                  <strong>Localidad: </strong> {getLocalidad(garaje.idLocalidad)} <strong>Ubicación:</strong> {garaje.Calle} N°{' '}
+                  {garaje.altura} <br />
+                  <strong>Descripción:</strong> {garaje.descripcion} <br />
+                  <strong>Precio por hora:</strong> ${garaje.precioHora} <br />
+                  <strong>Capacidad:</strong> {garaje.capacidad} vehículos <br />
+                </Typography>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+                <Button
+                  variant="text"
+                  color="primary"
+                  onClick={() => handleHistorialCalificaciones(garaje.id)}
+                  style={{ textDecoration: 'underline', marginTop: '10px', marginRight: '10px' }}
+                >
+                  Reseñas
+                </Button>
+                <Button variant="contained" color="primary" onClick={() => handleReservar()} style={{ marginTop: '10px' }}>
+                  Reservar
+                </Button>
+              </div>
+            </MainCard>
+          ))}
+      </div>
     </div>
   );
 }
