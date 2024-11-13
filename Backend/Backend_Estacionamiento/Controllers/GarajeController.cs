@@ -49,5 +49,12 @@ namespace WebAPI.Controllers
             var resultado = await _garaje.ObtenerIndividual(id).ConfigureAwait(false);
             return Ok(resultado);
         }
+
+        [HttpGet("ObtenerConPropietario/{idPropietario}")]
+        public async Task<ActionResult<List<GarajeConId>>> ObtenerConPropietario(int idPropietario)
+        {
+            var resultados = await _garaje.ObtenerConPropietario(idPropietario).ConfigureAwait(false);
+            return Ok(resultados);
+        }
     }
 }
