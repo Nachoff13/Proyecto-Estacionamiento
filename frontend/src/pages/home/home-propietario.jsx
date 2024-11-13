@@ -18,7 +18,7 @@ export default function HomePropietario() {
 
   const fetchGarages = async () => {
     try {
-      const response = await fetch("https://localhost:7294/Garaje/Obtener", {
+      const response = await fetch(`https://localhost:7294/Garaje/ObtenerConPropietario/${propietarioId}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       });
