@@ -18,17 +18,15 @@ export const endpoints = {
 export function useGetGaraje() {
     const { data, error, isValidating } = useSWR(endpoints.key + endpoints.list, getGarajes);
   
-    // Agregar console.log para depuración
-    console.log('Fetching garajes from:', endpoints.key + endpoints.list);
     console.log('Data Gataje:', data);
   
     const memoizedValue = useMemo(
       () => ({
-        garaje: data?.datos || [], 
+        garaje: data || [], 
         garajeLoading: !error && !data,
         garajeError: error,
         garajeValidating: isValidating,
-        garajeEmpty: data?.datos ? data.datos.length === 0 : true
+        garajeEmpty: data ? data.length === 0 : true
       }),
       [data, error, isValidating]
     );
