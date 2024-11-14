@@ -15,22 +15,21 @@ export const endpoints = {
   list: '/Localidad/Obtener', // server URL
 };
 
+
+//DEVUELVE EL ARRAY DE LOCALIDADES
 export function useGetLocalidad() {
     const { data, error, isValidating } = useSWR(endpoints.key + endpoints.list, getLocalidades);
-  
-    // Agregar console.log para depuración
-    console.log('Fetching localidades from:', endpoints.key + endpoints.list);
-    console.log('Data localidad:', data);
-  
+   
     const memoizedValue = useMemo(
       () => ({
-        localidad: data?.datos || [], 
+        localidad: data || [],  
         localidadLoading: !error && !data,
         localidadError: error,
         localidadValidating: isValidating,
-        localidadEmpty: data?.datos ? data.datos.length === 0 : true
+        localidadEmpty: data ? data.length === 0 : true
       }),
       [data, error, isValidating]
     );
+
     return memoizedValue;
-  }
+}
