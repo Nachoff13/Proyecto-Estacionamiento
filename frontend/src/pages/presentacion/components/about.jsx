@@ -1,37 +1,40 @@
-import React from "react";
+import React from 'react';
 
 export const About = (props) => {
   return (
-    // <div className="presentacion-page">
     <div id="about">
       <div className="container">
         <div className="row">
           <div className="col-xs-12 col-md-6">
-            {" "}
-            <img src="img/about.jpg" className="img-responsive" alt="" />{" "}
+            {' '}
+            <img src="img/about.jpg" className="img-responsive" alt="" />{' '}
           </div>
           <div className="col-xs-12 col-md-6">
             <div className="about-text">
-              <h2>About Us</h2>
-              <p>{props.data ? props.data.paragraph : "loading..."}</p>
-              <h3>Why Choose Us?</h3>
-              <div className="list-style">
+              <h2>Sobre Nosotros</h2>
+              <p>
+                En GARAJITO, somos una empresa dedicada a ofrecer una solución innovadora para propietarios y conductores en La Plata,
+                provincia de Buenos Aires. Nuestro objetivo es conectar a quienes tienen garajes disponibles con aquellos que necesitan un
+                espacio para estacionar de forma rápida, segura y conveniente.
+              </p>
+              <h3>¿Cómo funciona?</h3>
+              <div className="list-style row">
                 <div className="col-lg-6 col-sm-6 col-xs-12">
                   <ul>
-                    {props.data
-                      ? props.data.Why.map((d, i) => (
-                          <li key={`${d}-${i}`}>{d}</li>
-                        ))
-                      : "loading"}
+                    <li>
+                      <strong>Para los propietarios:</strong> Si tienes un garaje o espacio disponible, puedes ofrecerlo a través de nuestra
+                      plataforma para que otros usuarios lo alquilen. Es una forma fácil y flexible de generar ingresos con un espacio que
+                      no utilizas constantemente.
+                    </li>
                   </ul>
                 </div>
                 <div className="col-lg-6 col-sm-6 col-xs-12">
                   <ul>
-                    {props.data
-                      ? props.data.Why2.map((d, i) => (
-                          <li key={`${d}-${i}`}> {d}</li>
-                        ))
-                      : "loading"}
+                    <li>
+                      <strong>Para los conductores:</strong> A través de nuestra plataforma, puedes ver en tiempo real qué garajes están
+                      disponibles cerca de tu ubicación. Nuestro mapa interactivo te permitirá encontrar y reservar el lugar perfecto para
+                      estacionar tu vehículo, sin la preocupación de no encontrar un espacio libre.
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -40,6 +43,5 @@ export const About = (props) => {
         </div>
       </div>
     </div>
-    // </div>
   );
 };
