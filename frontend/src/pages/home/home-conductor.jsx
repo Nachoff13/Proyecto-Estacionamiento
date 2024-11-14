@@ -1,129 +1,143 @@
 import React, { useState, useEffect } from 'react';
 // material-ui
-import { Typography, Button, Chip } from '@mui/material';
+import { Typography, Button, Chip, ImageList, ImageListItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 // project import
 import MainCard from 'components/MainCard';
 import SearchBar from 'components/home/SearchBar';
 
-//data imports
-import dataGarajes from 'data/data-garajes';
-import fakeFotosGarajes from 'data/data-garajefoto';
-import fakeLocalidades from 'data/data-localidades';
-import fakeGarajeEstado from 'data/data-garajeestado';
-import fakePropietario from 'data/data-usuarios';
+// API imports
+import { useGetLocalidad } from 'src/api/Localidad';
+import { useGetPropietario } from 'src/api/Usuario';
+import { useGetGaraje } from 'api/Garaje';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
 export default function HomeConductor() {
-  const navigate = useNavigate(); // Hook para la navegación
-  const [selectedLocalidad, setSelectedLocalidad] = useState(''); //buscador
+  const navigate = useNavigate();
+  const [selectedLocalidad, setSelectedLocalidad] = useState(''); // Buscador
+    // Estado para almacenar las fotos de cada garaje
+    const [garageImages, setGarageImages] = useState({});
 
-  const getLocalidad = (idLocalidad) => {
-    const localidad = fakeLocalidades.find((loc) => loc.id === idLocalidad);
-    return localidad ? localidad.nombre : 'Desconocido';
-  };
+  // Obtener datos de API
+  const { localidad, localidadLoading, localidadError } = useGetLocalidad();
+  const { propietario, propietarioLoading, propietarioError } = useGetPropietario();
+  const { garaje, garajeLoading, garajeError } = useGetGaraje();
+  
 
-  const getEstadoGaraje = (idGarajeEstado) => {
-    const estado = fakeGarajeEstado.find((est) => est.id === idGarajeEstado);
-    return estado ? estado.nombre : 'Desconocido';
-  };
 
-  const getFotoGaraje = (idGaraje) => {
-    const fotoGaraje = fakeFotosGarajes.find((foto) => foto.idGaraje === idGaraje);
-    return fotoGaraje ? fotoGaraje.foto : 'default-foto.jpg'; // En caso de que no encuentre foto
-  };
+  // Función para obtener imágenes del garaje
+  const fetchGarageImages = async (idGaraje) => {
+    try {
+      const response = await fetch(`https://localhost:7294/GarajeFoto/ObtenerFotosDeGaraje/${idGaraje}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
 
-  const getPropietario = (idPropietario) => {
-    const propietario = fakePropietario.find((propietario) => propietario.id === idPropietario);
-    return propietario ? propietario.nombre + ' ' + propietario.apellido : 'Desconocido';
-  };
+      if (response.status === 404) {
+        console.warn(`No images found for garage ${idGaraje}`);
+        return;
+      }
 
-  //-------------------------------GET COLOR ESTADO-----------------------------------
-  const getColorEstado = (idGarajeEstado) => {
-    switch (idGarajeEstado) {
-      case 1: // Disponible
-        return 'success';
-      case 2: // Reservado
-        return 'warning';
-      case 3: // No Disponible
-        return 'error';
-      default:
-        return 'default';
+      const imagesData = await response.json();
+      if (imagesData && imagesData.length > 0) {
+        setGarageImages((prevImages) => ({
+          ...prevImages,
+          [idGaraje]: imagesData.map((img) => URL.createObjectURL(new Blob([new Uint8Array(img.foto.split(',').map(Number))], { type: 'image/jpeg' })))
+        }));
+      }
+    } catch (error) {
+      console.error(`Error fetching images for garage ${idGaraje}:`, error);
     }
   };
 
-  const handleReservar = () => {
-    navigate('/reserva');
+
+  useEffect(() => {
+    if (garaje.length > 0) {
+      garaje.forEach(garage => {
+        fetchGarageImages(garage.id);
+      });
+    }
+  }, [garaje]); 
+
+  // Manejo de errores
+  if (localidadError || propietarioError || garajeError) {
+    return <div>Error al cargar los datos.</div>;
+  }
+
+  // Manejo de carga
+  if (localidadLoading || propietarioLoading || garajeLoading) {
+    return <div>Cargando...</div>;
+  }
+
+  // Función para obtener la localidad por ID
+  const getLocalidad = (idLocalidad) => {
+    const localidadEncontrada = localidad.find((loc) => loc.id === idLocalidad);
+    return localidadEncontrada ? localidadEncontrada.nombre : 'Desconocido';
   };
 
-  const handleHistorialCalificaciones = (idGaraje) => {
-    navigate(`/historial-calificaciones/${idGaraje}`);
-  };
-
-  // Maneja la búsqueda de localidades
-  const handleSearch = ({ selectedLocalidad }) => {
-    setSelectedLocalidad(selectedLocalidad);
-    console.log("localidad seleeccionada:",selectedLocalidad);
+  // Función para obtener el propietario por ID
+  const getPropietario = (idPropietario) => {
+    const propietarioEncontrado = propietario.find((prop) => prop.id === idPropietario);
+    return propietarioEncontrado ? `${propietarioEncontrado.nombre} ${propietarioEncontrado.apellido}` : 'Desconocido';
   };
 
   return (
     <div>
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar onSearch={(search) => setSelectedLocalidad(search.selectedLocalidad)} />
       <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
-        {dataGarajes
-          .filter((garaje) => garaje.idGarajeEstado === 1 && 
-          (selectedLocalidad ? garaje.idLocalidad === selectedLocalidad : true)) // Filtra por disponibilidad y localidad
-        .map((garaje, index) => (
-            <MainCard key={garaje.id} style={{ width: '33.33%', boxSizing: 'border-box', height: '450px' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between'
-                }}
-              >
-                <Typography variant="h6" style={{ marginBottom: '8px' }}>
-                  Garaje {index + 1}
-                </Typography>
-                <Chip
-                  label={getEstadoGaraje(garaje.idGarajeEstado)}
-                  color={getColorEstado(garaje.idGarajeEstado)}
-                  variant="outlined"
-                  style={{ marginBottom: '8px' }}
-                />
-              </div>
-              <img
-                src={getFotoGaraje(garaje.id)} // Obtener la imagen del garaje
-                alt={`Foto del garaje ${garaje.id}`}
-                style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+        {garaje.filter(garageItem => garageItem.disponible && (!selectedLocalidad || garageItem.idlocalidad === selectedLocalidad)).map((garageItem, index) => (
+          <MainCard key={garageItem.id} style={{ width: '33.33%', boxSizing: 'border-box', height: '450px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Typography variant="h6" style={{ marginBottom: '8px' }}>
+                Garaje {index + 1}
+              </Typography>
+              <Chip
+                label={garageItem.disponible ? "Disponible" : "No disponible"}
+                color={garageItem.disponible ? "success" : "error"}
+                variant="outlined"
+                style={{ marginBottom: '8px' }}
               />
-              <div style={{ flex: '1', overflow: 'hidden' }}>
-                <Typography variant="body2">
-                  <strong>Propietario: </strong> {getPropietario(garaje.idPropietario)} <br />
-                  <strong>Localidad: </strong> {getLocalidad(garaje.idLocalidad)} <strong>Ubicación:</strong> {garaje.Calle} N°{' '}
-                  {garaje.altura} <br />
-                  <strong>Descripción:</strong> {garaje.descripcion} <br />
-                  <strong>Precio por hora:</strong> ${garaje.precioHora} <br />
-                  <strong>Capacidad:</strong> {garaje.capacidad} vehículos <br />
-                </Typography>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
-                <Button
-                  variant="text"
-                  color="primary"
-                  onClick={() => handleHistorialCalificaciones(garaje.id)}
-                  style={{ textDecoration: 'underline', marginTop: '10px', marginRight: '10px' }}
-                >
-                  Reseñas
-                </Button>
-                <Button variant="contained" color="primary" onClick={() => handleReservar()} style={{ marginTop: '10px' }}>
-                  Reservar
-                </Button>
-              </div>
-            </MainCard>
-          ))}
+            </div>
+            <div style={{ flex: '1', overflow: 'hidden', marginBottom: '8px' }}>
+              <ImageList cols={1} rowHeight={150} style={{ width: '100%', height: 'auto' }}>
+                {(garageImages[garageItem.id] || []).map((src, idx) => (
+                  <ImageListItem key={idx}>
+                    <img
+                      src={src}
+                      alt={`Foto ${idx + 1} del garaje ${garageItem.id}`}
+                      style={{ objectFit: 'contain', width: '100%', height: '100%', borderRadius: '8px' }}
+                    />
+                  </ImageListItem>
+                ))}
+              </ImageList>
+            </div>
+            <div style={{ flex: '1', overflow: 'hidden' }}>
+              <Typography variant="body2">
+                <strong>Propietario:</strong> {getPropietario(garageItem.idpropietario)}<br />
+                <strong>Localidad:</strong> {getLocalidad(garageItem.idlocalidad)}<br />
+                <strong>Ubicación:</strong> {garageItem.calle} N° {garageItem.altura}<br />
+                <strong>Descripción:</strong> {garageItem.descripcion}<br />
+                <strong>Precio por hora:</strong> ${garageItem.preciohora}<br />
+                <strong>Capacidad:</strong> {garageItem.capacidad} vehículos<br />
+              </Typography>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+              <Button
+                variant="text"
+                color="primary"
+                onClick={() => navigate(`/historial-calificaciones/${garageItem.id}`)}
+                style={{ textDecoration: 'underline', marginTop: '10px', marginRight: '10px' }}
+              >
+                Reseñas
+              </Button>
+              <Button variant="contained" color="primary" onClick={() => navigate('/reserva')} style={{ marginTop: '10px' }}>
+                Reservar
+              </Button>
+            </div>
+          </MainCard>
+        ))}
       </div>
     </div>
   );
