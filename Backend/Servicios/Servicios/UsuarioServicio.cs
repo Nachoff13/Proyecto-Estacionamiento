@@ -18,7 +18,11 @@ namespace Servicios.Servicios
         Task<bool> Eliminar(int id);
         Task<bool> Modificar(UsuarioConId usuario);
         Task<UsuarioConIdSinContrasena> ObtenerIndividual(int id);
+        Task<UsuarioConIdSinContrasena> ObtenerPropietarioIndividual(int id);
+        Task<UsuarioConIdSinContrasena> ObtenerConductorIndividual(int id);
         Task<List<UsuarioConIdSinContrasena>> Obtener();
+        Task<List<UsuarioConIdSinContrasena>> ObtenerPropietario();
+        Task<List<UsuarioConIdSinContrasena>> ObtenerConductor();
     }
 
     public class UsuarioServicio : IUsuario
@@ -135,6 +139,74 @@ namespace Servicios.Servicios
             catch (Exception ex)
             {
                 throw new Exception($"No se pudieron obtener los modelos. Detalles: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<List<UsuarioConIdSinContrasena>> ObtenerPropietario()
+        {
+            try
+            {
+                List<Data.Models.Usuario> modelos = _db.Usuario.Where(u => u.Espropietario == true).ToList();
+                return modelos.Adapt<List<UsuarioConIdSinContrasena>>();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"No se pudieron obtener los modelos. Detalles: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<List<UsuarioConIdSinContrasena>> ObtenerConductor()
+        {
+            try
+            {
+                List<Data.Models.Usuario> modelos = _db.Usuario.Where(u => u.Esconductor == true).ToList();
+                return modelos.Adapt<List<UsuarioConIdSinContrasena>>();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"No se pudieron obtener los modelos. Detalles: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<UsuarioConIdSinContrasena> ObtenerPropietarioIndividual(int id)
+        {
+            try
+            {
+                var modeloUsuario = _db.Usuario.Where(u => u.Espropietario == true).FirstOrDefault(x => x.Id == id);
+
+                if (modeloUsuario != null)
+                {
+                    return modeloUsuario.Adapt<UsuarioConIdSinContrasena>();
+                }
+                else
+                {
+                    throw new Exception("No es posible encontrar ese usuario");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"No se pudo recuperar el usuario con ID {id}. Detalles: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<UsuarioConIdSinContrasena> ObtenerConductorIndividual(int id)
+        {
+            try
+            {
+                var modeloUsuario = _db.Usuario.Where(u => u.Esconductor == true).FirstOrDefault(x => x.Id == id);
+
+                if (modeloUsuario != null)
+                {
+                    return modeloUsuario.Adapt<UsuarioConIdSinContrasena>();
+                }
+                else
+                {
+                    throw new Exception("No es posible encontrar ese usuario");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"No se pudo recuperar el usuario con ID {id}. Detalles: {ex.Message}", ex);
             }
         }
 
