@@ -1,27 +1,38 @@
 // SearchBar.jsx
 import React, { useState } from 'react';
 import { MenuItem, Button, Select, InputLabel, FormControl, Tooltip, IconButton } from '@mui/material';
-
 import SearchOutlined from '@ant-design/icons/SearchOutlined';
-
-import fakeLocalidades from 'data/data-localidades';
+import { useGetLocalidad } from 'src/api/Localidad';
 
 const SearchBar = ({ onSearch }) => {
   const [selectedLocalidad, setSelectedLocalidad] = useState('');
+  const { localidad, localidadLoading, localidadError } = useGetLocalidad();
 
   const handleSearch = () => {
-    onSearch({ selectedLocalidad }); 
+    onSearch({ selectedLocalidad: selectedLocalidad ? Number(selectedLocalidad) : '' });
   };
+
+  if (localidadError) {
+    return <div>Error al cargar las localidades.</div>;
+  }
+
+  if (localidadLoading) {
+    return <div>Cargando localidades...</div>;
+  }
 
   return (
     <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
       <FormControl variant="outlined" style={{ width: '300px' }}>
         <InputLabel>Filtre por Localidad...</InputLabel>
-        <Select value={selectedLocalidad} onChange={(e) => setSelectedLocalidad(e.target.value)} label="Localidad">
+        <Select
+          value={selectedLocalidad}
+          onChange={(e) => setSelectedLocalidad(e.target.value)}
+          label="Localidad"
+        >
           <MenuItem value="">
             <em>Todos</em>
           </MenuItem>
-          {fakeLocalidades.map((loc) => (
+          {localidad.map((loc) => (
             <MenuItem key={loc.id} value={loc.id}>
               {loc.nombre}
             </MenuItem>
