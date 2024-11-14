@@ -13,7 +13,7 @@ export const Header = (props) => {
                   tu garaje de confianza
                   <span></span>
                 </h1>
-                <a href="#features" className="btn btn-custom btn-lg page-scroll">
+                <a href="#about" className="btn btn-custom btn-lg page-scroll">
                   Leer más
                 </a>{' '}
               </div>
