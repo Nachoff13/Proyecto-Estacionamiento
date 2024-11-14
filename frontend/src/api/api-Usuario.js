@@ -16,3 +16,12 @@ export const getUsuarios = async () => {
     console.error("Error fetching usuarios:", error);
   }
 }
+
+export const getPropietarios = async () => {
+  try {
+    const response = await api.get('/Usuario/ObtenerPropietario');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching usuarios:", error);
+  }
+}
