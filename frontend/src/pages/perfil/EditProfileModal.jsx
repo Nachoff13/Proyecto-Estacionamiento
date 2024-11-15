@@ -54,40 +54,51 @@ const EditProfileModal = ({ open, handleClose, usuarioData, setUsuarioData }) =>
         <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
           Editar Perfil
         </Typography>
-        {/* Campo para Nombre */}
-        <TextField
-          label="Nombre"
-          name="nombre"
-          value={usuarioData.nombre}
-          onChange={handleInputChange}
-          fullWidth
-          sx={{ mb: 2 }}
-          error={!!errors.nombre}
-          helperText={errors.nombre}
-        />
+        {/* Verificación de usuarioData antes de acceder a sus propiedades */}
+        {usuarioData ? (
+          <>
+            {/* Campo para Nombre */}
+            <TextField
+              label="Nombre"
+              name="nombre"
+              value={usuarioData.nombre}
+              onChange={handleInputChange}
+              fullWidth
+              sx={{ mb: 2 }}
+              error={!!errors.nombre}
+              helperText={errors.nombre}
+            />
 
-        {/* Campo para Apellido */}
-        <TextField
-          label="Apellido"
-          name="apellido"
-          value={usuarioData.apellido}
-          onChange={handleInputChange}
-          fullWidth
-          sx={{ mb: 2 }}
-          error={!!errors.apellido}
-          helperText={errors.apellido}
-        />
+            {/* Campo para Apellido */}
+            <TextField
+              label="Apellido"
+              name="apellido"
+              value={usuarioData.apellido}
+              onChange={handleInputChange}
+              fullWidth
+              sx={{ mb: 2 }}
+              error={!!errors.apellido}
+              helperText={errors.apellido}
+            />
 
-        <TextField
-          label="Nombre de Usuario"
-          name="username"
-          value={usuarioData.username}
-          onChange={handleInputChange}
-          fullWidth
-          sx={{ mb: 2 }}
-          error={!!errors.username}
-          helperText={errors.username}
-        />
+            {/* Campo para Nombre de Usuario */}
+            <TextField
+              label="Nombre de Usuario"
+              name="username"
+              value={usuarioData.username}
+              onChange={handleInputChange}
+              fullWidth
+              sx={{ mb: 2 }}
+              error={!!errors.username}
+              helperText={errors.username}
+            />
+          </>
+        ) : (
+          <Typography variant="h6" color="text.secondary">
+            Cargando datos del usuario...
+          </Typography>
+        )}
+
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button onClick={handleClose} sx={{ mr: 2 }}>
             Cancelar
