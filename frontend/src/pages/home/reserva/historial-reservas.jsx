@@ -3,26 +3,17 @@ import { useLocation } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Box, TextField, InputAdornment } from '@mui/material';
 import MainCard from 'components/MainCard';
 
-//icons
+// Icons
 import SearchOutlined from '@ant-design/icons/SearchOutlined';
 
-//components
+// Components
 import ReservaEstados from 'components/reserva/ReservaEstados';
 
-// Fake data imports
-import { fakeReservas } from 'data/data-reservas';
-import fakeGarajes from 'data/data-garajes';
-import fakeUsuarios from 'data/data-usuarios';
+// Hooks
+import { useGetHistorialReserva } from 'api/ReservaHistorial';
+import { useGetConductores } from 'api/Usuario';
+import { useGetGaraje } from 'api/Garaje';
 
-// Crear datos de reserva
-const reservas = fakeReservas.map((reserva) => ({
-  id: reserva.id,
-  idGaraje: reserva.idGaraje,
-  idConductor: reserva.idConductor,
-  fechaInicio: reserva.fechaInicio,
-  fechaFin: reserva.fechaFin,
-  idEstado: reserva.idEstado
-}));
 
 // Nombres de las columnas
 const headCells = [
@@ -34,12 +25,12 @@ const headCells = [
   },
   { id: 'conductor', align: 'left', disablePadding: false, label: 'Conductor' },
   {
-    id: 'fechaInicio',
+    id: 'fechainicio',
     align: 'left',
     disablePadding: false,
     label: 'Fecha Inicio'
   },
-  { id: 'fechaFin', align: 'left', disablePadding: false, label: 'Fecha Fin' },
+  { id: 'fechafin', align: 'left', disablePadding: false, label: 'Fecha Fin' },
   { id: 'estado', align: 'left', disablePadding: false, label: 'Estado' }
 ];
 
@@ -47,28 +38,43 @@ export default function HistorialReservas() {
   const location = useLocation();
   const garajeId = location.state?.garajeId;
 
-  // busqueda
+  const { reservas, loading, error } = useGetHistorialReserva(garajeId);
+  const { conductores } = useGetConductores();
+  const { garaje } = useGetGaraje();
+
   const [searchTerm, setSearchTerm] = React.useState('');
 
   const getGarajeDireccion = (idGaraje) => {
-    const garaje = fakeGarajes.find((g) => g.id === idGaraje);
-    return garaje ? `${garaje.calle} N° ${garaje.altura}` : 'Desconocido';
+    const garajeEncontrado = garaje.find((g) => g.id === idGaraje);
+    return garajeEncontrado ? `${garajeEncontrado.calle} N° ${garajeEncontrado.altura}` : 'Desconocido';
   };
 
   const getConductorNombre = (idConductor) => {
-    const usuario = fakeUsuarios.find((u) => u.id === idConductor);
-    return usuario ? `${usuario.nombre} ${usuario.apellido}` : 'Desconocido';
+    const conductorEncontrado = conductores.find((u) => u.id === idConductor);
+    return conductorEncontrado ? `${conductorEncontrado.nombre} ${conductorEncontrado.apellido}` : 'Desconocido';
   };
 
-  // filtro reservas, sin ditinciion de mayusculas y minusculas, y sin tildes
+  // Filtrado de reservas
   const filteredReservas = reservas.filter((reserva) => {
-    const conductorNombre = getConductorNombre(reserva.idConductor)
+    const conductorNombre = getConductorNombre(reserva.idconductor)
       .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '');
-    const normalizedSearchTerm = searchTerm.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-
-    return reserva.idGaraje === garajeId && conductorNombre.toLowerCase().includes(normalizedSearchTerm.toLowerCase());
+      .replace(/[\u0300-\u036f]/g, '') // elimina tildes
+      .toLowerCase(); 
+  
+    const normalizedSearchTerm = searchTerm
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') 
+      .toLowerCase(); 
+    console.log("Conductor Nombre:", conductorNombre);
+    console.log("Search Term:", normalizedSearchTerm);
+  
+    return reserva.idgaraje === garajeId && conductorNombre.includes(normalizedSearchTerm);
   });
+  
+
+  // Manejo de estados de carga y error
+  if (loading) return <div>Cargando...</div>;
+  if (error) return <div>Error al cargar reservas: {error.message}</div>;
 
   return (
     <MainCard sx={{ mt: 2 }} content={false} spacing={2}>
@@ -106,7 +112,7 @@ export default function HistorialReservas() {
             <TableHead>
               <TableRow>
                 {headCells.map((headCell) => (
-                  <TableCell key={headCell.id} align={headCell.align} padding={headCell.disablePadding ? 'none' : 'normal'}>
+                  <TableCell key={headCell.id} align="left" padding="normal">
                     {headCell.label}
                   </TableCell>
                 ))}
@@ -115,12 +121,12 @@ export default function HistorialReservas() {
             <TableBody>
               {filteredReservas.map((reserva) => (
                 <TableRow hover role="checkbox" sx={{ '&:last-child td, &:last-child th': { border: 0 } }} tabIndex={-1} key={reserva.id}>
-                  <TableCell>{getGarajeDireccion(reserva.idGaraje)}</TableCell>
-                  <TableCell>{getConductorNombre(reserva.idConductor)}</TableCell>
-                  <TableCell>{new Date(reserva.fechaInicio).toLocaleString()}</TableCell>
-                  <TableCell>{new Date(reserva.fechaFin).toLocaleString()}</TableCell>
+                  <TableCell>{getGarajeDireccion(reserva.idgaraje)}</TableCell> 
+                  <TableCell>{getConductorNombre(reserva.idconductor)}</TableCell>
+                  <TableCell>{new Date(reserva.fechainicio).toLocaleString()}</TableCell>
+                  <TableCell>{new Date(reserva.fechafin).toLocaleString()}</TableCell>
                   <TableCell>
-                    <ReservaEstados idEstado={reserva.idEstado} />
+                    <ReservaEstados idEstado={reserva.idreservaestado} />
                   </TableCell>
                 </TableRow>
               ))}
