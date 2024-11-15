@@ -22,6 +22,10 @@ import fakeUsuarios from 'data/data-usuarios'; // Importa los usuarios
 import EditProfileModal from './EditProfileModal'; // Importa el componente de edición de perfil
 import ChangeProfileImageModal from './ChangeProfileImageModal'; // Importa el nuevo componente
 
+//componentes 
+import TablaGarajes from './tablaGarajes';
+import TablaVehiculos  from './tablaVehiculos';
+
 // Simulación de un usuario logueado
 const currentUser = fakeUsuarios.find((user) => user.username === 'johndoe'); // Puedes cambiar esto para obtener el usuario dinámicamente
 
@@ -134,75 +138,14 @@ export default function UserProfile() {
         </Typography>
       </Box>
 
-      {/* Condicionalmente renderizar la tabla de Mis Garages */}
-      {modo === false && (
-        <>
-          <Typography variant="h4" component="h2" sx={{ mb: 1 }}>
-            Mis Garages
-            <Box sx={{ width: '95%', margin: '0 auto', overflowX: 'auto' }}>
-              <TableContainer component={Paper} sx={{ mt: 2 }}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Localidad</TableCell>
-                      <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Altura</TableCell>
-                      <TableCell>Calle</TableCell>
-                      <TableCell>Precio por Hora</TableCell>
-                      <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Capacidad</TableCell>
-                      <TableCell>Estado</TableCell>
-                      <TableCell>Imágenes</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {userGarages.map((garage, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{getLocalidadName(garage.idLocalidad)}</TableCell>
-                        <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{garage.altura}</TableCell>
-                        <TableCell>{garage.calle}</TableCell>
-                        <TableCell>{`$${garage.precioHora}`}</TableCell>
-                        <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
-                          {garage.capacidad} {garage.capacidad > 1 ? 'autos' : 'auto'}
-                        </TableCell>
-                        <TableCell>{getGarageState(garage.idGarajeEstado)}</TableCell>
-                        <TableCell>
-                          {getGarageImages(garage.id).map((img, idx) => (
-                            <Button key={idx} onClick={() => handleOpen(img.foto)} sx={{ padding: 0, minWidth: 'auto' }}>
-                              <img src={img.foto} alt="Garage" width="80" style={{ marginRight: '8px' }} />
-                            </Button>
-                          ))}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Box>
-          </Typography>
-        </>
-      )}
-
-      {/* Modal para mostrar imagen ampliada */}
-      <Modal open={open} onClose={handleClose}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '80%',
-            bgcolor: 'background.paper',
-            borderRadius: '8px',
-            boxShadow: 24,
-            p: 4,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
-        >
-          <img src={selectedImage} alt="Imagen del garaje" style={{ maxWidth: '100%', maxHeight: '100%' }} />
-        </Box>
-      </Modal>
-
+      <TablaGarajes 
+        modo={modo} 
+        userGarages={userGarages} 
+        getLocalidadName={getLocalidadName} 
+        getGarageState={getGarageState} 
+        getGarageImages={getGarageImages} 
+      />
+  
       {/* Modal para editar perfil */}
       <EditProfileModal open={editOpen} handleClose={handleEditClose} profileData={profileData} setProfileData={setProfileData} />
 
