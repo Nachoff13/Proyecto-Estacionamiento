@@ -27,9 +27,11 @@ import TablaGarajes from './tablaGarajes';
 import TablaVehiculos from './tablaVehiculos';
 
 //data
+import { useGetUsuarioIndividual } from 'api/Usuario';
 import { useGetVehiculoConConductor } from 'api/Vehiculo';
 import { useGetModelo } from 'api/Modelo';
 import { useGetMarca } from 'api/Marca';
+import InfoPerfil from './infoPerfil';
 
 // Simulación de un usuario logueado
 const currentUser = fakeUsuarios.find((user) => user.username === 'johndoe'); // Puedes cambiar esto para obtener el usuario dinámicamente
@@ -47,8 +49,8 @@ export default function UserProfile() {
     image: localStorage.getItem('profileImage') || avatar // Cargar la imagen desde localStorage o usar la imagen por defecto
   });
 
+  const { usuarioIndividual, usuarioIndividualLoading, usuarioIndividualError } = useGetUsuarioIndividual(3);
   const idConductor = 3;
-
   // Obtengo datos de la API pasando el idConductor
   const { vehiculo, vehiculoLoading, vehiculoError } = useGetVehiculoConConductor(idConductor);
   // Obtengo datos de modelos
@@ -78,7 +80,17 @@ export default function UserProfile() {
     } else {
       console.log('No se encontraron marcas.');
     }
-  }, [vehiculo, vehiculoLoading, vehiculoError, modelo, marca]);
+
+    if (usuarioIndividualError) {
+      console.error('Error al obtener usuario:', usuarioIndividualError);
+      return; // Salir si hay un error
+    }
+    if (usuarioIndividual) {
+      console.log('Usuario obtenido:', usuarioIndividual);
+    } else {
+      console.log('No se encontraron usuarios.');
+    }
+  }, [vehiculo, vehiculoLoading, vehiculoError, modelo, marca, usuarioIndividual, usuarioIndividualError]);
 
   useEffect(() => {
     // Obtener el modo desde localStorage
@@ -140,42 +152,9 @@ export default function UserProfile() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', padding: 2, bgcolor: '#f5f5f5' }}>
-      <Typography variant="h3" component="h1" sx={{ mb: -4, alignSelf: 'flex-start' }}>
-        Perfil
-      </Typography>
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexGrow: 1, justifyContent: 'center' }}>
-        <Box
-          component="img"
-          alt="Perfil de usuario"
-          src={profileData.image}
-          sx={{
-            borderRadius: '50%',
-            width: '180px',
-            height: '180px',
-            mb: 3,
-            cursor: 'pointer',
-            transition: 'transform 0.3s, opacity 0.3s',
-            '&:hover': {
-              transform: 'scale(1.1)',
-              opacity: 0.8
-            }
-          }}
-          onClick={handleImageModalOpen}
-        />
-        <Typography variant="h2" component="div" sx={{ mb: 1 }}>
-          {currentUser.nombre} {currentUser.apellido}
-        </Typography>
-        <Typography variant="h4" color="text.secondary" sx={{ mb: 2 }}>
-          @{profileData.username}
-        </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 2, textAlign: 'center', maxWidth: 600, fontSize: '1.2rem' }}>
-          {profileData.bio}
-        </Typography>
-        <Typography variant="body1" sx={{ mb: 2, fontSize: '1.2rem' }}>
-          Email: {currentUser.mail}
-        </Typography>
-      </Box>
-
+     
+      <InfoPerfil profileData={profileData} currentUser={currentUser} handleImageModalOpen={handleImageModalOpen} />
+      
       <TablaGarajes
         modo={modo}
         userGarages={userGarages}
@@ -184,6 +163,7 @@ export default function UserProfile() {
         getGarageImages={getGarageImages}
       />
       <br></br>
+      
       {/* Renderiza la tabla de vehículos */}
       {vehiculoLoading && <p>Cargando vehículos...</p>}
       {vehiculoError && <p>Error al cargar vehículos: {vehiculoError.message}</p>}
