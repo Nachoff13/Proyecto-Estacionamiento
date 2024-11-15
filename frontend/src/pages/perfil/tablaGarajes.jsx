@@ -32,10 +32,10 @@ const TablaGarajes = ({ modo, userGarages, getLocalidadName, getGarageState, get
       {/* Condicionalmente renderizar la tabla de Mis Garages */}
       {modo === false && (
         <>
+          <Box sx={{ width: '95%', margin: '0 auto', overflowX: 'auto' }}>
           <Typography variant="h4" component="h2" sx={{ mb: 1 }}>
             Mis Garages
           </Typography>
-          <Box sx={{ width: '95%', margin: '0 auto', overflowX: 'auto' }}>
             <TableContainer component={Paper} sx={{ mt: 2 }}>
               <Table>
                 <TableHead>
