@@ -58,7 +58,7 @@ export default function Header() {
     sx: {
       borderBottom: `1px solid ${theme.palette.divider}`,
       // backgroundColor: '#007AFC'
-      backgroundColor: '#5fa7ee'
+      backgroundColor: '#75b2f0'
     }
   };
 
