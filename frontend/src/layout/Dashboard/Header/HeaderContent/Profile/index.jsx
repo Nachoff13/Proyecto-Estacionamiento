@@ -16,6 +16,7 @@ import Tabs from '@mui/material/Tabs';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Cookies from 'js-cookie'; // Importa la librería de cookies
 
 // project import
 import ProfileTab from './ProfileTab';
@@ -58,9 +59,9 @@ export default function Profile() {
   const [open, setOpen] = useState(false);
   const [usuarioData, setUsuarioData] = useState(null);
 
-  const idUsuario = 3;
+  const idUsuario = Cookies.get('userId'); // Obtener el ID del usuario desde la cookie
   // Obtener los datos del usuario
-  const { usuarioIndividual, usuarioIndividualLoading, usuarioIndividualError } = useGetUsuarioIndividual(idUsuario); // Suponiendo que el ID es 3
+  const { usuarioIndividual, usuarioIndividualLoading, usuarioIndividualError } = useGetUsuarioIndividual(idUsuario);
 
   useEffect(() => {
     if (usuarioIndividual) {
