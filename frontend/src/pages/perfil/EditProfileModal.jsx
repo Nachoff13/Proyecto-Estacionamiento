@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Typography,
-  Modal,
-  TextField,
-  Button
-} from '@mui/material';
+import { Box, Typography, Modal, TextField, Button } from '@mui/material';
 
 const EditProfileModal = ({ open, handleClose, usuarioData, setUsuarioData }) => {
   const [errors, setErrors] = useState({});
@@ -83,7 +77,7 @@ const EditProfileModal = ({ open, handleClose, usuarioData, setUsuarioData }) =>
           error={!!errors.apellido}
           helperText={errors.apellido}
         />
-        
+
         <TextField
           label="Nombre de Usuario"
           name="username"
@@ -95,8 +89,12 @@ const EditProfileModal = ({ open, handleClose, usuarioData, setUsuarioData }) =>
           helperText={errors.username}
         />
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button onClick={handleClose} sx={{ mr: 2 }}>Cancelar</Button>
-          <Button variant="contained" onClick={handleSave}>Guardar</Button>
+          <Button onClick={handleClose} sx={{ mr: 2 }}>
+            Cancelar
+          </Button>
+          <Button variant="contained" onClick={handleSave}>
+            Guardar
+          </Button>
         </Box>
       </Box>
     </Modal>
