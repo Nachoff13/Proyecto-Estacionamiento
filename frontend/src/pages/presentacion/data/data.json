@@ -34,29 +34,29 @@
 ,
   "Team": [
     {
+      "img": "/src/assets/images/presentacion/team/juanBautista.jpg",
+      "name": "Casas Ortiz de Rosas, Juan Bautista",
+      "job": "Desarrollador"
+    },
+    {
+      "img": "/src/assets/images/presentacion/team/juanIgnacio.jpg",
+      "name": "Frangolini, Juan Ignacio",
+      "job": "Desarrollador"
+    },
+    {
       "img": "/src/assets/images/presentacion/team/nuria.jpeg",
-      "name": "Nuria Robledo",
+      "name": "Robledo, Nuria",
       "job": "Desarrolladora"
     },
     {
-      "img": "img/team/02.jpg",
-      "name": "Milagros Soberón",
+      "img": "/src/assets/images/presentacion/team/milagros.jpg",
+      "name": "Soberón, Milagros",
       "job": "Desarrolladora"
     },
     {
-      "img": "img/team/03.jpg",
-      "name": "Juan Ignacio Frangolini",
-      "job": "Desarrollador"
-    },
-    {
-      "img": "img/team/04.jpg",
-      "name": "Aylen Tastaca",
+      "img": "/src/assets/images/presentacion/team/aylen.jpg",
+      "name": "Tastaca Lugo, Aylén",
       "job": "Desarrolladora"
-    },
-    {
-      "img": "img/team/03.jpg",
-      "name": "Juan Bautista",
-      "job": "Desarrollador"
     }
   ],
   "Contact": {
