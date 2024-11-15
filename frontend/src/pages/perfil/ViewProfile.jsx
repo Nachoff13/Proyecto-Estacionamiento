@@ -14,11 +14,6 @@ import {
   Modal
 } from '@mui/material';
 import avatar from './avatar.png';
-import fakeGarajes from 'data/data-garajes'; // Importa los datos de garajes
-import fakeGarajeEstado from 'data/data-garajeestado'; // Importa los estados de los garajes
-import fakeFotosGarajes from 'data/data-garajefoto'; // Importa las fotos de los garajes
-import fakeLocalidades from 'data/data-localidades'; // Importa las localidades
-import fakeUsuarios from 'data/data-usuarios'; // Importa los usuarios
 import EditProfileModal from './EditProfileModal'; // Importa el componente de edición de perfil
 import ChangeProfileImageModal from './ChangeProfileImageModal'; // Importa el nuevo componente
 
@@ -28,13 +23,12 @@ import TablaVehiculos from './tablaVehiculos';
 
 //data
 import { useGetUsuarioIndividual } from 'api/Usuario';
+import { useGetGarajeConPropietario } from 'api/Garaje';
+import { useGetLocalidad } from 'api/Localidad';
 import { useGetVehiculoConConductor } from 'api/Vehiculo';
 import { useGetModelo } from 'api/Modelo';
 import { useGetMarca } from 'api/Marca';
 import InfoPerfil from './infoPerfil';
-
-// Simulación de un usuario logueado
-const currentUser = fakeUsuarios.find((user) => user.username === 'johndoe'); // Puedes cambiar esto para obtener el usuario dinámicamente
 
 export default function UserProfile() {
   // Estado para manejar el modal de la imagen
@@ -44,19 +38,25 @@ export default function UserProfile() {
   const [editOpen, setEditOpen] = useState(false);
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [profileData, setProfileData] = useState({
-    username: currentUser.username,
     bio: 'Argentino de corazón, amante del fútbol, el mate y los asados. Disfruto de las pequeñas cosas de la vida, rodeado de amigos y familia.',
     image: localStorage.getItem('profileImage') || avatar // Cargar la imagen desde localStorage o usar la imagen por defecto
   });
   const [usuarioData, setUsuarioData] = useState(null);
 
+  const { localidad, localidadLoading, localidadError } = useGetLocalidad();
+
   const idUsuario = 3;
   const { usuarioIndividual, usuarioIndividualLoading, usuarioIndividualError } = useGetUsuarioIndividual(idUsuario);
-  const idConductor = 3;
-  // Obtengo datos de la API pasando el idConductor
+
+  const idPropietario = 3;
+  const { garajeConPropietario, garajeConPropietarioLoading, garajeConPropietarioError } = useGetGarajeConPropietario(idPropietario);
+
+  const idConductor = 4;
   const { vehiculo, vehiculoLoading, vehiculoError } = useGetVehiculoConConductor(idConductor);
+
   // Obtengo datos de modelos
   const { modelo } = useGetModelo();
+
   // Obtengo datos de marcas
   const { marca } = useGetMarca();
 
@@ -77,6 +77,20 @@ export default function UserProfile() {
       setUsuarioData(usuarioIndividual);
     } else {
       console.log('No se encontraron usuarios.');
+    }
+  };
+
+  const manejarCargaGaraje = () => {
+    if (garajeConPropietarioError) {
+      console.error('Error al obtener garajes:', garajeConPropietarioError);
+      return; // Salir si hay un error
+    }
+
+    // Verifica si los datos están disponibles
+    if (garajeConPropietario && Array.isArray(garajeConPropietario) && garajeConPropietario.length > 0) {
+      console.log('Garajes obtenidos:', garajeConPropietario);
+    } else {
+      console.log('No se encontraron garajes.');
     }
   };
 
@@ -106,39 +120,37 @@ export default function UserProfile() {
       console.log('No se encontraron marcas.');
     }
   };
-  
+
   useEffect(() => {
     manejarCargaUsuario();
+    manejarCargaGaraje();
     manejarCargaVehiculo();
     manejarCargaModelo();
     manejarCargaMarca();
-  }, [vehiculo, vehiculoLoading, vehiculoError, modelo, marca, usuarioIndividual, usuarioIndividualError, usuarioIndividualLoading]);
+  }, [
+    garajeConPropietario,
+    garajeConPropietarioLoading,
+    garajeConPropietarioError,
+    vehiculo,
+    vehiculoLoading,
+    vehiculoError,
+    modelo,
+    marca,
+    usuarioIndividual,
+    usuarioIndividualError,
+    usuarioIndividualLoading
+  ]);
 
-  console.log('usuarioData:', usuarioData);
   useEffect(() => {
     // Obtener el modo desde localStorage
     const savedModo = localStorage.getItem('modo');
     setModo(savedModo ? JSON.parse(savedModo) : false);
   }, []);
 
-  // Filtra los garajes del usuario actual (idPropietario)
-  const userGarages = fakeGarajes.filter((garage) => garage.idPropietario === currentUser.id);
-
-  // Función para obtener el nombre del estado del garaje
-  const getGarageState = (idGarajeEstado) => {
-    const estado = fakeGarajeEstado.find((estado) => estado.id === idGarajeEstado);
-    return estado ? estado.nombre : 'Desconocido';
-  };
-
-  // Función para obtener el nombre de la localidad
-  const getLocalidadName = (idLocalidad) => {
-    const localidad = fakeLocalidades.find((localidad) => localidad.id === idLocalidad);
-    return localidad ? localidad.nombre : 'Desconocido';
-  };
-
-  // Función para obtener las imágenes del garaje
-  const getGarageImages = (idGaraje) => {
-    return fakeFotosGarajes.filter((foto) => foto.idGaraje === idGaraje);
+  // Función para obtener la localidad por ID
+  const getLocalidad = (idLocalidad) => {
+    const localidadEncontrada = localidad.find((loc) => loc.id === idLocalidad);
+    return localidadEncontrada ? localidadEncontrada.nombre : 'Desconocido';
   };
 
   // Maneja el evento de abrir el modal de imagen
@@ -178,29 +190,20 @@ export default function UserProfile() {
       {usuarioIndividualLoading ? (
         <p>Cargando...</p> // Muestra un mensaje de carga mientras se obtienen los datos
       ) : (
-        <InfoPerfil
-          profileData={profileData}
-          usuarioData={usuarioData}
-          handleImageModalOpen={handleImageModalOpen}
-        />
+        <InfoPerfil profileData={profileData} usuarioData={usuarioData} handleImageModalOpen={handleImageModalOpen} />
       )}
 
-      <TablaGarajes
-        modo={modo}
-        userGarages={userGarages}
-        getLocalidadName={getLocalidadName}
-        getGarageState={getGarageState}
-        getGarageImages={getGarageImages}
-      />
-      <br></br>
+      {/* Mostrar TablaGarajes si es propietario */}
+      {usuarioData?.espropietario && <TablaGarajes modo={modo} garajeConPropietario={garajeConPropietario} getLocalidad={getLocalidad} />}
+      <br />
+      {/* Mostrar TablaVehiculos si es conductor */}
+      {usuarioData?.esconductor && <TablaVehiculos vehiculos={vehiculo} modelos={modelo} marcas={marca} />}
 
-      {/* Renderiza la tabla de vehículos */}
-      {vehiculoLoading && <p>Cargando vehículos...</p>}
-      {vehiculoError && <p>Error al cargar vehículos: {vehiculoError.message}</p>}
-      {!vehiculoLoading && !vehiculoError && <TablaVehiculos vehiculos={vehiculo} modelos={modelo} marcas={marca} />}
+      {/* Si el usuario es ambos (conductor y propietario), se mostrarán ambas tablas */}
+      {(usuarioData?.esconductor || usuarioData?.espropietario)}
 
       {/* Modal para editar perfil */}
-      <EditProfileModal open={editOpen} handleClose={handleEditClose} usuarioData={usuarioData} setUsuarioData={setUsuarioData}/>
+      <EditProfileModal open={editOpen} handleClose={handleEditClose} usuarioData={usuarioData} setUsuarioData={setUsuarioData} />
 
       {/* Modal para cambiar imagen de perfil */}
       <ChangeProfileImageModal open={imageModalOpen} handleClose={handleImageModalClose} setProfileData={setProfileData} />
