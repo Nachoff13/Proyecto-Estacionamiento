@@ -187,7 +187,7 @@ export default function UserProfile() {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', padding: 2, bgcolor: '#f5f5f5' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', padding: 2, bgcolor: '#ecf5fc' }}>
       {usuarioIndividualLoading ? (
         <p>Cargando...</p> // Muestra un mensaje de carga mientras se obtienen los datos
       ) : (

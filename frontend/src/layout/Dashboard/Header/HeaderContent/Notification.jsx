@@ -70,9 +70,9 @@ export default function Notification() {
   const iconBackColorOpen = 'grey.100';
 
   return (
-    <Box sx={{ flexShrink: 0, ml: 0.75 }}>
+    <Box sx={{ flexShrink: 0, ml: 0.75, backgroundColor: '#bddeff', borderRadius: '5px'  }}>
       <IconButton
-        color="secondary"
+        color="white"
         variant="light"
         sx={{ color: 'text.primary', bgcolor: open ? iconBackColorOpen : 'transparent' }}
         aria-label="open profile"

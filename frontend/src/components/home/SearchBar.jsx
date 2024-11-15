@@ -21,7 +21,7 @@ const SearchBar = ({ onSearch }) => {
   }
 
   return (
-    <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+    <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', marginTop: '15px' }}>
       <FormControl variant="outlined" style={{ width: '300px' }}>
         <InputLabel>Filtre por Localidad...</InputLabel>
         <Select
