@@ -1,81 +1,113 @@
-import React, { useState } from 'react';
-import fakeGarajes from '../../data/data-garajes';
-import fakeUsuarios from '../../data/data-usuarios'; // Importar los datos de usuarios
-import 'src/pages/reserva/ReservaForm.css';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import 'src/pages/reserva/ReservaForm.css';
 
 const ReservaForm = () => {
+  const [garaje, setGaraje] = useState(null);
+  const [usuario, setUsuario] = useState(null);
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
   const [monto, setMonto] = useState(null);
 
-  // Obtenemos el primer garaje de los datos
-  const garaje = fakeGarajes[0];
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  // Simula obtener el usuario actual
-  const usuarioId = 4; // Cambia esto según el usuario que necesites
-  const usuario = fakeUsuarios.find((user) => user.id === usuarioId);
-
-  // Obtener la fecha actual en el formato 'YYYY-MM-DDTHH:MM' requerido por el input datetime-local
   const today = new Date().toISOString().slice(0, 16); 
 
-  const calcularMonto = () => {
-    if (fechaInicio && fechaFin) {
-      const inicio = new Date(fechaInicio);
-      const fin = new Date(fechaFin);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const garajeResponse = await axios.get(`https://localhost:7294/Garaje/ObtenerIndividual/${id}`);
+        setGaraje(garajeResponse.data);
 
-      if (fin <= inicio) {
-        alert('La fecha de fin no puede ser anterior o igual a la fecha de inicio.');
-        return;
+        const propietarioResponse = await axios.get(`https://localhost:7294/Usuario/ObtenerIndividual/${garajeResponse.data.idpropietario}`);
+        setUsuario(propietarioResponse.data);
+
+      } catch (error) {
+        console.error('Error al obtener los datos:', error);
       }
+    };
 
-      // Calculamos la diferencia en horas entre las dos fechas
-      const diferenciaHoras = Math.abs(fin - inicio) / 36e5;
+    fetchData();
+  }, [id]);
 
-      // Calculamos el monto total basado en el precio por hora del garaje
-      const total = diferenciaHoras * garaje.precioHora;
-      setMonto(total.toFixed(2)); // Fijamos dos decimales
-    } else {
-      alert('Por favor, selecciona ambas fechas y horas.');
+  const calcularMonto = (fechaInicio, fechaFin) => {
+    const inicio = new Date(fechaInicio);
+    const fin = new Date(fechaFin);
+
+    if (fin <= inicio) {
+      setMonto(null);
+      return;
+    }
+
+    const diferenciaHoras = Math.abs(fin - inicio) / 36e5;
+    const total = diferenciaHoras * garaje.preciohora;
+    setMonto(total.toFixed(2)); 
+  };
+
+  const handleFechaChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'fechaInicio') {
+      setFechaInicio(value);
+    } else if (name === 'fechaFin') {
+      setFechaFin(value);
+    }
+
+    if (fechaInicio && fechaFin) {
+      calcularMonto(fechaInicio, fechaFin);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!monto || monto === 'XXX') {
+      alert('Por favor, selecciona fechas válidas para calcular el monto.');
+      return;
+    }
+
+    // Confirmación de la reserva con el monto
+    const confirmReserva = window.confirm(`¿Estás seguro de que quieres hacer la reserva? El costo total es ${monto} pesos argentinos.`);
+
+    if (!confirmReserva) {
+      return; // Si el usuario no confirma, no se hace nada
+    }
+
     const reserva = {
       idGaraje: garaje.id,
-      idConductor: usuario.id,
-      idReservaEstado: 1, // Puedes ajustar esto según tu lógica de negocio
+      idConductor: 4, 
+      idReservaEstado: 1, 
       fechaInicio,
       fechaFin
     };
 
     try {
       const response = await axios.post('https://localhost:7294/Reserva/Agregar', reserva);
-
-      alert('Reserva agregada con éxito');
-      console.log(response.data);
+      alert(`Reserva agregada con éxito. El monto total es ${monto} pesos argentinos.`);
+      navigate('/home-conductor'); // Redirige al home-conductor después de la reserva
     } catch (error) {
       console.error('Error:', error);
       alert('Hubo un error al guardar la reserva');
     }
   };
 
+  if (!garaje || !usuario) {
+    return <div>Cargando información...</div>;
+  }
+
   return (
     <div className="reservation-form">
       <h2>Formulario de Reserva</h2>
 
-      {usuario && (
-        <div className="row">
-          <div className="info">
-            <p><strong>Dueño:</strong> {`${usuario.nombre} ${usuario.apellido}`}</p>
-            <p><strong>Email:</strong> {usuario.mail}</p>
-            <p><strong>Ubicación del Garaje:</strong> {`${garaje.calle} ${garaje.altura}`}</p>
-            <p><strong>Descripción:</strong> {garaje.descripcion}</p>
-          </div>
+      <div className="row">
+        <div className="info">
+          <p><strong>Dueño:</strong> {`${usuario.nombre} ${usuario.apellido}`}</p>
+          <p><strong>Email:</strong> {usuario.mail}</p>
+          <p><strong>Ubicación del Garaje:</strong> {`${garaje.calle} ${garaje.altura}`}</p>
+          <p><strong>Descripción:</strong> {garaje.descripcion}</p>
         </div>
-      )}
+      </div>
 
       <div className="row">
         <div className="input">
@@ -83,9 +115,10 @@ const ReservaForm = () => {
           <input
             type="datetime-local"
             id="fecha-inicio"
+            name="fechaInicio"
             value={fechaInicio}
-            onChange={(e) => setFechaInicio(e.target.value)}
-            min={today} // Evita fechas anteriores a hoy
+            onChange={handleFechaChange}
+            min={today}
           />
         </div>
         <div className="input">
@@ -93,25 +126,23 @@ const ReservaForm = () => {
           <input
             type="datetime-local"
             id="fecha-fin"
+            name="fechaFin"
             value={fechaFin}
-            onChange={(e) => setFechaFin(e.target.value)}
-            min={fechaInicio || today} // Evita fechas anteriores a la fecha de inicio
+            onChange={handleFechaChange}
+            min={fechaInicio || today}
           />
         </div>
       </div>
 
       <div className="row">
         <div>
-          <p><strong>Monto Total:</strong> {monto ? `${monto} USD` : 'XXX'}</p>
+          <p><strong>Monto Total:</strong> {monto ? `${monto} $ ARG` : 'XXX'}</p>
         </div>
       </div>
 
       <div className="buttons">
-        <button className="cancelar" onClick={() => window.location.href = 'home-conductor'}>
+        <button className="cancelar" onClick={() => window.location.href = '/home-conductor'}>
           Volver al Home
-        </button>
-        <button className="confirmar" onClick={calcularMonto}>
-          Confirmar Reserva
         </button>
         <button className="confirmar" onClick={handleSubmit}>
           Guardar Reserva

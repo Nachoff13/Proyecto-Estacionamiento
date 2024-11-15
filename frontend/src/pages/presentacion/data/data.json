@@ -1,0 +1,70 @@
+{
+"Testimonials": [
+  {
+    "img": "/src/assets/images/presentacion/testimonials/01.jpg",
+    "text": "\"Estaba buscando un garaje para un recital cerca del Estadio Único, y gracias a esta app lo encontré rápidamente. ¡Una solución excelente para eventos!\"",
+    "name": "Fernando Álvarez"
+  },
+  {
+    "img": "/src/assets/images/presentacion/testimonials/02.jpg",
+    "text": "\"Tenía un garaje sin uso porque había vendido mi auto, y alquilarlo a través de esta plataforma fue una gran opción para ganar dinero extra sin esfuerzo.\"",
+    "name": "Lorena Ramírez"
+  },
+  {
+    "img": "/src/assets/images/presentacion/testimonials/03.jpg",
+    "text": "\"Alquilar mi garaje a través de la plataforma ha sido una experiencia increíble. Puedo gestionar las reservas fácilmente y tener un ingreso extra sin complicaciones. ¡Y encima en la mejor ciudad!\"",
+    "name": "José Martínez"
+  },
+  {
+    "img": "/src/assets/images/presentacion/testimonials/04.jpg",
+    "text": "\"Muy recomendable. La aplicación es fácil de usar, y los garajes disponibles siempre cumplen con las expectativas.\"",
+    "name": "Ana López"
+  },
+  {
+    "img": "/src/assets/images/presentacion/testimonials/05.jpg",
+    "text": "\"Me siento seguro utilizando esta plataforma. La verificación de los garajes y propietarios es un gran plus.\"",
+    "name": "Luis Fernández"
+  },
+  {
+    "img": "/src/assets/images/presentacion/testimonials/06.jpg",
+    "text": "\"Sin duda, la mejor opción para encontrar un garaje cerca de mi ubicación y reservarlo de inmediato. ¡Totalmente satisfecha!\"",
+    "name": "Isabel Pérez"
+  }
+]
+,
+  "Team": [
+    {
+      "img": "/src/assets/images/presentacion/team/juanBautista.jpg",
+      "name": "Casas Ortiz de Rosas, Juan Bautista",
+      "job": "Desarrollador"
+    },
+    {
+      "img": "/src/assets/images/presentacion/team/juanIgnacio.jpg",
+      "name": "Frangolini, Juan Ignacio",
+      "job": "Desarrollador"
+    },
+    {
+      "img": "/src/assets/images/presentacion/team/nuria.jpeg",
+      "name": "Robledo, Nuria",
+      "job": "Desarrolladora"
+    },
+    {
+      "img": "/src/assets/images/presentacion/team/milagros.jpg",
+      "name": "Soberón, Milagros",
+      "job": "Desarrolladora"
+    },
+    {
+      "img": "/src/assets/images/presentacion/team/aylen.jpg",
+      "name": "Tastaca Lugo, Aylén",
+      "job": "Desarrolladora"
+    }
+  ],
+  "Contact": {
+    "address": "Av. del Petroleo Argentino 417, B1924 Berisso, Provincia de Buenos Aires",
+    "phone": "+1 123 456 1234",
+    "email": "info@garajito.com",
+    "facebook": "fb.com",
+    "twitter": "twitter.com",
+    "youtube": "youtube.com"
+  }
+}
