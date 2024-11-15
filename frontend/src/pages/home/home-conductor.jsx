@@ -14,11 +14,9 @@ import fakeLocalidades from 'data/data-localidades';
 import fakeGarajeEstado from 'data/data-garajeestado';
 import fakePropietario from 'data/data-usuarios';
 
-// ==============================|| SAMPLE PAGE ||============================== //
-
 export default function HomeConductor() {
-  const navigate = useNavigate(); // Hook para la navegación
-  const [selectedLocalidad, setSelectedLocalidad] = useState(''); //buscador
+  const navigate = useNavigate();
+  const [selectedLocalidad, setSelectedLocalidad] = useState('');
 
   const getLocalidad = (idLocalidad) => {
     const localidad = fakeLocalidades.find((loc) => loc.id === idLocalidad);
@@ -32,7 +30,7 @@ export default function HomeConductor() {
 
   const getFotoGaraje = (idGaraje) => {
     const fotoGaraje = fakeFotosGarajes.find((foto) => foto.idGaraje === idGaraje);
-    return fotoGaraje ? fotoGaraje.foto : 'default-foto.jpg'; // En caso de que no encuentre foto
+    return fotoGaraje ? fotoGaraje.foto : 'default-foto.jpg';
   };
 
   const getPropietario = (idPropietario) => {
@@ -40,32 +38,31 @@ export default function HomeConductor() {
     return propietario ? propietario.nombre + ' ' + propietario.apellido : 'Desconocido';
   };
 
-  //-------------------------------GET COLOR ESTADO-----------------------------------
   const getColorEstado = (idGarajeEstado) => {
     switch (idGarajeEstado) {
-      case 1: // Disponible
+      case 1:
         return 'success';
-      case 2: // Reservado
+      case 2:
         return 'warning';
-      case 3: // No Disponible
+      case 3:
         return 'error';
       default:
         return 'default';
     }
   };
 
-  const handleReservar = () => {
-    navigate('/reserva');
+  // Modificar handleReservar para recibir el id del garaje
+  const handleReservar = (idGaraje) => {
+    navigate(`/reserva/${idGaraje}`);
   };
 
   const handleHistorialCalificaciones = (idGaraje) => {
     navigate(`/historial-calificaciones/${idGaraje}`);
   };
 
-  // Maneja la búsqueda de localidades
   const handleSearch = ({ selectedLocalidad }) => {
     setSelectedLocalidad(selectedLocalidad);
-    console.log("localidad seleeccionada:",selectedLocalidad);
+    console.log("localidad seleccionada:", selectedLocalidad);
   };
 
   return (
@@ -74,7 +71,7 @@ export default function HomeConductor() {
       <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
         {dataGarajes
           .filter((garaje) => garaje.idGarajeEstado === 1 && 
-          (selectedLocalidad ? garaje.idLocalidad === selectedLocalidad : true)) // Filtra por disponibilidad y localidad
+          (selectedLocalidad ? garaje.idLocalidad === selectedLocalidad : true))
         .map((garaje, index) => (
             <MainCard key={garaje.id} style={{ width: '33.33%', boxSizing: 'border-box', height: '450px' }}>
               <div
@@ -95,7 +92,7 @@ export default function HomeConductor() {
                 />
               </div>
               <img
-                src={getFotoGaraje(garaje.id)} // Obtener la imagen del garaje
+                src={getFotoGaraje(garaje.id)}
                 alt={`Foto del garaje ${garaje.id}`}
                 style={{ width: '100%', height: '200px', objectFit: 'cover' }}
               />
@@ -118,7 +115,13 @@ export default function HomeConductor() {
                 >
                   Reseñas
                 </Button>
-                <Button variant="contained" color="primary" onClick={() => handleReservar()} style={{ marginTop: '10px' }}>
+                {/* Pasar el id del garaje seleccionado a handleReservar */}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleReservar(garaje.id)}
+                  style={{ marginTop: '10px' }}
+                >
                   Reservar
                 </Button>
               </div>
