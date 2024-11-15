@@ -27,11 +27,11 @@ export function useGetUsuarioIndividual(id) {
 
   const memoizedValue = useMemo(
     () => ({
-      usuarioIndividual: data || [],
+      usuarioIndividual: data || null, 
       usuarioIndividualLoading: !error && !data,
       usuarioIndividualError: error,
       usuarioIndividualValidating: isValidating,
-      usuarioIndividualEmpty: data ? data.length === 0 : true
+      usuarioIndividualEmpty: !data 
     }),
     [data, error, isValidating]
   );

@@ -48,8 +48,10 @@ export default function UserProfile() {
     bio: 'Argentino de corazón, amante del fútbol, el mate y los asados. Disfruto de las pequeñas cosas de la vida, rodeado de amigos y familia.',
     image: localStorage.getItem('profileImage') || avatar // Cargar la imagen desde localStorage o usar la imagen por defecto
   });
+  const [usuarioData, setUsuarioData] = useState(null);
 
-  const { usuarioIndividual, usuarioIndividualLoading, usuarioIndividualError } = useGetUsuarioIndividual(3);
+  const idUsuario = 3;
+  const { usuarioIndividual, usuarioIndividualLoading, usuarioIndividualError } = useGetUsuarioIndividual(idUsuario);
   const idConductor = 3;
   // Obtengo datos de la API pasando el idConductor
   const { vehiculo, vehiculoLoading, vehiculoError } = useGetVehiculoConConductor(idConductor);
@@ -81,17 +83,24 @@ export default function UserProfile() {
       console.log('No se encontraron marcas.');
     }
 
+    if (usuarioIndividualLoading) {
+      console.log('Cargando datos del usuario...');
+      return;
+    }
+
     if (usuarioIndividualError) {
       console.error('Error al obtener usuario:', usuarioIndividualError);
       return; // Salir si hay un error
     }
     if (usuarioIndividual) {
       console.log('Usuario obtenido:', usuarioIndividual);
+      setUsuarioData(usuarioIndividual);
     } else {
       console.log('No se encontraron usuarios.');
     }
-  }, [vehiculo, vehiculoLoading, vehiculoError, modelo, marca, usuarioIndividual, usuarioIndividualError]);
+  }, [vehiculo, vehiculoLoading, vehiculoError, modelo, marca, usuarioIndividual, usuarioIndividualError, usuarioIndividualLoading]);
 
+console.log('usuarioData:', usuarioData);
   useEffect(() => {
     // Obtener el modo desde localStorage
     const savedModo = localStorage.getItem('modo');
@@ -153,7 +162,11 @@ export default function UserProfile() {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', padding: 2, bgcolor: '#f5f5f5' }}>
      
-      <InfoPerfil profileData={profileData} currentUser={currentUser} handleImageModalOpen={handleImageModalOpen} />
+     {usuarioIndividualLoading ? (
+        <p>Cargando...</p> // Muestra un mensaje de carga mientras se obtienen los datos
+      ) : (
+        <InfoPerfil profileData={profileData} currentUser={currentUser} usuarioData={usuarioData} handleImageModalOpen={handleImageModalOpen} />
+      )}
       
       <TablaGarajes
         modo={modo}
