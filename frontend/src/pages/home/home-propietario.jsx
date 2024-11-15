@@ -5,6 +5,7 @@ import EditModal from 'components/modals/EditModal';
 import { useNavigate } from 'react-router-dom';
 import EditOutlined from '@ant-design/icons/EditOutlined';
 import HistoryOutlined from '@ant-design/icons/HistoryOutlined';
+import Cookies from 'js-cookie'; // Importa la librería de cookies
 
 export default function HomePropietario() {
   const [opened, setOpened] = useState(false);
@@ -14,7 +15,7 @@ export default function HomePropietario() {
   const [localidades, setLocalidades] = useState([]);
   const navigate = useNavigate();
 
-  const propietarioId = 3;
+  const propietarioId = Cookies.get('userId'); // Obtener el ID del usuario desde la cookie
 
   const fetchGarages = async () => {
     try {

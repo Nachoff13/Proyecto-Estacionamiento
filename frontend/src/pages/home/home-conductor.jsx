@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 // material-ui
 import { Typography, Button, Chip, ImageList, ImageListItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie'; // Importa la librería de cookies
 
 // project import
 import MainCard from 'components/MainCard';
