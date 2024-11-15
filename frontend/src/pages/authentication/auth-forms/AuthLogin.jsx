@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
-import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { UserContext } from 'src/contexts/auth-reducer/UserContext'; // Asegúrate de que la ruta sea correcta
 
 // material-ui
 import Button from '@mui/material/Button';
@@ -29,18 +30,64 @@ import EyeOutlined from '@ant-design/icons/EyeOutlined';
 import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
 import FirebaseSocial from './FirebaseSocial';
 
-// ============================|| JWT - LOGIN ||============================ //
-
 export default function AuthLogin({ isDemo = false }) {
-  const [checked, setChecked] = React.useState(false);
+  const [checked, setChecked] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const { setUserId } = useContext(UserContext); // Usa el contexto del usuario
 
-  const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
+  };
+
+  const handleSubmit = async (values, { setSubmitting, setErrors }) => {
+    try {
+      const response = await fetch("https://localhost:7294/Usuario/IniciarSesion", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ mail: values.email, contrasena: values.password }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error al iniciar sesión');
+      }
+  
+      const user = await response.json();
+      console.log('Usuario autenticado:', user);
+  
+      // Guardar el ID del usuario en el contexto y en localStorage
+      setUserId(user.id);
+      localStorage.setItem('user', JSON.stringify(user));
+  
+      // Verificar los roles del usuario
+      const esPropietario = user.esPropietario || user.espropietario;
+      const esConductor = user.esConductor || user.esconductor;
+  
+      console.log('esPropietario:', esPropietario);
+      console.log('esConductor:', esConductor);
+  
+      // Redirigir según el rol del usuario
+      if (esPropietario && esConductor) {
+        navigate('/home-conductor'); 
+      } else if (esPropietario) {
+        navigate('/home-propietario');
+      } else if (esConductor) {
+        navigate('/home-conductor');
+      } else {
+        throw new Error('Rol de usuario no definido');
+      }
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+      setErrors({ submit: 'Error al iniciar sesión. Por favor, verifique sus credenciales.' });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -52,16 +99,17 @@ export default function AuthLogin({ isDemo = false }) {
           submit: null
         }}
         validationSchema={Yup.object().shape({
-          email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-          password: Yup.string().max(255).required('Password is required')
+          email: Yup.string().email('Debe ser un email válido').max(255).required('El email es requerido'),
+          password: Yup.string().max(255).required('La contraseña es requerida')
         })}
+        onSubmit={handleSubmit}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="email-login">Email Address</InputLabel>
+                  <InputLabel htmlFor="email-login">Email</InputLabel>
                   <OutlinedInput
                     id="email-login"
                     type="email"
@@ -69,7 +117,7 @@ export default function AuthLogin({ isDemo = false }) {
                     name="email"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="Enter email address"
+                    placeholder="Ingrese su email"
                     fullWidth
                     error={Boolean(touched.email && errors.email)}
                   />
@@ -82,11 +130,11 @@ export default function AuthLogin({ isDemo = false }) {
               </Grid>
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="password-login">Password</InputLabel>
+                  <InputLabel htmlFor="password-login">Contraseña</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.password && errors.password)}
-                    id="-password-login"
+                    id="password-login"
                     type={showPassword ? 'text' : 'password'}
                     value={values.password}
                     name="password"
@@ -105,7 +153,7 @@ export default function AuthLogin({ isDemo = false }) {
                         </IconButton>
                       </InputAdornment>
                     }
-                    placeholder="Enter password"
+                    placeholder="Ingrese su contraseña"
                   />
                 </Stack>
                 {touched.password && errors.password && (
@@ -127,10 +175,10 @@ export default function AuthLogin({ isDemo = false }) {
                         size="small"
                       />
                     }
-                    label={<Typography variant="h6">Keep me sign in</Typography>}
+                    label={<Typography variant="h6">Mantener iniciada la sesión</Typography>}
                   />
                   <Link variant="h6" component={RouterLink} color="text.primary">
-                    Forgot Password?
+                    ¿Olvidaste la contraseña?
                   </Link>
                 </Stack>
               </Grid>
@@ -148,7 +196,7 @@ export default function AuthLogin({ isDemo = false }) {
               </Grid>
               <Grid item xs={12}>
                 <Divider>
-                  <Typography variant="caption"> Login with</Typography>
+                  <Typography variant="caption"> Ingresar con</Typography>
                 </Divider>
               </Grid>
               <Grid item xs={12}>
