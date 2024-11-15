@@ -6,18 +6,14 @@ export const Navigation = (props) => {
   return (
     <nav id="menu" className="navbar navbar-default navbar-fixed-top">
       <div className="container">
-        <div className="navbar-header">
+        <div className="navbar-header" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginTop: '-10px'}} >
           <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
             {' '}
             <span className="sr-only">Toggle navigation</span> <span className="icon-bar"></span> <span className="icon-bar"></span>{' '}
             <span className="icon-bar"></span>{' '}
           </button>
           <a className="navbar-brand page-scroll" href="#page-top">
-            <img
-              src={logo}
-              alt="Logo"
-              style={{ height: '40px' }}
-            />
+          <img src={logo} alt="Logo" style={{ height: '47px', display: 'block' }} />
           </a>{' '}
         </div>
 
