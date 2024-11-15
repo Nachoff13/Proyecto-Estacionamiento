@@ -12,8 +12,6 @@ import { useGetLocalidad } from 'src/api/Localidad';
 import { useGetPropietario } from 'src/api/Usuario';
 import { useGetGaraje } from 'api/Garaje';
 
-// ==============================|| SAMPLE PAGE ||============================== //
-
 export default function HomeConductor() {
   const navigate = useNavigate();
   const [selectedLocalidad, setSelectedLocalidad] = useState(''); // Buscador
@@ -43,8 +41,7 @@ export default function HomeConductor() {
         setGarageImages((prevImages) => ({
           ...prevImages,
           [idGaraje]: imagesData.map((img) =>
-            URL.createObjectURL(new Blob([new Uint8Array(img.foto.split(',').map(Number))], { type: 'image/jpeg' }))
-          )
+            URL.createObjectURL(new Blob([new Uint8Array(img.foto.split(',').map(Number))], { type: 'image/jpeg' })))
         }));
       }
     } catch (error) {
@@ -155,7 +152,12 @@ export default function HomeConductor() {
                 >
                   Reseñas
                 </Button>
-                <Button variant="contained" color="primary" onClick={() => navigate('/reserva')} style={{ marginTop: '10px' }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => navigate(`/reserva/${garageItem.id}`)} // Aquí se pasa el ID del garaje
+                  style={{ marginTop: '10px' }}
+                >
                   Reservar
                 </Button>
               </div>
