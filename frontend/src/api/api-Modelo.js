@@ -13,6 +13,6 @@ export const getModelos = async () => {
     const response = await api.get('/Modelo/Obtener');
     return response.data;
   } catch (error) {
-    console.error("Error fetching garages:", error);
+    console.error("Error fetching modelo:", error);
   }
 }
