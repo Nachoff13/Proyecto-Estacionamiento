@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, Modal, TextField, Button } from '@mui/material';
 
 const EditProfileModal = ({ open, handleClose, usuarioData, setUsuarioData }) => {
+  const [tempUsuarioData, setTempUsuarioData] = useState(usuarioData);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (open) {
+      setTempUsuarioData(usuarioData); // Resetear los datos temporales cuando se abre el modal
+    }
+  }, [open, usuarioData]);
 
   // Maneja el cambio en los campos del formulario de edición
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUsuarioData((prevData) => ({
+    setTempUsuarioData((prevData) => ({
       ...prevData,
       [name]: value
     }));
@@ -17,14 +24,14 @@ const EditProfileModal = ({ open, handleClose, usuarioData, setUsuarioData }) =>
   const handleSave = () => {
     let validationErrors = {};
 
-    if (!usuarioData.username) {
+    if (!tempUsuarioData.username) {
       validationErrors.username = 'El nombre de usuario no puede estar vacío';
     }
 
-    if (!usuarioData.nombre) {
+    if (!tempUsuarioData.nombre) {
       validationErrors.nombre = 'El nombre no puede estar vacío';
     }
-    if (!usuarioData.apellido) {
+    if (!tempUsuarioData.apellido) {
       validationErrors.apellido = 'El apellido no puede estar vacío';
     }
 
@@ -32,6 +39,7 @@ const EditProfileModal = ({ open, handleClose, usuarioData, setUsuarioData }) =>
       setErrors(validationErrors);
     } else {
       setErrors({});
+      setUsuarioData(tempUsuarioData); // Actualizar el estado principal solo cuando se hace clic en "Guardar"
       handleClose();
     }
   };
@@ -54,14 +62,14 @@ const EditProfileModal = ({ open, handleClose, usuarioData, setUsuarioData }) =>
         <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
           Editar Perfil
         </Typography>
-        {/* Verificación de usuarioData antes de acceder a sus propiedades */}
-        {usuarioData ? (
+        {/* Verificación de tempUsuarioData antes de acceder a sus propiedades */}
+        {tempUsuarioData ? (
           <>
             {/* Campo para Nombre */}
             <TextField
               label="Nombre"
               name="nombre"
-              value={usuarioData.nombre}
+              value={tempUsuarioData.nombre}
               onChange={handleInputChange}
               fullWidth
               sx={{ mb: 2 }}
@@ -73,7 +81,7 @@ const EditProfileModal = ({ open, handleClose, usuarioData, setUsuarioData }) =>
             <TextField
               label="Apellido"
               name="apellido"
-              value={usuarioData.apellido}
+              value={tempUsuarioData.apellido}
               onChange={handleInputChange}
               fullWidth
               sx={{ mb: 2 }}
@@ -85,7 +93,7 @@ const EditProfileModal = ({ open, handleClose, usuarioData, setUsuarioData }) =>
             <TextField
               label="Nombre de Usuario"
               name="username"
-              value={usuarioData.username}
+              value={tempUsuarioData.username}
               onChange={handleInputChange}
               fullWidth
               sx={{ mb: 2 }}
