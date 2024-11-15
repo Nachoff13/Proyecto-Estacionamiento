@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useState, useContext } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { UserContext } from 'src/contexts/auth-reducer/UserContext'; // Asegúrate de que la ruta sea correcta
+import Cookies from 'js-cookie'; // Importa la librería de cookies
 
 // material-ui
 import Button from '@mui/material/Button';
@@ -64,7 +65,8 @@ export default function AuthLogin({ isDemo = false }) {
       // Guardar el ID del usuario en el contexto y en localStorage
       setUserId(user.id);
       localStorage.setItem('user', JSON.stringify(user));
-  
+      Cookies.set('userId', user.id); // Guardar el ID del usuario en una cookie
+
       // Verificar los roles del usuario
       const esPropietario = user.esPropietario || user.espropietario;
       const esConductor = user.esConductor || user.esconductor;

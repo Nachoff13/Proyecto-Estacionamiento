@@ -13,6 +13,7 @@ import {
   Paper,
   Modal
 } from '@mui/material';
+import Cookies from 'js-cookie'; // Importa la librería de cookies
 import avatar from './avatar.png';
 import EditProfileModal from './EditProfileModal'; // Importa el componente de edición de perfil
 import ChangeProfileImageModal from './ChangeProfileImageModal'; // Importa el nuevo componente
@@ -45,13 +46,13 @@ export default function UserProfile() {
 
   const { localidad, localidadLoading, localidadError } = useGetLocalidad();
 
-  const idUsuario = 3;
+  const idUsuario = Cookies.get('userId'); // Obtener el ID del usuario desde la cookie
   const { usuarioIndividual, usuarioIndividualLoading, usuarioIndividualError } = useGetUsuarioIndividual(idUsuario);
 
-  const idPropietario = 3;
+  const idPropietario = idUsuario;
   const { garajeConPropietario, garajeConPropietarioLoading, garajeConPropietarioError } = useGetGarajeConPropietario(idPropietario);
 
-  const idConductor = 4;
+  const idConductor = idUsuario;
   const { vehiculo, vehiculoLoading, vehiculoError } = useGetVehiculoConConductor(idConductor);
 
   // Obtengo datos de modelos
