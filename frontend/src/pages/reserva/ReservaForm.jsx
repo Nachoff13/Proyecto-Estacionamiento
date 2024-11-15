@@ -35,16 +35,27 @@ const ReservaForm = () => {
   const calcularMonto = (fechaInicio, fechaFin) => {
     const inicio = new Date(fechaInicio);
     const fin = new Date(fechaFin);
-
+  
     if (fin <= inicio) {
       setMonto(null);
       return;
     }
-
+  
     const diferenciaHoras = Math.abs(fin - inicio) / 36e5;
-    const total = diferenciaHoras * garaje.preciohora;
-    setMonto(total.toFixed(2)); 
+    const diferenciaDias = Math.ceil(diferenciaHoras / 24); // Calcular los días completos
+  
+    let total = diferenciaHoras * garaje.preciohora;
+  
+    // Aplicar descuento según los días reservados
+    if (diferenciaDias >= 7) {
+      total *= 0.6; // 40% de descuento para 7 días o más
+    } else if (diferenciaDias >= 3) {
+      total *= 0.8; // 20% de descuento para 3 días o más
+    }
+  
+    setMonto(total.toFixed(2));
   };
+  
 
   const handleFechaChange = (e) => {
     const { name, value } = e.target;
