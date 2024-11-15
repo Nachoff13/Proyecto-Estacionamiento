@@ -8,9 +8,9 @@ const api = axios.create({
     }
   });
 
-export const getUsuarios = async () => {
+export const getUsuarioIndividual = async (id) => {
   try {
-    const response = await api.get('/Usuario/Obtener');
+    const response = await api.get(`/Usuario/ObtenerIndividual/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching usuarios:", error);

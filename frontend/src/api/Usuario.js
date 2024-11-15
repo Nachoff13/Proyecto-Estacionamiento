@@ -1,6 +1,6 @@
 import useSWR, { mutate } from 'swr';
 import { useMemo } from 'react';
-import { getPropietarios, getConductores} from './api-Usuario';
+import { getPropietarios, getConductores, getUsuarioIndividual} from './api-Usuario';
 
 
 const initialState = {
@@ -14,6 +14,31 @@ export const endpoints = {
   actions: 'actions',
   list: '/Usuario/ObtenerPropietario' // server URL
 };
+
+//DEVUELVE EL ARRAY DE USUARIOS
+export function useGetUsuarioIndividual(id) {
+
+  const { data, error, isValidating } = useSWR(
+    id ? `/Usuario/ObtenerIndividual/${id}` : null,
+    (url) => getUsuarioIndividual(id) 
+  );
+
+  console.log('Data usuario individual:', data);
+
+  const memoizedValue = useMemo(
+    () => ({
+      usuarioIndividual: data || [],
+      usuarioIndividualLoading: !error && !data,
+      usuarioIndividualError: error,
+      usuarioIndividualValidating: isValidating,
+      usuarioIndividualEmpty: data ? data.length === 0 : true
+    }),
+    [data, error, isValidating]
+  );
+
+  return memoizedValue;
+}
+
 
 //DEVUELVE EL ARRAY DE PROPIETARIOS
 export function useGetPropietario() {
