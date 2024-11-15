@@ -6,7 +6,7 @@
     "name": "Fernando Álvarez"
   },
   {
-    "img": "/src/assets/images/presentacion/testimonials/08.jpg",
+    "img": "/src/assets/images/presentacion/testimonials/02.jpg",
     "text": "\"Tenía un garaje sin uso porque había vendido mi auto, y alquilarlo a través de esta plataforma fue una gran opción para ganar dinero extra sin esfuerzo.\"",
     "name": "Lorena Ramírez"
   },
@@ -60,33 +60,11 @@
     }
   ],
   "Contact": {
-    "address": "4321 California St, San Francisco, CA 12345 ",
+    "address": "Av. del Petroleo Argentino 417, B1924 Berisso, Provincia de Buenos Aires",
     "phone": "+1 123 456 1234",
-    "email": "info@company.com",
+    "email": "info@garajito.com",
     "facebook": "fb.com",
     "twitter": "twitter.com",
     "youtube": "youtube.com"
-  },
-  "Features": [
-    {
-      "icon": "fa fa-comments-o",
-      "title": "Lorem ipsum",
-      "text": "Lorem ipsum dolor sit amet placerat facilisis felis mi in tempus eleifend pellentesque natoque etiam."
-    },
-    {
-      "icon": "fa fa-bullhorn",
-      "title": "Lorem ipsum",
-      "text": "Lorem ipsum dolor sit amet placerat facilisis felis mi in tempus eleifend pellentesque natoque etiam."
-    },
-    {
-      "icon": "fa fa-group",
-      "title": "Lorem ipsum",
-      "text": "Lorem ipsum dolor sit amet placerat facilisis felis mi in tempus eleifend pellentesque natoque etiam."
-    },
-    {
-      "icon": "fa fa-magic",
-      "title": "Lorem ipsum",
-      "text": "Lorem ipsum dolor sit amet placerat facilisis felis mi in tempus eleifend pellentesque natoque etiam."
-    }
-  ]
+  }
 }
