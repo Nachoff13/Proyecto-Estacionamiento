@@ -16,3 +16,13 @@ export const getGarajes = async () => {
     console.error("Error fetching garages:", error);
   }
 }
+
+export const getGarajeConPropietario = async (idPropietario) => {
+  try {
+    const response = await api.get(`/Garaje/ObtenerConPropietario/${idPropietario}`);
+    console.log("la data es:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching garages:", error);
+  }
+}
