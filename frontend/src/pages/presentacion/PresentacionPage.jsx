@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navigation } from './components/navigation';
 import { Header } from './components/header';
-import { Features } from './components/features';
 import { About } from './components/about';
 import { Services } from './components/services';
 import { Testimonials } from './components/testimonials';
