@@ -25,3 +25,12 @@ export const getPropietarios = async () => {
     console.error("Error fetching usuarios:", error);
   }
 }
+
+export const getConductores = async () => {
+  try {
+    const response = await api.get('/Usuario/ObtenerConductor');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching usuarios:", error);
+  }
+}

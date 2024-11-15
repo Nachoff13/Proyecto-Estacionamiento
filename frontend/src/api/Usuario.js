@@ -1,6 +1,6 @@
 import useSWR, { mutate } from 'swr';
 import { useMemo } from 'react';
-import { getPropietarios, getUsuarios} from './api-Usuario';
+import { getPropietarios, getConductores} from './api-Usuario';
 
 
 const initialState = {
@@ -32,3 +32,21 @@ export function useGetPropietario() {
     return memoizedValue;
   }
 
+
+  // DEVUELVE EL ARRAY DE CONDUCTORES
+export function useGetConductores() {
+  const { data, error, isValidating } = useSWR('/Usuario/ObtenerConductor', getConductores);
+
+  const memoizedValue = useMemo(
+      () => ({
+          conductores: data || [],
+          conductoresLoading: !error && !data,
+          conductoresError: error,
+          conductoresValidating: isValidating,
+          conductoresEmpty: data ? data.length === 0 : true
+      }),
+      [data, error, isValidating]
+  );
+
+  return memoizedValue;
+}
