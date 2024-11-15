@@ -27,7 +27,7 @@ export default function PresentacionPage() {
       <Navigation />
       <Header data={landingPageData.Header} />
       <About />
-      <Services data={landingPageData.Services} />
+      <Services/>
       <Testimonials data={landingPageData.Testimonials} />
       <Team data={landingPageData.Team} />
       <Contact data={landingPageData.Contact} />
