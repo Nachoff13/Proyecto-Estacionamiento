@@ -3,6 +3,30 @@ import { Link } from 'react-router-dom';
 import  logo  from '../../../assets/images/logo.png';
 
 export const Navigation = (props) => {
+  const loginButtonStyle = {
+    display: 'inline-block',
+    backgroundColor: '#228AF6',
+    color: 'white',
+    padding: '10px 20px',
+    borderRadius: '5px',
+    textDecoration: 'none',
+    fontWeight: 'bold'
+  };
+
+  const loginButtonHoverStyle = {
+    backgroundColor: 'darkblue'
+  };
+
+  const registerLinkStyle = {
+    color: '#228AF6',
+    textDecoration: 'none',
+    fontWeight: 'bold'
+  };
+
+  const registerLinkHoverStyle = {
+    color: 'darkblue'
+  };
+
   return (
     <nav id="menu" className="navbar navbar-default navbar-fixed-top">
       <div className="container">
@@ -45,18 +69,16 @@ export const Navigation = (props) => {
               </a>
             </li>
             <li>
-              <Link className="page-scroll" to="/login">
-                Iniciar Sesión
-              </Link>
+              <Link className="page-scroll" to="/login" style={loginButtonStyle}>Iniciar Sesión</Link>
             </li>
             <li>
-              <Link className="page-scroll" to="/register">
-                Registrarme
-              </Link>
+              <Link className="page-scroll" to="/register" style={registerLinkStyle}>Registrarme</Link>
             </li>
           </ul>
         </div>
       </div>
     </nav>
+
+    
   );
 };
