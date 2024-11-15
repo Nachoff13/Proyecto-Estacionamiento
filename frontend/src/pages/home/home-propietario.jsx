@@ -119,8 +119,8 @@ export default function HomePropietario() {
               Mi garaje {index + 1}
             </Typography>
             <Chip
-              label={garaje.disponible ? "Disponible" : "No disponible"}
-              color={garaje.disponible ? "success" : "error"}
+              label={garaje.disponible ? "Disponible" : "Reservado"}
+              color={garaje.disponible ? "success" : "warning"}
               variant="outlined"
               style={{ marginBottom: '8px' }}
             />

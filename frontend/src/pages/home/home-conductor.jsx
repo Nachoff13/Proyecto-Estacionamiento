@@ -108,8 +108,8 @@ export default function HomeConductor() {
                   Garaje {index + 1}
                 </Typography>
                 <Chip
-                  label={garageItem.disponible ? 'Disponible' : 'No disponible'}
-                  color={garageItem.disponible ? 'success' : 'error'}
+                  label={garageItem.disponible ? 'Disponible' : 'Reservado'}
+                  color={garageItem.disponible ? 'success' : 'warning'}
                   variant="outlined"
                   style={{ marginBottom: '8px' }}
                 />
