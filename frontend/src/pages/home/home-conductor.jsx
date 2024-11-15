@@ -24,9 +24,7 @@ export default function HomeConductor() {
 
   // Obtener datos de API
   const { provincia, provinciaLoading, provinciaError } = useGetProvincia();
-  console.log("Primero provincias:", provincia);
   const { localidad, localidadLoading, localidadError } = useGetLocalidad();
-  console.log("Primero localidades", localidad)
   const { propietario, propietarioLoading, propietarioError } = useGetPropietario();
   const { garaje, garajeLoading, garajeError } = useGetGaraje();
 

@@ -12,8 +12,6 @@ export const endpoints = {
 export function useGetProvincia() {
     const { data, error, isValidating } = useSWR(endpoints.key + endpoints.list, getProvincias);
 
-    console.log('Provincias data:', data);
-
     const memoizedValue = useMemo(
       () => ({
         provincia: data || [],  
