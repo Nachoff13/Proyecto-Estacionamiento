@@ -105,8 +105,8 @@ export default function HomePropietario() {
         <MainCard
           key={garaje.id}
           style={{
-            width: '32%', // Ancho de la tarjeta
-            height: 'auto', // Ajustar altura automáticamente
+            width: '32%', 
+            height: 'auto',
             display: 'flex',
             flexDirection: 'column',
             position: 'relative',
@@ -132,7 +132,7 @@ export default function HomePropietario() {
                   <img
                     src={src}
                     alt={`Foto ${idx + 1} del garaje ${garaje.id}`}
-                    style={{ objectFit: 'contain', width: '100%', height: '100%', borderRadius: '8px' }} // Cambiado a 'contain'
+                    style={{ objectFit: 'contain', width: '100%', height: '100%', borderRadius: '8px' }} 
                   />
                 </ImageListItem>
               ))}
