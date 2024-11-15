@@ -54,7 +54,7 @@ const MainRoutes = {
       element: <HomePropietario />
     },
     {
-      path: 'reserva',
+      path: 'reserva/:id',
       element: <ReservaForm />
     },
     {
