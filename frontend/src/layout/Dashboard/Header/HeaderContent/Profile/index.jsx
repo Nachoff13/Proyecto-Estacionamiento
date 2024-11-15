@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -30,6 +30,9 @@ import SettingOutlined from '@ant-design/icons/SettingOutlined';
 import UserOutlined from '@ant-design/icons/UserOutlined';
 import avatar1 from 'src/pages/perfil/avatar.png';
 
+//data
+import { useGetUsuarioIndividual } from 'api/Usuario';
+
 // tab panel wrapper
 function TabPanel({ children, value, index, ...other }) {
   return (
@@ -53,6 +56,18 @@ export default function Profile() {
 
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
+  const [usuarioData, setUsuarioData] = useState(null);
+
+  const idUsuario = 3;
+  // Obtener los datos del usuario
+  const { usuarioIndividual, usuarioIndividualLoading, usuarioIndividualError } = useGetUsuarioIndividual(idUsuario); // Suponiendo que el ID es 3
+
+  useEffect(() => {
+    if (usuarioIndividual) {
+      setUsuarioData(usuarioIndividual); // Guarda los datos del usuario en el estado
+    }
+  }, [usuarioIndividual]);
+
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -91,7 +106,7 @@ export default function Profile() {
         <Stack direction="row" spacing={1.25} alignItems="center" sx={{ p: 0.5 }}>
           <Avatar alt="profile user" src={avatar1} size="sm" />
           <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-            John Doe
+            {usuarioData ? `${usuarioData.nombre} ${usuarioData.apellido}` : 'Cargando...'}
           </Typography>
         </Stack>
       </ButtonBase>
@@ -124,7 +139,9 @@ export default function Profile() {
                         <Stack direction="row" spacing={1.25} alignItems="center">
                           <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
                           <Stack>
-                            <Typography variant="h6">John Doe</Typography>
+                            <Typography variant="h6">
+                              {usuarioData ? `${usuarioData.nombre} ${usuarioData.apellido}` : 'Cargando...'}
+                            </Typography>
                           </Stack>
                         </Stack>
                       </Grid>
