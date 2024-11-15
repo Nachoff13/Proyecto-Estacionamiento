@@ -7,13 +7,13 @@ import {
   Button
 } from '@mui/material';
 
-const EditProfileModal = ({ open, handleClose, profileData, setProfileData }) => {
+const EditProfileModal = ({ open, handleClose, usuarioData, setUsuarioData }) => {
   const [errors, setErrors] = useState({});
 
   // Maneja el cambio en los campos del formulario de edición
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setProfileData((prevData) => ({
+    setUsuarioData((prevData) => ({
       ...prevData,
       [name]: value
     }));
@@ -23,8 +23,15 @@ const EditProfileModal = ({ open, handleClose, profileData, setProfileData }) =>
   const handleSave = () => {
     let validationErrors = {};
 
-    if (!profileData.username) {
+    if (!usuarioData.username) {
       validationErrors.username = 'El nombre de usuario no puede estar vacío';
+    }
+
+    if (!usuarioData.nombre) {
+      validationErrors.nombre = 'El nombre no puede estar vacío';
+    }
+    if (!usuarioData.apellido) {
+      validationErrors.apellido = 'El apellido no puede estar vacío';
     }
 
     if (Object.keys(validationErrors).length > 0) {
@@ -53,25 +60,39 @@ const EditProfileModal = ({ open, handleClose, profileData, setProfileData }) =>
         <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
           Editar Perfil
         </Typography>
+        {/* Campo para Nombre */}
+        <TextField
+          label="Nombre"
+          name="nombre"
+          value={usuarioData.nombre}
+          onChange={handleInputChange}
+          fullWidth
+          sx={{ mb: 2 }}
+          error={!!errors.nombre}
+          helperText={errors.nombre}
+        />
+
+        {/* Campo para Apellido */}
+        <TextField
+          label="Apellido"
+          name="apellido"
+          value={usuarioData.apellido}
+          onChange={handleInputChange}
+          fullWidth
+          sx={{ mb: 2 }}
+          error={!!errors.apellido}
+          helperText={errors.apellido}
+        />
+        
         <TextField
           label="Nombre de Usuario"
           name="username"
-          value={profileData.username}
+          value={usuarioData.username}
           onChange={handleInputChange}
           fullWidth
           sx={{ mb: 2 }}
           error={!!errors.username}
           helperText={errors.username}
-        />
-        <TextField
-          label="Biografía"
-          name="bio"
-          value={profileData.bio}
-          onChange={handleInputChange}
-          fullWidth
-          multiline
-          rows={4}
-          sx={{ mb: 2 }}
         />
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button onClick={handleClose} sx={{ mr: 2 }}>Cancelar</Button>

@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { Typography, Box, Chip } from '@mui/material';
 
 const InfoPerfil = ({ profileData, usuarioData, handleImageModalOpen }) => {
-  console.log('Data usuario individual desde info perfil:', usuarioData);
-
   // Función para determinar los roles del usuario
   const obtenerRoles = () => {
     const roles = [];

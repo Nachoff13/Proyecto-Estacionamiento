@@ -180,7 +180,6 @@ export default function UserProfile() {
       ) : (
         <InfoPerfil
           profileData={profileData}
-          currentUser={currentUser}
           usuarioData={usuarioData}
           handleImageModalOpen={handleImageModalOpen}
         />
@@ -201,7 +200,7 @@ export default function UserProfile() {
       {!vehiculoLoading && !vehiculoError && <TablaVehiculos vehiculos={vehiculo} modelos={modelo} marcas={marca} />}
 
       {/* Modal para editar perfil */}
-      <EditProfileModal open={editOpen} handleClose={handleEditClose} profileData={profileData} setProfileData={setProfileData} />
+      <EditProfileModal open={editOpen} handleClose={handleEditClose} usuarioData={usuarioData} setUsuarioData={setUsuarioData}/>
 
       {/* Modal para cambiar imagen de perfil */}
       <ChangeProfileImageModal open={imageModalOpen} handleClose={handleImageModalClose} setProfileData={setProfileData} />
