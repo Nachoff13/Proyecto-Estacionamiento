@@ -22,9 +22,14 @@ import fakeUsuarios from 'data/data-usuarios'; // Importa los usuarios
 import EditProfileModal from './EditProfileModal'; // Importa el componente de edición de perfil
 import ChangeProfileImageModal from './ChangeProfileImageModal'; // Importa el nuevo componente
 
-//componentes 
+//componentes
 import TablaGarajes from './tablaGarajes';
-import TablaVehiculos  from './tablaVehiculos';
+import TablaVehiculos from './tablaVehiculos';
+
+//data
+import { useGetVehiculoConConductor } from 'api/Vehiculo';
+import { useGetModelo } from 'api/Modelo';
+import { useGetMarca } from 'api/Marca';
 
 // Simulación de un usuario logueado
 const currentUser = fakeUsuarios.find((user) => user.username === 'johndoe'); // Puedes cambiar esto para obtener el usuario dinámicamente
@@ -41,6 +46,39 @@ export default function UserProfile() {
     bio: 'Argentino de corazón, amante del fútbol, el mate y los asados. Disfruto de las pequeñas cosas de la vida, rodeado de amigos y familia.',
     image: localStorage.getItem('profileImage') || avatar // Cargar la imagen desde localStorage o usar la imagen por defecto
   });
+
+  const idConductor = 3;
+
+  // Obtengo datos de la API pasando el idConductor
+  const { vehiculo, vehiculoLoading, vehiculoError } = useGetVehiculoConConductor(idConductor);
+  // Obtengo datos de modelos
+  const { modelo } = useGetModelo();
+  // Obtengo datos de marcas
+  const { marca } = useGetMarca();
+
+  useEffect(() => {
+    if (vehiculoError) {
+      console.error('Error al obtener vehículos:', vehiculoError);
+      return; // Salir si hay un error
+    }
+    if (vehiculo.length > 0) {
+      console.log('Vehículos obtenidos:', vehiculo);
+    } else {
+      console.log('No se encontraron vehículos.');
+    }
+
+    if (modelo.length > 0) {
+      console.log('Modelos obtenidos:', modelo);
+    } else {
+      console.log('No se encontraron modelos.');
+    }
+
+    if (marca.length > 0) {
+      console.log('Marcas obtenidos:', marca);
+    } else {
+      console.log('No se encontraron marcas.');
+    }
+  }, [vehiculo, vehiculoLoading, vehiculoError, modelo, marca]);
 
   useEffect(() => {
     // Obtener el modo desde localStorage
@@ -138,14 +176,19 @@ export default function UserProfile() {
         </Typography>
       </Box>
 
-      <TablaGarajes 
-        modo={modo} 
-        userGarages={userGarages} 
-        getLocalidadName={getLocalidadName} 
-        getGarageState={getGarageState} 
-        getGarageImages={getGarageImages} 
+      <TablaGarajes
+        modo={modo}
+        userGarages={userGarages}
+        getLocalidadName={getLocalidadName}
+        getGarageState={getGarageState}
+        getGarageImages={getGarageImages}
       />
-  
+      <br></br>
+      {/* Renderiza la tabla de vehículos */}
+      {vehiculoLoading && <p>Cargando vehículos...</p>}
+      {vehiculoError && <p>Error al cargar vehículos: {vehiculoError.message}</p>}
+      {!vehiculoLoading && !vehiculoError && <TablaVehiculos vehiculos={vehiculo} modelos={modelo} marcas={marca} />}
+
       {/* Modal para editar perfil */}
       <EditProfileModal open={editOpen} handleClose={handleEditClose} profileData={profileData} setProfileData={setProfileData} />
 
