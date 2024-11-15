@@ -21,7 +21,7 @@ const LogoSection = ({ sx, to }) => {
     alignItems="center"
     justifyContent="center"
     ml={3} 
-    sx={{ height: '100%' }} 
+    sx={{ height: '100%', backgroundColor: 'white' }} 
   >
     <Logo />
     {/* <Chip

@@ -19,9 +19,10 @@ export default function HeaderContent() {
   const downLG = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   return (
-    <>
-      {!downLG && <Search />}
-      {downLG && <Box sx={{ width: '100%', ml: 1 }} />}
+    // verificar medidas
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      {!downLG && <Box sx={{ width: '1150px' }} />} 
+
       <IconButton
         component={Link}
         href="https://github.com/Nachoff13/Proyecto-Estacionamiento"
@@ -29,7 +30,7 @@ export default function HeaderContent() {
         disableRipple
         color="secondary"
         title="Repo"
-        sx={{ color: 'text.primary', bgcolor: 'grey.100' }}
+        sx={{ color: 'text.primary', bgcolor: '#bddeff' }}
       >
         <GithubOutlined />
       </IconButton>
@@ -37,6 +38,6 @@ export default function HeaderContent() {
       <Notification />
       {!downLG && <Profile />}
       {downLG && <MobileSection />}
-    </>
+    </Box>
   );
 }

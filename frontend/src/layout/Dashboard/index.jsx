@@ -29,10 +29,11 @@ export default function DashboardLayout() {
   if (menuMasterLoading) return <Loader />;
 
   return (
-    <Box sx={{ display: 'flex', width: '100%' }}>
+    <Box sx={{ display: 'flex', width: '100%'}}>
       <Header />
       <Drawer />
-      <Box component="main" sx={{ width: 'calc(100% - 260px)', flexGrow: 1, p: { xs: 2, sm: 3 } }}>
+      {/* color de fondo de todas las paginas */}
+      <Box component="main" sx={{ width: 'calc(100% - 260px)', flexGrow: 1, p: { xs: 2, sm: 3 }, backgroundColor:'#ecf5fc' }}>
         <Toolbar />
         <Breadcrumbs navigation={navigation} title />
         <Outlet />
