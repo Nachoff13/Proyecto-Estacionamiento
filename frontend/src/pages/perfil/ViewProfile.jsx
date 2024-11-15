@@ -60,29 +60,8 @@ export default function UserProfile() {
   // Obtengo datos de marcas
   const { marca } = useGetMarca();
 
-  useEffect(() => {
-    if (vehiculoError) {
-      console.error('Error al obtener vehículos:', vehiculoError);
-      return; // Salir si hay un error
-    }
-    if (vehiculo.length > 0) {
-      console.log('Vehículos obtenidos:', vehiculo);
-    } else {
-      console.log('No se encontraron vehículos.');
-    }
-
-    if (modelo.length > 0) {
-      console.log('Modelos obtenidos:', modelo);
-    } else {
-      console.log('No se encontraron modelos.');
-    }
-
-    if (marca.length > 0) {
-      console.log('Marcas obtenidos:', marca);
-    } else {
-      console.log('No se encontraron marcas.');
-    }
-
+  // Función para manejar la carga del usuario
+  const manejarCargaUsuario = () => {
     if (usuarioIndividualLoading) {
       console.log('Cargando datos del usuario...');
       return;
@@ -92,15 +71,50 @@ export default function UserProfile() {
       console.error('Error al obtener usuario:', usuarioIndividualError);
       return; // Salir si hay un error
     }
+
     if (usuarioIndividual) {
       console.log('Usuario obtenido:', usuarioIndividual);
       setUsuarioData(usuarioIndividual);
     } else {
       console.log('No se encontraron usuarios.');
     }
+  };
+
+  const manejarCargaVehiculo = () => {
+    if (vehiculoError) {
+      console.error('Error al obtener vehículos:', vehiculoError);
+      return; // Salir si hay un error
+    }
+    if (vehiculo.length > 0) {
+      console.log('Vehículos obtenidos:', vehiculo);
+    } else {
+      console.log('No se encontraron vehículos.');
+    }
+  };
+
+  const manejarCargaModelo = () => {
+    if (modelo.length > 0) {
+      console.log('Modelos obtenidos:', modelo);
+    } else {
+      console.log('No se encontraron modelos.');
+    }
+  };
+  const manejarCargaMarca = () => {
+    if (marca.length > 0) {
+      console.log('Marcas obtenidos:', marca);
+    } else {
+      console.log('No se encontraron marcas.');
+    }
+  };
+  
+  useEffect(() => {
+    manejarCargaUsuario();
+    manejarCargaVehiculo();
+    manejarCargaModelo();
+    manejarCargaMarca();
   }, [vehiculo, vehiculoLoading, vehiculoError, modelo, marca, usuarioIndividual, usuarioIndividualError, usuarioIndividualLoading]);
 
-console.log('usuarioData:', usuarioData);
+  console.log('usuarioData:', usuarioData);
   useEffect(() => {
     // Obtener el modo desde localStorage
     const savedModo = localStorage.getItem('modo');
@@ -161,13 +175,17 @@ console.log('usuarioData:', usuarioData);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', padding: 2, bgcolor: '#f5f5f5' }}>
-     
-     {usuarioIndividualLoading ? (
+      {usuarioIndividualLoading ? (
         <p>Cargando...</p> // Muestra un mensaje de carga mientras se obtienen los datos
       ) : (
-        <InfoPerfil profileData={profileData} currentUser={currentUser} usuarioData={usuarioData} handleImageModalOpen={handleImageModalOpen} />
+        <InfoPerfil
+          profileData={profileData}
+          currentUser={currentUser}
+          usuarioData={usuarioData}
+          handleImageModalOpen={handleImageModalOpen}
+        />
       )}
-      
+
       <TablaGarajes
         modo={modo}
         userGarages={userGarages}
@@ -176,7 +194,7 @@ console.log('usuarioData:', usuarioData);
         getGarageImages={getGarageImages}
       />
       <br></br>
-      
+
       {/* Renderiza la tabla de vehículos */}
       {vehiculoLoading && <p>Cargando vehículos...</p>}
       {vehiculoError && <p>Error al cargar vehículos: {vehiculoError.message}</p>}
