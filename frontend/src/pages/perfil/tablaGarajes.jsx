@@ -88,7 +88,7 @@ const TablaGarajes = ({ modo, garajeConPropietario, getLocalidad }) => {
         <>
           <Box sx={{ width: '95%', margin: '0 auto', overflowX: 'auto' }}>
             <Typography variant="h4" component="h2" sx={{ mb: 1 }}>
-              Mis Garages
+              Mis Garajes
             </Typography>
             <TableContainer component={Paper} sx={{ mt: 2 }}>
               <Table>
