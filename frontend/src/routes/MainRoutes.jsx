@@ -35,7 +35,7 @@ const MainRoutes = {
   children: [
     {
       path: '/',
-      element: <Navigate to="/login" replace />
+      element: <Navigate to="/presentacion" replace />
     },
     {
       path: 'home-propietario',
