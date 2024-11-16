@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Typography, Box, Chip } from '@mui/material';
 
+import Avatar from './avatar.png';
+
 const InfoPerfil = ({ profileData, usuarioData, handleImageModalOpen }) => {
   // Función para determinar los roles del usuario
   const obtenerRoles = () => {
@@ -31,7 +33,7 @@ const InfoPerfil = ({ profileData, usuarioData, handleImageModalOpen }) => {
             <Box
               component="img"
               alt="Perfil de usuario"
-              src={profileData.image}
+              src={Avatar}
               sx={{
                 borderRadius: '50%',
                 width: '180px',
